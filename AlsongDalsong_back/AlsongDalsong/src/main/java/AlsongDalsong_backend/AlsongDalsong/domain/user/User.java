@@ -31,13 +31,18 @@ public class User extends BaseTimeEntity {
     @Column(name = "User_Id")
     private Long id; // 기본키
 
+    // @Column(nullable = false)
+    private Integer kakaoId; // 카카오 아이디
+
     @Column(nullable = false)
     private String name; // 이름
 
     @Column(nullable = false)
-    private String email; // 닉네임
+    private String email; // 이메일
 
     @Column(nullable = false)
+    private String nickname; // 닉네임
+
     private String profileUrl; // 프로필 사진 Url
 
     @Column(columnDefinition = "TEXT")
@@ -47,7 +52,7 @@ public class User extends BaseTimeEntity {
     private String role; // 권한
 
     @Column(nullable = false)
-    private Long point; // 포인트 적립
+    private Integer point; // 포인트 적립
 
     @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Sticker> stickerList = new ArrayList<>(); // 회원 스티커 리스트
@@ -68,9 +73,11 @@ public class User extends BaseTimeEntity {
     private List<Vote> voteList = new ArrayList<>(); // 회원 게시글 투표 리스트
 
     @Builder
-    public User(String name, String email, String profileUrl, String introduce, String role, Long point) {
+    public User(Integer kakaoId, String name, String email, String nickname, String profileUrl, String introduce, String role, Integer point) {
+        this.kakaoId = kakaoId;
         this.name = name;
         this.email = email;
+        this.nickname = nickname;
         this.profileUrl = profileUrl;
         this.introduce = introduce;
         this.role = role;
