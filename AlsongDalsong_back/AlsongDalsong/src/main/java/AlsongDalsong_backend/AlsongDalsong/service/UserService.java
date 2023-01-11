@@ -10,6 +10,8 @@ import com.auth0.jwt.algorithms.Algorithm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 
@@ -22,9 +24,11 @@ public class UserService {
 
     @Autowired
     private final UserRepository userRepository;
+    private final AwsS3Service awsS3Service;
 
     /**
     // 인가코드로 카카오 access_token 발급하기
+    @Transactional
     public OauthToken getAccessToken(String code) {
         // Http 통신을 위해 생성
         RestTemplate restTemplate = new RestTemplate();
@@ -60,7 +64,8 @@ public class UserService {
     }
 
     // 액세스 토큰으로 카카오 사용자 정보 가져오기
-    public KakaoProfile findProfile(String accessToken) {
+     @Transactional
+     public KakaoProfile findProfile(String accessToken) {
         // Http 통신을 위해 생성
         RestTemplate restTemplate = new RestTemplate();
 
@@ -88,7 +93,8 @@ public class UserService {
     }
 
     // 카카오 회원가입과 로그인
-    public TokenDto kakaoSignup(String access_token) {
+     @Transactional
+     public TokenDto kakaoSignup(String access_token) {
         KakaoProfile profile = findProfile(access_token);
 
         // 사용자의 카카오 이메일로 이미 가입한 회원이 아니라면, 카카오 정보를 가지고 회원가입과 로그인
@@ -103,34 +109,49 @@ public class UserService {
                     .introduce("")
                     .role("ROLE_USER")
                     .point(0)
+                    .withdraw(false)
                     .build();
             userRepository.save(user);
         }
 
-        // 토큰 발급
-        return createToken(user);
-    }
-    **/
+        // 탈퇴한 회원이 아닐 경우 토큰 발급
+         if (!user.getNickname().equals("탈퇴한 회원")) {
+             return createToken(user);
+         }
+         else {
+             throw new RuntimeException("로그인에 실패했습니다. 탈퇴한 회원입니다.");
+         }
+     }
+     **/
 
     // 일반 회원가입
+    @Transactional
     public UserResponseDto signup(UserSaveRequestDto userSaveRequestDto) {
         // 이메일로 이미 가입한 회원이 아니라면, 받은 정보를 가지고 회원가입
         if (userRepository.findByEmail(userSaveRequestDto.getEmail()) != null) {
             throw new RuntimeException("이미 가입되어 있는 유저입니다.");
         }
         User user = userRepository.save(userSaveRequestDto.toEntity());
-        return new UserResponseDto(user);
+        return new UserResponseDto(user, user.getProfile());
     }
 
     // 일반 로그인
+    @Transactional
     public TokenDto login(String email) {
         // 이메일로 회원 정보 찾기
         User user = userRepository.findByEmail(email);
-        // 토큰 발급
-        return createToken(user);
+
+        // 탈퇴한 회원인지 확인
+        if (!user.getNickname().equals("탈퇴한 회원")) {
+            return createToken(user);
+        }
+        else {
+            throw new RuntimeException("로그인에 실패했습니다. 탈퇴한 회원입니다.");
+        }
     }
 
     // jwt 토큰 생성
+    @Transactional
     public TokenDto createToken(User user) {
         String jwtToken = JWT.create()
                 .withSubject(user.getName())
@@ -143,10 +164,50 @@ public class UserService {
     }
 
     // 회원 정보
+    @Transactional(readOnly = true)
     public User getUser(String email) {
         // 이메일로 회원 정보 가져오기
         User user = userRepository.findByEmail(email);
-        
         return user;
+    }
+    
+    // 회원 정보 수정
+    @Transactional
+    public User updateUser(UserUpdateRequestDto userUpdateRequestDto) {
+
+        // 이메일로 회원 정보 가져오기
+        User user = userRepository.findByEmail(userUpdateRequestDto.getEmail());
+        user.update(userUpdateRequestDto.getNickname(),
+                userUpdateRequestDto.getIntroduce());
+        return user;
+    }
+
+    // 회원 프로필 사진 수정
+    @Transactional
+    public User updateProfile(String email, MultipartFile multipartFile) {
+
+        // 이메일로 회원 정보 가져오기
+        User user = userRepository.findByEmail(email);
+        awsS3Service.deleteS3(user.getProfile());
+        // 프로필 저장
+        String profile = awsS3Service.uploadProfile(multipartFile);
+        // 회원 프로필 사진 수정
+        user.updateProfile(profile);
+
+        return user;
+    }
+
+    // 회원 탈퇴
+    @Transactional
+    public Boolean withdrawUser(String email) {
+        User user = userRepository.findByEmail(email);
+
+        if(user.getEmail().equals(email)) {
+            user.setWithdraw();
+            return true;
+        }
+        else {
+            throw new RuntimeException("회원 탈퇴에 실패했습니다.");
+        }
     }
 }

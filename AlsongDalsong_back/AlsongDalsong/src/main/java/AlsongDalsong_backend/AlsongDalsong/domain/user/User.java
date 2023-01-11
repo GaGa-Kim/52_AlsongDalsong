@@ -43,7 +43,7 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private String nickname; // 닉네임
 
-    private String profileUrl; // 프로필 사진 Url
+    private String profile; // 프로필 사진
 
     @Column(columnDefinition = "TEXT")
     private String introduce; // 소개
@@ -53,6 +53,9 @@ public class User extends BaseTimeEntity {
 
     @Column(nullable = false)
     private Integer point; // 포인트 적립
+
+    @Column(nullable = false)
+    private Boolean withdraw; // 탈퇴 여부
 
     @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Sticker> stickerList = new ArrayList<>(); // 회원 스티커 리스트
@@ -73,15 +76,42 @@ public class User extends BaseTimeEntity {
     private List<Vote> voteList = new ArrayList<>(); // 회원 게시글 투표 리스트
 
     @Builder
-    public User(Integer kakaoId, String name, String email, String nickname, String profileUrl, String introduce, String role, Integer point) {
+    public User(Integer kakaoId, String name, String email, String nickname, String profile, String introduce, String role, Integer point, Boolean withdraw) {
         this.kakaoId = kakaoId;
         this.name = name;
         this.email = email;
         this.nickname = nickname;
-        this.profileUrl = profileUrl;
+        this.profile = profile;
         this.introduce = introduce;
         this.role = role;
         this.point = point;
+        this.withdraw = withdraw;
+    }
+    
+    // 회원 정보 수정
+    public User update(String nickname, String introduce) {
+        this.nickname = nickname;
+        this.introduce = introduce;
+        return this;
+    }
+
+    public User updateProfile(String profile) {
+        this.profile = profile;
+        return this;
+    }
+    
+    // 회원 포인트 적립 수정
+    public void updatePoint(Integer point) {
+        this.point = point + 1;
+        if (this.point >= 100) {
+            this.point = 0;
+        }
+    }
+
+    // 회원 탈퇴 수정
+    public void setWithdraw() {
+        this.withdraw = true;
+        this.nickname = "탈퇴한 회원";
     }
 
     // 스티커 연관관계 메소드

@@ -22,7 +22,7 @@ import java.util.List;
  */
 @Configuration
 @EnableSwagger2
-public class SwaggerConfiguration {
+public class SwaggerConfig {
 
     private static final String API_NAME = "AlsongDalsong API";
     private static final String API_VERSION = "0.0.1";

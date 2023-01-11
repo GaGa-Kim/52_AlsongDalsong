@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### secret ###
+### !**/src/main/AlsongDalsong_backend/AlsongDalsong/config/s3/S3Properties.java ###
