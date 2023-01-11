@@ -28,19 +28,19 @@ public class Photo extends BaseTimeEntity {
     private Post postId; // 게시글 외래키
 
     @Column(nullable = false)
-    private String origFileName; // 원본 이름
+    private String origPhotoName; // 원본 이름
 
     @Column(nullable = false)
-    private String fileName; // 변환된 파일 이름
+    private String photoName; // 변환된 사진 이름
 
     @Column(nullable = false)
-    private String fileUrl; // 파일 Url
+    private String photoUrl; // 사진 Url
 
     @Builder
-    public Photo(String origFileName, String fileName, String fileUrl) {
-        this.origFileName = origFileName;
-        this.fileName = fileName;
-        this.fileUrl = fileUrl;
+    public Photo(String origPhotoName, String photoName, String photoUrl) {
+        this.origPhotoName = origPhotoName;
+        this.photoName = photoName;
+        this.photoUrl = photoUrl;
     }
 
     // 게시글 연관관계 메소드
