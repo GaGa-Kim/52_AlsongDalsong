@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 
 /**
- * 회원 정보 dto
+ * 회원정보 dto
  */
 @Getter
 public class UserResponseDto {
@@ -25,8 +25,8 @@ public class UserResponseDto {
     @ApiModelProperty(notes = "닉네임", example = "가경")
     private String nickname; // 닉네임
 
-    @ApiModelProperty(notes = "프로필 사진 Url", example = "www")
-    private String profileUrl; // 프로필 사진 Url
+    @ApiModelProperty(notes = "프로필 사진", example = "www")
+    private String profile; // 프로필 사진
 
     @ApiModelProperty(notes = "소개", example = "안녕하세요.")
     private String introduce; // 소개
@@ -37,16 +37,20 @@ public class UserResponseDto {
     @ApiModelProperty(notes = "포인트 적립", example = "15")
     private Integer point; // 포인트 적립
 
-    public UserResponseDto(User user) {
+    @ApiModelProperty(notes = "탈퇴 여부", example = "false")
+    private Boolean withdraw; // 탈퇴 여부
+
+    public UserResponseDto(User user, String profile) {
         this.id = user.getId();
         this.kakaoId = user.getKakaoId();
         this.name = user.getName();
         this.email = user.getEmail();
         this.nickname = user.getNickname();
-        this.profileUrl = user.getProfileUrl();
+        this.profile = profile;
         this.introduce = user.getIntroduce();
         this.role = user.getRole();
         this.point = user.getPoint();
+        this.withdraw = user.getWithdraw();
     }
 
 }
