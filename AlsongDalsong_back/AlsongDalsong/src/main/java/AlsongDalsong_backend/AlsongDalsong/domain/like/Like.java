@@ -35,8 +35,10 @@ public class Like extends BaseTimeEntity {
     // 회원 연관관계 메소드
     public void setUser(User user) {
         this.userId = user;
+        /*
         if(!userId.getLikeList().contains(this))
             user.getLikeList().add(this);
+         */
     }
 
     // 댓글 연관관계 메소드

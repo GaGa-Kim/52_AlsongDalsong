@@ -48,12 +48,12 @@ public class PostService {
             List<Photo> photoList = awsS3Service.uploadPhoto(multipartFiles);
             if(!photoList.isEmpty()) {
                 for(Photo photo: photoList) {
-                    post.addPostList(photoRepository.save(photo));
+                    post.addPhotoList(photoRepository.save(photo));
                 }
             }
         }
 
-        postRepository.save(post);
+        user.addPostList(postRepository.save(post));
         return new PostResponseDto(post, findPostId(post.getId()));
     }
 
@@ -76,7 +76,7 @@ public class PostService {
             if(!CollectionUtils.isEmpty(multipartFiles)) {
                 List<Photo> photoList = awsS3Service.uploadPhoto(multipartFiles);
                 for(Photo photo: photoList) {
-                    post.addPostList(photoRepository.save(photo));
+                    post.addPhotoList(photoRepository.save(photo));
                 }
             }
 

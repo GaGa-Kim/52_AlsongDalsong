@@ -66,6 +66,7 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> postList = new ArrayList<>(); // 회원 게시글 리스트
 
+    /*
     @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> commentList = new ArrayList<>(); // 회원 댓글 리스트
 
@@ -74,6 +75,7 @@ public class User extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Vote> voteList = new ArrayList<>(); // 회원 게시글 투표 리스트
+    */
 
     @Builder
     public User(Integer kakaoId, String name, String email, String nickname, String profile, String introduce, String role, Integer point, Boolean withdraw) {
@@ -139,7 +141,7 @@ public class User extends BaseTimeEntity {
         }
     }
 
-    // 댓글 연관관계 메소드
+    /* 댓글 연관관계 메소드
     public void addCommentList(Comment comment) {
         this.commentList.add(comment);
         if(comment.getUserId() != this) {
@@ -162,5 +164,6 @@ public class User extends BaseTimeEntity {
             vote.setUser(this);
         }
     }
+     */
 }
 
