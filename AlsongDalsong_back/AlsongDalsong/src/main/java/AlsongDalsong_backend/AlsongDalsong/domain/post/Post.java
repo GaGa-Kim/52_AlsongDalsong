@@ -128,7 +128,7 @@ public class Post extends BaseTimeEntity {
     }
 
     // 사진 연관관계 메소드
-    public void addPostList(Photo photo) {
+    public void addPhotoList(Photo photo) {
         this.photoList.add(photo);
         if(photo.getPostId() != this) {
             photo.setPost(this);

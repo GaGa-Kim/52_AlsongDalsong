@@ -49,8 +49,10 @@ public class Comment extends BaseTimeEntity {
     // 회원 연관관계 메소드
     public void setUser(User user) {
         this.userId = user;
+        /*
         if(!userId.getCommentList().contains(this))
             user.getCommentList().add(this);
+         */
     }
 
     // 게시글 연관관계 메소드

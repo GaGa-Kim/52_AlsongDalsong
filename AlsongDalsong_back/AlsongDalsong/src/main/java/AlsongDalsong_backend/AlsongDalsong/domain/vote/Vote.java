@@ -40,11 +40,19 @@ public class Vote extends BaseTimeEntity {
         this.vote = vote;
     }
 
+    // 투표 수정
+    public Vote update(Boolean vote) {
+        this.vote = vote;
+        return this;
+    }
+
     // 회원 연관관계 메소드
     public void setUser(User user) {
         this.userId = user;
+        /*
         if(!userId.getVoteList().contains(this))
             user.getVoteList().add(this);
+         */
     }
 
     // 게시글 연관관계 메소드
