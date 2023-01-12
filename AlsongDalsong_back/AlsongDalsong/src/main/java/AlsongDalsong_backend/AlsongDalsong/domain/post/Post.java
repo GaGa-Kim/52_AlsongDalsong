@@ -13,7 +13,6 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -47,7 +46,7 @@ public class Post extends BaseTimeEntity {
     private String old; // 연령
 
     @Column(nullable = false)
-    private Date date; // 언제
+    private String date; // 언제
 
     @Column(nullable = false)
     private String what; // 무엇을
@@ -58,10 +57,13 @@ public class Post extends BaseTimeEntity {
     private String link; // 링크
 
     @Column(nullable = false)
-    private Long importance; // 중요도
+    private Integer importance; // 중요도
 
     @Column(nullable = false)
     private String decision; // 결정 완료 여부
+
+    @Column(columnDefinition = "TEXT")
+    private String reason; // 결정 이유
 
     @OneToMany(mappedBy = "postId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Scrap> scrapList = new ArrayList<>(); // 게시글 스크랩 리스트
@@ -76,7 +78,7 @@ public class Post extends BaseTimeEntity {
     private List<Vote> voteList = new ArrayList<>(); // 게시글 투표 리스트
 
     @Builder
-    public Post(String todo, String category, String who, String old, Date date, String what, String content, String link, Long importance, String decision) {
+    public Post(String todo, String category, String who, String old, String date, String what, String content, String link, Integer importance, String decision, String reason) {
         this.todo = todo;
         this.category = category;
         this.who = who;
@@ -87,6 +89,27 @@ public class Post extends BaseTimeEntity {
         this.link = link;
         this.importance = importance;
         this.decision = decision;
+        this.reason = reason;
+    }
+
+    // 게시글 수정
+    public Post update(String todo, String category, String who, String old, String date, String what, String content, String link, Integer importance) {
+        this.todo = todo;
+        this.category = category;
+        this.who = who;
+        this.old = old;
+        this.date = date;
+        this.what = what;
+        this.content = content;
+        this.link = link;
+        this.importance = importance;
+        return this;
+    }
+
+    // 게시글 확정
+    public void setDecision(String decision, String reason) {
+        this.decision = decision;
+        this.reason = reason;
     }
 
     // 회원 연관관계 메소드

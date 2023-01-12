@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * 회원가입 dto
+ * 회원 가입 dto
  */
 @Getter
 @NoArgsConstructor
@@ -50,5 +50,4 @@ public class UserSaveRequestDto {
                 .withdraw(false)
                 .build();
     }
-
 }
