@@ -91,7 +91,7 @@ public class UserController {
     }
 
     // 회원 정보 수정
-    @PostMapping("/api/user/updateInfo")
+    @PutMapping("/api/user/updateInfo")
     @ApiOperation(value = "회원 수정", notes = "회원 수정 API")
     public ResponseEntity<UserResponseDto> updateUser(@RequestBody UserUpdateRequestDto userUpdateRequestDto) {
         // 받아온 정보로 회원 정보 수정 및 프로필 저장
@@ -107,7 +107,7 @@ public class UserController {
     }
 
     // 회원 프로필 사진 수정
-    @PostMapping(value = "/api/user/updateProfile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/api/user/updateProfile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiOperation(value = "회원 프로필 사진 수정", notes = "회원 프로필 사진 수정 API")
     public ResponseEntity<UserResponseDto> updateProfile(@RequestParam String email, @RequestPart MultipartFile multipartFile) {
         // 받아온 정보로 회원 정보 수정 및 프로필 저장

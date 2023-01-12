@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * 회원수정 dto
+ * 회원 수정 dto
  */
 @Getter
 @NoArgsConstructor

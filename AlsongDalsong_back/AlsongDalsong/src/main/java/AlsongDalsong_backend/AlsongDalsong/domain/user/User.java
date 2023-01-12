@@ -95,6 +95,7 @@ public class User extends BaseTimeEntity {
         return this;
     }
 
+    // 회원 프로필 사진 수정
     public User updateProfile(String profile) {
         this.profile = profile;
         return this;
@@ -102,7 +103,7 @@ public class User extends BaseTimeEntity {
     
     // 회원 포인트 적립 수정
     public void updatePoint(Integer point) {
-        this.point = point + 1;
+        this.point = point;
         if (this.point >= 100) {
             this.point = 0;
         }

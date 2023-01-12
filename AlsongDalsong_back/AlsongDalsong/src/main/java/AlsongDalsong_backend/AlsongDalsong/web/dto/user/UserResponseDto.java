@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 
 /**
- * 회원정보 dto
+ * 회원 정보 dto
  */
 @Getter
 public class UserResponseDto {
