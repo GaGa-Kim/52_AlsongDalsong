@@ -37,4 +37,4 @@ out/
 .vscode/
 
 ### secret ###
-!**/src/main/AlsongDalsong_back/AlsongDalsong/src/main/resources/application.properties
+AlsongDalsong_back/AlsongDalsong/src/main/resources/application.properties
