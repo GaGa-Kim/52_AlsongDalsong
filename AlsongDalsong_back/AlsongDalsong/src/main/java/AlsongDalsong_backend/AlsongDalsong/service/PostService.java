@@ -57,6 +57,13 @@ public class PostService {
         return new PostResponseDto(post, findPostId(post.getId()));
     }
 
+    // 게시글 조회
+    @Transactional
+    public PostResponseDto inquire(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(()-> new IllegalArgumentException("해당 게시글이 없습니다."));
+        return new PostResponseDto(post, findPostId(postId));
+    }
+
     // 게시글 수정
     @Transactional
     public PostResponseDto update(PostUpdateRequestDto postUpdateRequestDto, List<MultipartFile> multipartFiles, List<Long> deleteId) {
