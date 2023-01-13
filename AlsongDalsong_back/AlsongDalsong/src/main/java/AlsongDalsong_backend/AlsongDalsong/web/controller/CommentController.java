@@ -1,6 +1,5 @@
 package AlsongDalsong_backend.AlsongDalsong.web.controller;
 
-import AlsongDalsong_backend.AlsongDalsong.domain.comment.Comment;
 import AlsongDalsong_backend.AlsongDalsong.service.CommentService;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.comment.CommentResponseDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.comment.CommentSaveRequestDto;
@@ -11,7 +10,6 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

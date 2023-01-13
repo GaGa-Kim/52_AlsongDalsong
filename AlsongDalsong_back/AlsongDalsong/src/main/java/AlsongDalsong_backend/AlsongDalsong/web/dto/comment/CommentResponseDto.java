@@ -28,6 +28,9 @@ public class CommentResponseDto {
     @ApiModelProperty(notes = "내용", example = "꼭 구매하세요")
     private String content; // 내용
 
+    @ApiModelProperty(notes = "좋아요 갯수", example = "3")
+    private Integer like;
+
     public CommentResponseDto(Comment comment) {
         this.id = comment.getId();
         this.email = comment.getUserId().getEmail();
@@ -35,5 +38,6 @@ public class CommentResponseDto {
         this.profile = comment.getUserId().getProfile();
         this.postId = comment.getPostId().getId();
         this.content = comment.getContent();
+        this.like = comment.getLikeList().size();
     }
 }
