@@ -50,6 +50,14 @@ public class PostController {
         return ResponseEntity.ok().body(postService.save(postSaveRequestDto, postSaveRequestVo.getPhotos()));
     }
 
+    // 게시글 조회
+    @GetMapping("/api/post/inquire")
+    @ApiOperation(value = "게시글 조회", notes = "게시글 조회 API")
+    @ApiImplicitParam(name = "postId", value = "게시글 id", example = "1")
+    public ResponseEntity<PostResponseDto> inquire(Long postId) {
+        return ResponseEntity.ok().body(postService.inquire(postId));
+    }
+
     // 게시글 수정
     @PutMapping(value = "/api/post/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiOperation(value = "게시글 수정", notes = "게시글 수정 API")

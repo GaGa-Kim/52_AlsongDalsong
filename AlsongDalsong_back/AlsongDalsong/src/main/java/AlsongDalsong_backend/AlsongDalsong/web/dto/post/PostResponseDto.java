@@ -15,8 +15,14 @@ public class PostResponseDto {
     @ApiModelProperty(notes = "게시글 기본키", example = "1")
     private Long id;
 
-    @ApiModelProperty(notes = "작성자 닉네임", example = "1234@gmail.com")
+    @ApiModelProperty(notes = "작성자 이메일", example = "1234@gmail.com")
+    private String email; // 작성자 이메일
+
+    @ApiModelProperty(notes = "작성자 닉네임", example = "가경")
     private String nickname; // 작성자 닉네임
+
+    @ApiModelProperty(notes = "작성자 프로필 사진", example = "http")
+    private String profile; // 프로필 사진
 
     @ApiModelProperty(notes = "분류", example = "살까 말까")
     private String todo; // 분류
@@ -56,7 +62,9 @@ public class PostResponseDto {
     
     public PostResponseDto(Post post, List<Long> photoId) {
         this.id = post.getId();
+        this.email = post.getUserId().getEmail();
         this.nickname = post.getUserId().getNickname();
+        this.profile = post.getUserId().getProfile();
         this.todo = post.getTodo();
         this.category = post.getCategory();
         this.who = post.getWho();
