@@ -6,6 +6,7 @@ import Button from "../ui/Button";
 import data from '../../data.json';
 import Template from "../ui/template";
 
+//chae33 branch check
 const MainTitleText = styled.p`
     font-size: 50px;
     font-weight: 900;
