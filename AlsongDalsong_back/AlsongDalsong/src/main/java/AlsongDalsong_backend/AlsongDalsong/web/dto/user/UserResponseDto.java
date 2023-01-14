@@ -37,6 +37,9 @@ public class UserResponseDto {
     @ApiModelProperty(notes = "포인트 적립", example = "15")
     private Integer point; // 포인트 적립
 
+    @ApiModelProperty(notes = "스티커 갯수", example = "1")
+    private Integer sticker; // 스티커 갯수
+
     @ApiModelProperty(notes = "탈퇴 여부", example = "false")
     private Boolean withdraw; // 탈퇴 여부
 
@@ -50,6 +53,7 @@ public class UserResponseDto {
         this.introduce = user.getIntroduce();
         this.role = user.getRole();
         this.point = user.getPoint();
+        this.sticker = user.getSticker();
         this.withdraw = user.getWithdraw();
     }
 

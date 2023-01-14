@@ -47,6 +47,7 @@ public class UserSaveRequestDto {
                 .introduce(introduce)
                 .role("ROLE_USER")
                 .point(0)
+                .sticker(0)
                 .withdraw(false)
                 .build();
     }
