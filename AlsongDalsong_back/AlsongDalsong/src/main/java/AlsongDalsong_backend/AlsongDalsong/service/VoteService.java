@@ -37,7 +37,7 @@ public class VoteService {
             vote.setPost(post);
             post.addVoteList(voteRepository.save(vote));
             // 글 투표 시 + 1점
-            user.updatePoint(user.getPoint() + 1);
+            user.updatePointAndSticker(user.getPoint() + 1, user.getSticker());
 
             return true;
         }
@@ -46,7 +46,7 @@ public class VoteService {
             // 투표 취소하기
             if ((voteRequestDto.getVote().equals(voteRepository.findByUserIdAndPostId(user, post).getVote()))) {
                 // 글 투표 취소시 - 1점
-                user.updatePoint(user.getPoint() - 1);
+                user.updatePointAndSticker(user.getPoint() - 1, user.getSticker());
                 voteRepository.delete(vote);
             }
             // 반대로 투표 변경하기

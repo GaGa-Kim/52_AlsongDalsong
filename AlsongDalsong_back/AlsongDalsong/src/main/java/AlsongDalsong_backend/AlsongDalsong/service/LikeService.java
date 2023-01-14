@@ -37,7 +37,7 @@ public class LikeService {
             like.setComment(comment);
             comment.addLikeList(likeRepository.save(like));
             // 좋아요 작성 시 + 1점
-            user.updatePoint(user.getPoint() + 1);
+            user.updatePointAndSticker(user.getPoint() + 1, user.getSticker());
 
             return true;
         }
@@ -45,7 +45,7 @@ public class LikeService {
         else if(likeRepository.findByUserIdAndCommentId(user, comment) != null) {
             likeRepository.delete(likeRepository.findByUserIdAndCommentId(user, comment));
             // 좋아요 취소 시 + 1점
-            user.updatePoint(user.getPoint() - 1);
+            user.updatePointAndSticker(user.getPoint() - 1, user.getSticker());
             return true;
         }
         else {

@@ -27,8 +27,7 @@ public class ScrapService {
     private final ScrapRepository scrapRepository;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
-    private final PostService postService;
-    
+
     // 스크랩
     public Boolean save(ScrapRequestDto scrapRequestDto) {
         User user = userRepository.findByEmail(scrapRequestDto.getEmail());

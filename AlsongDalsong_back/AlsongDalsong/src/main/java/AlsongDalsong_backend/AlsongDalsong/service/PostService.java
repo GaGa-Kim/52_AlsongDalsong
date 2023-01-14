@@ -41,7 +41,7 @@ public class PostService {
         Post post = postSaveRequestDto.toEntity();
         post.setUser(user);
         // 글 작성 시 + 1점
-        user.updatePoint(user.getPoint() + 1);
+        user.updatePointAndSticker(user.getPoint() + 1, user.getSticker());
 
         // 게시글에 사진이 있을 경우
         if(multipartFiles != null) {
@@ -130,7 +130,7 @@ public class PostService {
         Post post = postRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("해당 게시글이 없습니다."));
         post.setDecision(decision, reason);
         // 글 확정 시 + 5점
-        post.getUserId().updatePoint(post.getUserId().getPoint() + 5);
+        post.getUserId().updatePointAndSticker(post.getUserId().getPoint() + 5, post.getUserId().getSticker());
 
         return new PostResponseDto(post, findPostId(post.getId()));
     }

@@ -41,7 +41,7 @@ public class CommentService {
 
         post.addCommentList(commentRepository.save(comment));
         // 댓글 작성 시 + 1점
-        user.updatePoint(user.getPoint() + 1);
+        user.updatePointAndSticker(user.getPoint() + 1, user.getSticker());
 
         return commentRepository.findAllByPostId(post)
                 .stream()
