@@ -174,20 +174,27 @@ public class UserService {
     // 회원 정보 수정
     @Transactional
     public User updateUser(UserUpdateRequestDto userUpdateRequestDto) {
-
         // 이메일로 회원 정보 가져오기
         User user = userRepository.findByEmail(userUpdateRequestDto.getEmail());
-        user.update(userUpdateRequestDto.getNickname(),
-                userUpdateRequestDto.getIntroduce());
-        return user;
+
+        // 회원과 회원 수정하는 자가 같을 경우에만 수정 가능
+        if(user.getEmail().equals(user.getEmail())) {
+            user.update(userUpdateRequestDto.getNickname(),
+                    userUpdateRequestDto.getIntroduce());
+
+            return user;
+        }
+        else {
+            throw new RuntimeException("회원 정보 수정에 실패했습니다.");
+        }
     }
 
     // 회원 프로필 사진 수정
     @Transactional
     public User updateProfile(String email, MultipartFile multipartFile) {
-
         // 이메일로 회원 정보 가져오기
         User user = userRepository.findByEmail(email);
+        // 이전 프로필 삭제
         awsS3Service.deleteS3(user.getProfile());
         // 프로필 저장
         String profile = awsS3Service.uploadProfile(multipartFile);
@@ -202,6 +209,7 @@ public class UserService {
     public Boolean withdrawUser(String email) {
         User user = userRepository.findByEmail(email);
 
+        // 회원과 탈퇴하는 자가 같을 경우에만 수정 가능
         if(user.getEmail().equals(email)) {
             user.setWithdraw();
             return true;

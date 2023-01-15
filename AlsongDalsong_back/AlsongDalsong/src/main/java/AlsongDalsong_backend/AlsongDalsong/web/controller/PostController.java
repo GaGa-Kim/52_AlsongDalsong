@@ -96,10 +96,11 @@ public class PostController {
     @ApiOperation(value = "게시글 확정", notes = "게시글 확정 API")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "게시글 id", example = "1"),
+            @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com"),
             @ApiImplicitParam(name = "decision", value = "결정 완료", example = "취소"),
             @ApiImplicitParam(name = "reason", value = "결정 이유", example = "비싸서")
     })
-    public ResponseEntity<PostResponseDto> updateDecision(@RequestParam Long id, String decision, String reason) {
-        return ResponseEntity.ok().body(postService.updateDecision(id, decision, reason));
+    public ResponseEntity<PostResponseDto> updateDecision(@RequestParam Long id, String email, String decision, String reason) {
+        return ResponseEntity.ok().body(postService.updateDecision(id, email, decision, reason));
     }
 }

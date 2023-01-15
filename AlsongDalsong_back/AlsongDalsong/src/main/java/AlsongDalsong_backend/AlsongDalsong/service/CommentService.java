@@ -36,10 +36,11 @@ public class CommentService {
         Post post = postRepository.findById(commentSaveRequestDto.getPostId()).orElseThrow(()-> new IllegalArgumentException("해당 게시글이 없습니다."));
 
         Comment comment = commentSaveRequestDto.toEntity();
+        // 연관관계 설정
         comment.setUser(user);
         comment.setPost(post);
-
         post.addCommentList(commentRepository.save(comment));
+
         // 댓글 작성 시 + 1점
         user.updatePointAndSticker(user.getPoint() + 1, user.getSticker());
 
@@ -65,9 +66,9 @@ public class CommentService {
     public List<CommentResponseDto> update(CommentUpdateRequestDto commentUpdateRequestDto) {
         Comment comment = commentRepository.findById(commentUpdateRequestDto.getId()).orElseThrow(()-> new IllegalArgumentException("해당 댓글이 없습니다."));
 
+        // 댓글 작성자와 댓글 수정하는 자가 같을 경우에만 수정 가능
         if(comment.getUserId().getEmail().equals(commentUpdateRequestDto.getEmail())) {
             comment.update(commentUpdateRequestDto.getContent());
-
             Post post = postRepository.findById(commentUpdateRequestDto.getPostId()).orElseThrow(()-> new IllegalArgumentException("해당 게시글이 없습니다."));
 
             return commentRepository.findAllByPostId(post)
@@ -75,7 +76,6 @@ public class CommentService {
                     .map(CommentResponseDto::new)
                     .collect(Collectors.toList());
         }
-        
         else {
             throw new RuntimeException("댓글 수정에 실패했습니다.");
         }
@@ -86,8 +86,10 @@ public class CommentService {
     public Boolean delete(Long id, String email) {
         Comment comment = commentRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("해당 댓글이 없습니다."));
 
+        // 댓글 작성자와 댓글 삭제하는 자가 같을 경우에만 삭제 가능
         if(email.equals(comment.getUserId().getEmail())) {
-            commentRepository.delete(comment);            
+            commentRepository.delete(comment);
+
             return true;
         }
         else {
