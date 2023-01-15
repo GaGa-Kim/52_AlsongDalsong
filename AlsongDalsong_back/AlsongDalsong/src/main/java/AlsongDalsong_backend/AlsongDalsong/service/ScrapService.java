@@ -36,15 +36,18 @@ public class ScrapService {
         // 한 번도 스크랩한 적 없다면 스크랩하기
         if(scrapRepository.findByUserIdAndPostId(user, post) == null) {
             Scrap scrap = new Scrap();
+            // 연관관계 설정
             scrap.setUser(user);
             scrap.setPost(post);
             user.addScrapList(scrapRepository.save(scrap));
+            post.addScrapList(scrapRepository.save(scrap));
             
             return true;
         }
         // 이미 스크랩 되어있다면 스크랩 취소하기
         else if (scrapRepository.findByUserIdAndPostId(user, post) != null) {
             scrapRepository.delete(scrapRepository.findByUserIdAndPostId(user, post));
+
             return true;
         }
         else {
@@ -58,6 +61,7 @@ public class ScrapService {
         User user = userRepository.findByEmail(email);
         List<Scrap> scraps = scrapRepository.findAllByUserId(user);
         List<Post> posts = new ArrayList<>();
+        
         for (Scrap scrap: scraps) {
             Post post = postRepository.findById(scrap.getPostId().getId()).orElseThrow(()-> new IllegalArgumentException("해당 게시글이 없습니다."));
             posts.add(post);

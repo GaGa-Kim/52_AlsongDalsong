@@ -21,7 +21,7 @@ public class Vote extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Comment_Id")
+    @Column(name = "Vote_Id")
     private Long id; // 기본키
 
     @ManyToOne(fetch = FetchType.LAZY)

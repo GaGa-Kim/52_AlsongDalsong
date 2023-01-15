@@ -4,6 +4,7 @@ import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -14,6 +15,9 @@ public class PostResponseDto {
 
     @ApiModelProperty(notes = "게시글 기본키", example = "1")
     private Long id;
+
+    @ApiModelProperty(notes = "생성 날짜 및 시간", example = "2023-01-15T16:34:30.388")
+    private LocalDateTime createdDateTime; // 생성 날짜 및 시간
 
     @ApiModelProperty(notes = "작성자 이메일", example = "1234@gmail.com")
     private String email; // 작성자 이메일
@@ -59,9 +63,22 @@ public class PostResponseDto {
 
     @ApiModelProperty(notes = "게시글 사진 id", example = "[1, 2]")
     private List<Long> photoId;
-    
-    public PostResponseDto(Post post, List<Long> photoId) {
+
+    @ApiModelProperty(notes = "찬성 투표 수", example = "3")
+    private Long agree;
+
+    @ApiModelProperty(notes = "반대 투표 수", example = "3")
+    private Long disagree;
+
+    @ApiModelProperty(notes = "댓글 수", example = "3")
+    private Integer comment;
+
+    @ApiModelProperty(notes = "스크랩 수", example = "3")
+    private Integer scrap;
+
+    public PostResponseDto(Post post, List<Long> photoId, Long agree, Long disagree) {
         this.id = post.getId();
+        this.createdDateTime = post.getCreatedDateTime();
         this.email = post.getUserId().getEmail();
         this.nickname = post.getUserId().getNickname();
         this.profile = post.getUserId().getProfile();
@@ -77,5 +94,9 @@ public class PostResponseDto {
         this.decision = post.getDecision();
         this.reason = post.getReason();
         this.photoId = photoId;
+        this.agree = agree;
+        this.disagree = disagree;
+        this.comment = post.getCommentList().size();
+        this.scrap = post.getScrapList().size();
     }
 }
