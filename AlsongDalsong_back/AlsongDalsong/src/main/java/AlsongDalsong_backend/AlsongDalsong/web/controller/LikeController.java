@@ -30,14 +30,14 @@ public class LikeController {
         return ResponseEntity.ok().body(likeService.save(likeSaveRequestDto));
     }
     
-    // 사용자에 따른 댓글 좋아요 조회
-    @PostMapping("/api/like/inquire")
-    @ApiOperation(value = "댓글 좋아요 조회", notes = "댓글 좋아요 조회 API")
+    // 댓글에 따른 좋아요 여부 조회
+    @PostMapping("/api/like/check")
+    @ApiOperation(value = "댓글에 따른 좋아요 여부 조회", notes = "댓글에 따른 좋아요 여부 조회 API")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "댓글 id", example = "1"),
             @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com")
     })
-    public ResponseEntity<Boolean> inquire(@RequestParam Long id, String email) {
-        return ResponseEntity.ok().body(likeService.inquire(id, email));
+    public ResponseEntity<Boolean> check(@RequestParam Long id, String email) {
+        return ResponseEntity.ok().body(likeService.check(id, email));
     }
 }

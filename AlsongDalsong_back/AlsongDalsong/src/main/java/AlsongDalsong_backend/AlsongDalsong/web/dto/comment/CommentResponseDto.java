@@ -14,17 +14,17 @@ public class CommentResponseDto {
     @ApiModelProperty(notes = "댓글 기본키", example = "1")
     private Long id;
 
-    @ApiModelProperty(notes = "생성 날짜 및 시간 추가", example = "3분 전")
-    private String createdDateTime; // 생성 날짜 및 시간 추가
+    @ApiModelProperty(notes = "생성 날짜 및 시간", example = "3분 전")
+    private String createdDateTime; // 생성 날짜 및 시간
 
     @ApiModelProperty(notes = "댓글 작성자 이메일", example = "1234@gmail.com")
-    private String email; // 작성자 이메일
+    private String email; // 댓글 작성자 이메일
 
     @ApiModelProperty(notes = "댓글 작성자 닉네임", example = "가경")
-    private String nickname; // 작성자 닉네임
+    private String nickname; // 댓글 작성자 닉네임
 
     @ApiModelProperty(notes = "댓글 작성자 프로필 사진", example = "http")
-    private String profile; // 프로필 사진
+    private String profile; // 댓글 작성자 프로필 사진
 
     @ApiModelProperty(notes = "게시글 기본키", example = "1")
     private Long postId; // 게시글 기본키

@@ -208,25 +208,25 @@ public class UserService {
         return user;
     }
 
-    // 나의 구매 성향 (통계)
+    // 사용자별 구매 성향 (통계)
     @Transactional(readOnly = true)
     public Map<String, Object> propensity(String email) {
         User user = userRepository.findByEmail(email);
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("살까 말까 미정", postRepository.countByUserIdAndTodoAndDecision(user, "살까 말까", "미정"));
-        map.put("살까 말까 결정", postRepository.countByUserIdAndTodoAndDecision(user, "살까 말까", "결정"));
-        map.put("살까 말까 취소", postRepository.countByUserIdAndTodoAndDecision(user, "살까 말까", "취소"));
+        Map<String, Object> propensityMap = new HashMap<>();
+        propensityMap.put("살까 말까 미정", postRepository.countByUserIdAndTodoAndDecision(user, "살까 말까", "미정"));
+        propensityMap.put("살까 말까 결정", postRepository.countByUserIdAndTodoAndDecision(user, "살까 말까", "결정"));
+        propensityMap.put("살까 말까 취소", postRepository.countByUserIdAndTodoAndDecision(user, "살까 말까", "취소"));
 
-        map.put("할까 말까 미정", postRepository.countByUserIdAndTodoAndDecision(user, "할까 말까", "미정"));
-        map.put("할까 말까 결정", postRepository.countByUserIdAndTodoAndDecision(user, "할까 말까", "결정"));
-        map.put("할까 말까 취소", postRepository.countByUserIdAndTodoAndDecision(user, "할까 말까", "취소"));
+        propensityMap.put("할까 말까 미정", postRepository.countByUserIdAndTodoAndDecision(user, "할까 말까", "미정"));
+        propensityMap.put("할까 말까 결정", postRepository.countByUserIdAndTodoAndDecision(user, "할까 말까", "결정"));
+        propensityMap.put("할까 말까 취소", postRepository.countByUserIdAndTodoAndDecision(user, "할까 말까", "취소"));
 
-        map.put("갈까 말까 미정", postRepository.countByUserIdAndTodoAndDecision(user, "갈까 말까", "미정"));
-        map.put("갈까 말까 결정", postRepository.countByUserIdAndTodoAndDecision(user, "갈까 말까", "결정"));
-        map.put("갈까 말까 취소", postRepository.countByUserIdAndTodoAndDecision(user, "갈까 말까", "취소"));
+        propensityMap.put("갈까 말까 미정", postRepository.countByUserIdAndTodoAndDecision(user, "갈까 말까", "미정"));
+        propensityMap.put("갈까 말까 결정", postRepository.countByUserIdAndTodoAndDecision(user, "갈까 말까", "결정"));
+        propensityMap.put("갈까 말까 취소", postRepository.countByUserIdAndTodoAndDecision(user, "갈까 말까", "취소"));
 
-        return map;
+        return propensityMap;
     }
 
     // 회원 탈퇴

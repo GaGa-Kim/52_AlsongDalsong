@@ -34,7 +34,7 @@ public class PhotoController {
     private final PhotoService photoService;
     private final AwsS3Service awsS3Service;
 
-    // 사진 정보 조회
+    // 사진 id로 이미지 정보 조회
     @GetMapping("/api/photo/photoInfo")
     @ApiOperation(value = "사진 id로 이미지 정보 조회", notes = "사진 id로 이미지 정보 조회 API")
     @ApiImplicitParam(name = "id", value = "사진 id", example = "1")
@@ -42,7 +42,7 @@ public class PhotoController {
         return ResponseEntity.ok().body(photoService.findByPhotoId(id));
     }
 
-    // 사진 URL 정보 조회
+    // 사진 id로 이미지 URL 정보 조회
     @GetMapping("/api/photo/photoURL")
     @ApiOperation(value = "사진 id로 이미지 URL 정보 조회", notes = "사진 id로 이미지 URL 정보 조회 API")
     @ApiImplicitParam(name = "id", value = "사진 id", example = "1")
@@ -51,7 +51,7 @@ public class PhotoController {
         return ResponseEntity.ok().body(awsS3Service.getS3(photo.getPhotoName()));
     }
 
-    // 사진 다운로드
+    // 사진 id로 이미지 다운로드
     @GetMapping("/api/photo/photoDownload")
     @ApiOperation(value = "사진 id로 이미지 다운로드", notes = "사진 id로 이미지 다운로드 API")
     @ApiImplicitParam(name = "id", value = "사진 id", example = "1")

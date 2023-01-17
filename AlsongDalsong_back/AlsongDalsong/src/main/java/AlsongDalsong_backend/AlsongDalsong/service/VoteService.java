@@ -24,7 +24,7 @@ public class VoteService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     
-    // 투표하기
+    // 게시글 투표하기
     @Transactional
     public Boolean vote(VoteRequestDto voteRequestDto) {
         User user = userRepository.findByEmail(voteRequestDto.getEmail());
@@ -64,10 +64,10 @@ public class VoteService {
         }
     }
 
-    // 사용자에 따른 투표 조회
-    public String inquire(Long id, String email) {
+    // 게시글에 따른 투표 여부 조회
+    public String check(Long postId, String email) {
         User user = userRepository.findByEmail(email);
-        Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+        Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
 
         // 투표 했다면
         if(voteRepository.findByUserIdAndPostId(user, post) != null) {

@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CommentSaveRequestDto {
 
-    @ApiModelProperty(notes = "회원 이메일", example = "1234@gmail.com", required = true)
+    @ApiModelProperty(notes = "댓글 작성자 이메일", example = "1234@gmail.com", required = true)
     private String email; // 회원 이메일
 
     @ApiModelProperty(notes = "게시글 id", example = "1", required = true)

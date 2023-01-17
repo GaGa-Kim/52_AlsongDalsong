@@ -16,8 +16,8 @@ public class PostResponseDto {
     @ApiModelProperty(notes = "게시글 기본키", example = "1")
     private Long id;
 
-    @ApiModelProperty(notes = "생성 날짜 및 시간 추가", example = "3분 전")
-    private String createdDateTime; // 생성 날짜 및 시간 추가
+    @ApiModelProperty(notes = "생성 날짜 및 시간", example = "3분 전")
+    private String createdDateTime; // 생성 날짜 및 시간
 
     @ApiModelProperty(notes = "작성자 이메일", example = "1234@gmail.com")
     private String email; // 작성자 이메일

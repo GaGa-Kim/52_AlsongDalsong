@@ -1,5 +1,6 @@
 package AlsongDalsong_backend.AlsongDalsong.service;
 
+import AlsongDalsong_backend.AlsongDalsong.domain.comment.Comment;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.PostRepository;
 import AlsongDalsong_backend.AlsongDalsong.domain.scrap.Scrap;
@@ -54,8 +55,22 @@ public class ScrapService {
             throw new RuntimeException("스크랩에 실패했습니다.");
         }
     }
+
+    // 게시글에 따른 스크랩 여부 조회
+    public Boolean check(Long postId, String email) {
+        User user = userRepository.findByEmail(email);
+        Post post = postRepository.findById(postId).orElseThrow(()-> new IllegalArgumentException("해당 게시글이 없습니다."));
+        
+        // 글을 스크랩 했다면
+        if(scrapRepository.findByUserIdAndPostId(user, post) != null) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
     
-    // 스크랩 조회
+    // 사용자별 스크랩 조회 (마이페이지)
     public List<ScrapResponseDto> inquire(String email) {
         // 내가 스크랩한 게시글의 정보 담기
         User user = userRepository.findByEmail(email);
