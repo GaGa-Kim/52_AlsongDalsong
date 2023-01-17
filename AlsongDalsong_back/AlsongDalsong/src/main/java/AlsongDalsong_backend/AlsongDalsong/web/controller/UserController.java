@@ -94,7 +94,7 @@ public class UserController {
 
     // 회원 정보 수정
     @PutMapping("/api/user/updateInfo")
-    @ApiOperation(value = "회원 수정", notes = "회원 수정 API")
+    @ApiOperation(value = "회원 정보 수정", notes = "회원 정보 수정 API")
     public ResponseEntity<UserResponseDto> updateUser(@RequestBody UserUpdateRequestDto userUpdateRequestDto) {
         // 받아온 정보로 회원 정보 수정 및 프로필 저장
         User user = userService.updateUser(userUpdateRequestDto);
@@ -124,9 +124,9 @@ public class UserController {
         return ResponseEntity.ok().body(new UserResponseDto(user, profile));
     }
 
-    // 나의 구매 성향 (통계)
+    // 사용자별 구매 성향 (통계)
     @GetMapping("/api/user/propensity")
-    @ApiOperation(value = "나의 구매 성향", notes = "나의 구매 성향 API")
+    @ApiOperation(value = "사용자별 구매 성향", notes = "사용자별 구매 성향 API")
     @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com", required = true)
     public Map<String, Object> propensity(String email) {
         return userService.propensity(email);

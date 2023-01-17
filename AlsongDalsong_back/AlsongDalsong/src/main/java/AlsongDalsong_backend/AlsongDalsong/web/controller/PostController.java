@@ -52,12 +52,12 @@ public class PostController {
         return ResponseEntity.ok().body(postService.save(postSaveRequestDto, postSaveRequestVo.getPhotos()));
     }
 
-    // 게시글 조회
+    // 게시글 상세 조회
     @GetMapping("/api/post/inquire")
-    @ApiOperation(value = "게시글 조회", notes = "게시글 조회 API")
-    @ApiImplicitParam(name = "postId", value = "게시글 id", example = "1")
-    public ResponseEntity<PostResponseDto> inquire(Long postId) {
-        return ResponseEntity.ok().body(postService.inquire(postId));
+    @ApiOperation(value = "게시글 상세 조회", notes = "게시글 상세 조회 API")
+    @ApiImplicitParam(name = "id", value = "게시글 id", example = "1")
+    public ResponseEntity<PostResponseDto> inquire(Long id) {
+        return ResponseEntity.ok().body(postService.inquire(id));
     }
 
     // 게시글 수정
@@ -95,7 +95,7 @@ public class PostController {
 
     // 게시글 확정
     @PutMapping(value = "/api/post/updateDecision")
-    @ApiOperation(value = "게시글 확정", notes = "게시글 확정 API")
+    @ApiOperation(value = "게시글 확정", notes = "게시글 확정 API (미정/결정/취소)")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "게시글 id", example = "1"),
             @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com"),

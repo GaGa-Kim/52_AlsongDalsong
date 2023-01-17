@@ -23,21 +23,21 @@ public class VoteController {
     @Autowired
     private final VoteService voteService;
 
-    // 투표하기
+    // 게시글 투표하기
     @PostMapping("/api/vote/save")
-    @ApiOperation(value = "게시글 투표하기 (투표, 변경, 취소)", notes = "게시글 투표하기 API")
+    @ApiOperation(value = "게시글 투표하기", notes = "게시글 투표하기 API (투표, 변경, 취소)")
     public ResponseEntity<Boolean> vote(@RequestBody VoteRequestDto voteRequestDto) {
         return ResponseEntity.ok().body(voteService.vote(voteRequestDto));
     }
 
-    // 사용자에 따른 투표 조회
-    @PostMapping("/api/vote/inquire")
-    @ApiOperation(value = "투표 조회", notes = "투표 조회 API")
+    // 게시글에 따른 투표 여부 조회
+    @PostMapping("/api/vote/check")
+    @ApiOperation(value = "게시글에 따른 투표 여부 조회", notes = "게시글에 따른 투표 여부 조회 API")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "게시글 id", example = "1"),
+            @ApiImplicitParam(name = "postId", value = "게시글 id", example = "1"),
             @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com")
     })
-    public ResponseEntity<String> inquire(@RequestParam Long id, String email) {
-        return ResponseEntity.ok().body(voteService.inquire(id, email));
+    public ResponseEntity<String> check(@RequestParam Long postId, String email) {
+        return ResponseEntity.ok().body(voteService.check(postId, email));
     }
 }
