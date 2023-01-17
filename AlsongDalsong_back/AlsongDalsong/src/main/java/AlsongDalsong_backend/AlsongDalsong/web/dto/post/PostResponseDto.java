@@ -1,10 +1,10 @@
 package AlsongDalsong_backend.AlsongDalsong.web.dto.post;
 
+import AlsongDalsong_backend.AlsongDalsong.domain.Time;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -16,8 +16,8 @@ public class PostResponseDto {
     @ApiModelProperty(notes = "게시글 기본키", example = "1")
     private Long id;
 
-    @ApiModelProperty(notes = "생성 날짜 및 시간", example = "2023-01-15T16:34:30.388")
-    private LocalDateTime createdDateTime; // 생성 날짜 및 시간
+    @ApiModelProperty(notes = "생성 날짜 및 시간 추가", example = "3분 전")
+    private String createdDateTime; // 생성 날짜 및 시간 추가
 
     @ApiModelProperty(notes = "작성자 이메일", example = "1234@gmail.com")
     private String email; // 작성자 이메일
@@ -78,7 +78,7 @@ public class PostResponseDto {
 
     public PostResponseDto(Post post, List<Long> photoId, Long agree, Long disagree) {
         this.id = post.getId();
-        this.createdDateTime = post.getCreatedDateTime();
+        this.createdDateTime = Time.calculateTime(post.getCreatedDateTime());
         this.email = post.getUserId().getEmail();
         this.nickname = post.getUserId().getNickname();
         this.profile = post.getUserId().getProfile();

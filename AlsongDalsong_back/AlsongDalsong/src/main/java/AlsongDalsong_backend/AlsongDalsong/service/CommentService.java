@@ -44,7 +44,7 @@ public class CommentService {
         // 댓글 작성 시 + 1점
         user.updatePointAndSticker(user.getPoint() + 1, user.getSticker());
 
-        return commentRepository.findAllByPostId(post)
+        return commentRepository.findAllByPostIdOrderByLikeListDesc(post)
                 .stream()
                 .map(CommentResponseDto::new)
                 .collect(Collectors.toList());
@@ -55,7 +55,7 @@ public class CommentService {
     public List<CommentResponseDto> inquire(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(()-> new IllegalArgumentException("해당 게시글이 없습니다."));
 
-        return commentRepository.findAllByPostId(post)
+        return commentRepository.findAllByPostIdOrderByLikeListDesc(post)
                 .stream()
                 .map(CommentResponseDto::new)
                 .collect(Collectors.toList());
@@ -71,7 +71,7 @@ public class CommentService {
             comment.update(commentUpdateRequestDto.getContent());
             Post post = postRepository.findById(commentUpdateRequestDto.getPostId()).orElseThrow(()-> new IllegalArgumentException("해당 게시글이 없습니다."));
 
-            return commentRepository.findAllByPostId(post)
+            return commentRepository.findAllByPostIdOrderByLikeListDesc(post)
                     .stream()
                     .map(CommentResponseDto::new)
                     .collect(Collectors.toList());

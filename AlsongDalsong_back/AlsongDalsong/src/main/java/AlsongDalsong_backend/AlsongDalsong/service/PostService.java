@@ -141,7 +141,7 @@ public class PostService {
 
         // 게시글 작성자와 게시글 확정하는 자가 같을 경우에만 확정 가능
         // 이미 게시글을 확정했다면 변경할 수 없음
-        if((post.getUserId().getEmail().equals(email)) && (post.getDecision() == "미정")) {
+        if((post.getUserId().getEmail().equals(email)) && (post.getDecision().equals("미정"))) {
             post.setDecision(decision, reason);
             // 글 확정 시 + 5점
             post.getUserId().updatePointAndSticker(post.getUserId().getPoint() + 5, post.getUserId().getSticker());
@@ -152,6 +152,59 @@ public class PostService {
         else {
             throw new RuntimeException("게시글 확정에 실패했습니다.");
         }
+    }
+
+    // 살까 말까 / 할까 말까 / 갈까 말까로 분류별 최신글 조회
+    @Transactional(readOnly = true)
+    public List<PostResponseDto> inquireLatest(String todo) {
+        List<Post> postList = postRepository.findByTodo(todo);
+        List<PostResponseDto> postResponseDtoList = new ArrayList<>();
+
+        for (Post post: postList) {
+            postResponseDtoList.add(new PostResponseDto(post, findPostId(post.getId()), voteRepository.countByPostIdAndVote(post, true), voteRepository.countByPostIdAndVote(post, false)));
+        }
+
+        return postResponseDtoList;
+    }
+
+    // 분류별 인기글 조회 (결정이 된 글은 인기순에서 제외)
+    @Transactional(readOnly = true)
+    public List<PostResponseDto> inquirePopular(String todo) {
+        List<Post> postList = postRepository.findByTodoAndDecisionOrderByVoteListDesc(todo, "미정");
+        List<PostResponseDto> postResponseDtoList = new ArrayList<>();
+
+        for (Post post: postList) {
+            postResponseDtoList.add(new PostResponseDto(post, findPostId(post.getId()), voteRepository.countByPostIdAndVote(post, true), voteRepository.countByPostIdAndVote(post, false)));
+        }
+
+        return postResponseDtoList;
+    }
+
+    // 분류의 카테고리별 조회
+    @Transactional(readOnly = true)
+    public List<PostResponseDto> inquireCategory(String todo, String category) {
+        List<Post> postList = postRepository.findByTodoAndCategory(todo, category);
+        List<PostResponseDto> postResponseDtoList = new ArrayList<>();
+
+        for (Post post: postList) {
+            postResponseDtoList.add(new PostResponseDto(post, findPostId(post.getId()), voteRepository.countByPostIdAndVote(post, true), voteRepository.countByPostIdAndVote(post, false)));
+        }
+
+        return postResponseDtoList;
+    }
+
+    // 내가 쓴 글 조회
+    @Transactional(readOnly = true)
+    public List<PostResponseDto> my(String email) {
+        User user = userRepository.findByEmail(email);
+        List<Post> postList = postRepository.findByUserId(user);
+        List<PostResponseDto> postResponseDtoList = new ArrayList<>();
+
+        for (Post post: postList) {
+            postResponseDtoList.add(new PostResponseDto(post, findPostId(post.getId()), voteRepository.countByPostIdAndVote(post, true), voteRepository.countByPostIdAndVote(post, false)));
+        }
+
+        return postResponseDtoList;
     }
 
     // 게시글 별 사진 아이디 전체 조회

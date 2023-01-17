@@ -16,6 +16,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 /**
  * 게시글 컨트롤러
@@ -102,5 +104,40 @@ public class PostController {
     })
     public ResponseEntity<PostResponseDto> updateDecision(@RequestParam Long id, String email, String decision, String reason) {
         return ResponseEntity.ok().body(postService.updateDecision(id, email, decision, reason));
+    }
+
+
+    // 살까 말까 / 할까 말까 / 갈까 말까로 분류별 최신글 조회
+    @GetMapping("/api/post/inquireLatest")
+    @ApiOperation(value = "살까 말까 / 할까 말까 / 갈까 말까로 분류별 최신글 조회", notes = "살까 말까 / 할까 말까 / 갈까 말까로 분류별 최신글 조회 API")
+    @ApiImplicitParam(name = "todo", value = "분류", example = "살까 말까")
+    public ResponseEntity<List<PostResponseDto>> inquireLatest(String todo) {
+        return ResponseEntity.ok().body(postService.inquireLatest(todo));
+    }
+
+    // 살까 말까 / 할까 말까 / 갈까 말까로 분류별 인기글 조회
+    @GetMapping("/api/post/inquirePopular")
+    @ApiOperation(value = "살까 말까 / 할까 말까 / 갈까 말까로 분류별 인기글 조회", notes = "살까 말까 / 할까 말까 / 갈까 말까로 분류별 인기글 조회 API")
+    @ApiImplicitParam(name = "todo", value = "분류", example = "살까 말까")
+    public ResponseEntity<List<PostResponseDto>> inquirePopular(String todo) {
+        return ResponseEntity.ok().body(postService.inquirePopular(todo));
+    }
+
+    // 분류의 카테고리별 조회
+    @GetMapping("/api/post/inquireCategory")
+    @ApiOperation(value = "분류의 카테고리별 조회", notes = "분류의 카테고리별 조회 API")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "todo", value = "분류", example = "살까 말까"),
+            @ApiImplicitParam(name = "category", value = "카테고리", example = "패션")
+    })    public ResponseEntity<List<PostResponseDto>> inquireCategory(String todo, String category) {
+        return ResponseEntity.ok().body(postService.inquireCategory(todo, category));
+    }
+
+    // 사용자별 쓴 글 조회
+    @GetMapping("/api/post/my")
+    @ApiOperation(value = "사용자별 쓴 글 조회", notes = "사용자별 쓴 글 조회 API")
+    @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com")
+    public ResponseEntity<List<PostResponseDto>> my(String email) {
+        return ResponseEntity.ok().body(postService.my(email));
     }
 }

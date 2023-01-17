@@ -1,10 +1,9 @@
 package AlsongDalsong_backend.AlsongDalsong.web.dto.comment;
 
+import AlsongDalsong_backend.AlsongDalsong.domain.Time;
 import AlsongDalsong_backend.AlsongDalsong.domain.comment.Comment;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
 
 /**
  * 댓글 조회 dto
@@ -15,8 +14,8 @@ public class CommentResponseDto {
     @ApiModelProperty(notes = "댓글 기본키", example = "1")
     private Long id;
 
-    @ApiModelProperty(notes = "생성 날짜 및 시간", example = "2023-01-15T16:34:30.388")
-    private LocalDateTime createdDateTime; // 생성 날짜 및 시간
+    @ApiModelProperty(notes = "생성 날짜 및 시간 추가", example = "3분 전")
+    private String createdDateTime; // 생성 날짜 및 시간 추가
 
     @ApiModelProperty(notes = "댓글 작성자 이메일", example = "1234@gmail.com")
     private String email; // 작성자 이메일
@@ -38,7 +37,7 @@ public class CommentResponseDto {
 
     public CommentResponseDto(Comment comment) {
         this.id = comment.getId();
-        this.createdDateTime = comment.getCreatedDateTime();
+        this.createdDateTime = Time.calculateTime(comment.getCreatedDateTime());
         this.email = comment.getUserId().getEmail();
         this.nickname = comment.getUserId().getNickname();
         this.profile = comment.getUserId().getProfile();
