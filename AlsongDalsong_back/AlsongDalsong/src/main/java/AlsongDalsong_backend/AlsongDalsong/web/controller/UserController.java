@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Map;
+
 /**
  * 회원 컨트롤러
  */
@@ -120,6 +122,14 @@ public class UserController {
             profile = awsS3Service.getS3(user.getProfile());
         }
         return ResponseEntity.ok().body(new UserResponseDto(user, profile));
+    }
+
+    // 나의 구매 성향 (통계)
+    @GetMapping("/api/user/propensity")
+    @ApiOperation(value = "나의 구매 성향", notes = "나의 구매 성향 API")
+    @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com", required = true)
+    public Map<String, Object> propensity(String email) {
+        return userService.propensity(email);
     }
 
     // 회원 탈퇴

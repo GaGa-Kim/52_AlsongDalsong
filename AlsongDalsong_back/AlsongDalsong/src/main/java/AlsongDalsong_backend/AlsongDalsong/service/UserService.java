@@ -1,6 +1,7 @@
 package AlsongDalsong_backend.AlsongDalsong.service;
 
 import AlsongDalsong_backend.AlsongDalsong.config.jwt.JwtProperties;
+import AlsongDalsong_backend.AlsongDalsong.domain.post.PostRepository;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.TokenDto;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.UserRepository;
@@ -14,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 회원 서비스
@@ -24,6 +27,7 @@ public class UserService {
 
     @Autowired
     private final UserRepository userRepository;
+    private final PostRepository postRepository;
     private final AwsS3Service awsS3Service;
 
     /**
@@ -202,6 +206,27 @@ public class UserService {
         user.updateProfile(profile);
 
         return user;
+    }
+
+    // 나의 구매 성향 (통계)
+    @Transactional(readOnly = true)
+    public Map<String, Object> propensity(String email) {
+        User user = userRepository.findByEmail(email);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("살까 말까 미정", postRepository.countByUserIdAndTodoAndDecision(user, "살까 말까", "미정"));
+        map.put("살까 말까 결정", postRepository.countByUserIdAndTodoAndDecision(user, "살까 말까", "결정"));
+        map.put("살까 말까 취소", postRepository.countByUserIdAndTodoAndDecision(user, "살까 말까", "취소"));
+
+        map.put("할까 말까 미정", postRepository.countByUserIdAndTodoAndDecision(user, "할까 말까", "미정"));
+        map.put("할까 말까 결정", postRepository.countByUserIdAndTodoAndDecision(user, "할까 말까", "결정"));
+        map.put("할까 말까 취소", postRepository.countByUserIdAndTodoAndDecision(user, "할까 말까", "취소"));
+
+        map.put("갈까 말까 미정", postRepository.countByUserIdAndTodoAndDecision(user, "갈까 말까", "미정"));
+        map.put("갈까 말까 결정", postRepository.countByUserIdAndTodoAndDecision(user, "갈까 말까", "결정"));
+        map.put("갈까 말까 취소", postRepository.countByUserIdAndTodoAndDecision(user, "갈까 말까", "취소"));
+
+        return map;
     }
 
     // 회원 탈퇴
