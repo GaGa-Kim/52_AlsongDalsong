@@ -54,7 +54,7 @@ function Selectpage(props) {
                 <SButton
                     title="룰렛 PICK"
                     onClick={() => {
-                        navigate("/main-page");
+                        navigate("/wheel-page");
                     }}
                 />
                 </Stemplate>

@@ -11,7 +11,7 @@ import PostWritePage from './component/page/PostWritePage';
 import PostViewPage from './component/page/PostViewPage';
 import Intropage from "./component/page/Intropage";
 import Selectpage from "./component/page/Selectpage";
-
+import Roulettepage from "./component/page/Roulettepage";
 
 function App(props) {
     return (
@@ -22,6 +22,7 @@ function App(props) {
                 <Route path="main-page" element={<MainPage />} />
                 <Route path="post-write" element={<PostWritePage />} />
                 <Route path="post/:postId" element={<PostViewPage />} />
+                <Route path="wheel-page" element={<Roulettepage/>} />
             </Routes>
         </BrowserRouter>
     );
