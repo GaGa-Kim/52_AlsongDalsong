@@ -28,8 +28,8 @@ public class CommentService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
-    
-    // 댓글 저장
+
+    // 게시글에 댓글 작성
     @Transactional
     public List<CommentResponseDto> save(CommentSaveRequestDto commentSaveRequestDto) {
         User user = userRepository.findByEmail(commentSaveRequestDto.getEmail());
@@ -44,24 +44,24 @@ public class CommentService {
         // 댓글 작성 시 + 1점
         user.updatePointAndSticker(user.getPoint() + 1, user.getSticker());
 
-        return commentRepository.findAllByPostId(post)
+        return commentRepository.findAllByPostIdOrderByLikeListDesc(post)
                 .stream()
                 .map(CommentResponseDto::new)
                 .collect(Collectors.toList());
     }
-    
-    // 댓글 조회
+
+    // 게시글별 댓글 조회
     @Transactional(readOnly = true)
     public List<CommentResponseDto> inquire(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(()-> new IllegalArgumentException("해당 게시글이 없습니다."));
 
-        return commentRepository.findAllByPostId(post)
+        return commentRepository.findAllByPostIdOrderByLikeListDesc(post)
                 .stream()
                 .map(CommentResponseDto::new)
                 .collect(Collectors.toList());
     }
-    
-    // 댓글 수정
+
+    // 게시글의 댓글 수정
     @Transactional
     public List<CommentResponseDto> update(CommentUpdateRequestDto commentUpdateRequestDto) {
         Comment comment = commentRepository.findById(commentUpdateRequestDto.getId()).orElseThrow(()-> new IllegalArgumentException("해당 댓글이 없습니다."));
@@ -71,7 +71,7 @@ public class CommentService {
             comment.update(commentUpdateRequestDto.getContent());
             Post post = postRepository.findById(commentUpdateRequestDto.getPostId()).orElseThrow(()-> new IllegalArgumentException("해당 게시글이 없습니다."));
 
-            return commentRepository.findAllByPostId(post)
+            return commentRepository.findAllByPostIdOrderByLikeListDesc(post)
                     .stream()
                     .map(CommentResponseDto::new)
                     .collect(Collectors.toList());
@@ -80,8 +80,8 @@ public class CommentService {
             throw new RuntimeException("댓글 수정에 실패했습니다.");
         }
     }
-    
-    // 댓글 삭제
+
+    // 게시글의 댓글 삭제
     @Transactional
     public Boolean delete(Long id, String email) {
         Comment comment = commentRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("해당 댓글이 없습니다."));

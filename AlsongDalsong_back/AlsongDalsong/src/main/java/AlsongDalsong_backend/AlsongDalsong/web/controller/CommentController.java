@@ -27,31 +27,31 @@ public class CommentController {
     @Autowired
     private final CommentService commentService;
     
-    // 댓글 저장
+    // 게시글에 댓글 작성
     @PostMapping("/api/comment/save")
-    @ApiOperation(value = "댓글 작성", notes = "댓글 작성 API")
+    @ApiOperation(value = "게시글에 댓글 작성", notes = "게시글에 댓글 작성 API")
     public ResponseEntity<List<CommentResponseDto>> save(@RequestBody CommentSaveRequestDto commentSaveRequestDto) {
         return ResponseEntity.ok().body(commentService.save(commentSaveRequestDto));
     }
 
-    // 댓글 조회
+    // 게시글별 댓글 조회
     @GetMapping("/api/comment/inquire")
-    @ApiOperation(value = "댓글 조회", notes = "댓글 조회 API")
+    @ApiOperation(value = "게시글별 댓글 조회", notes = "게시글별 댓글 조회 API")
     @ApiImplicitParam(name = "postId", value = "게시글 id", example = "1")
     public ResponseEntity<List<CommentResponseDto>> inquire(@RequestParam Long postId) {
         return ResponseEntity.ok().body(commentService.inquire(postId));
     }
 
-    // 댓글 수정
+    // 게시글의 댓글 수정
     @PutMapping("/api/comment/update")
-    @ApiOperation(value = "댓글 수정", notes = "댓글 수정 API")
+    @ApiOperation(value = "게시글의 댓글 수정", notes = "게시글의 댓글 수정 API")
     public ResponseEntity<List<CommentResponseDto>> update(@RequestBody CommentUpdateRequestDto commentUpdateRequestDto) {
         return ResponseEntity.ok().body(commentService.update(commentUpdateRequestDto));
     }
 
-    // 댓글 삭제
+    // 게시글의 댓글 삭제
     @DeleteMapping("/api/comment/delete")
-    @ApiOperation(value = "댓글 삭제", notes = "댓글 삭제 API")
+    @ApiOperation(value = "게시글의 댓글 삭제", notes = "게시글의 댓글 삭제 API")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "댓글 id", example = "1"),
             @ApiImplicitParam(name = "email", value = "댓글 작성자 이메일", example = "1234@gmail.com"),

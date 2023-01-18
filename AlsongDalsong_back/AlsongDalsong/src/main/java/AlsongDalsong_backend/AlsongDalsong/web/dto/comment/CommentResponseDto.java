@@ -1,10 +1,9 @@
 package AlsongDalsong_backend.AlsongDalsong.web.dto.comment;
 
+import AlsongDalsong_backend.AlsongDalsong.domain.Time;
 import AlsongDalsong_backend.AlsongDalsong.domain.comment.Comment;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
 
 /**
  * 댓글 조회 dto
@@ -15,17 +14,17 @@ public class CommentResponseDto {
     @ApiModelProperty(notes = "댓글 기본키", example = "1")
     private Long id;
 
-    @ApiModelProperty(notes = "생성 날짜 및 시간", example = "2023-01-15T16:34:30.388")
-    private LocalDateTime createdDateTime; // 생성 날짜 및 시간
+    @ApiModelProperty(notes = "생성 날짜 및 시간", example = "3분 전")
+    private String createdDateTime; // 생성 날짜 및 시간
 
     @ApiModelProperty(notes = "댓글 작성자 이메일", example = "1234@gmail.com")
-    private String email; // 작성자 이메일
+    private String email; // 댓글 작성자 이메일
 
     @ApiModelProperty(notes = "댓글 작성자 닉네임", example = "가경")
-    private String nickname; // 작성자 닉네임
+    private String nickname; // 댓글 작성자 닉네임
 
     @ApiModelProperty(notes = "댓글 작성자 프로필 사진", example = "http")
-    private String profile; // 프로필 사진
+    private String profile; // 댓글 작성자 프로필 사진
 
     @ApiModelProperty(notes = "게시글 기본키", example = "1")
     private Long postId; // 게시글 기본키
@@ -38,7 +37,7 @@ public class CommentResponseDto {
 
     public CommentResponseDto(Comment comment) {
         this.id = comment.getId();
-        this.createdDateTime = comment.getCreatedDateTime();
+        this.createdDateTime = Time.calculateTime(comment.getCreatedDateTime());
         this.email = comment.getUserId().getEmail();
         this.nickname = comment.getUserId().getNickname();
         this.profile = comment.getUserId().getProfile();

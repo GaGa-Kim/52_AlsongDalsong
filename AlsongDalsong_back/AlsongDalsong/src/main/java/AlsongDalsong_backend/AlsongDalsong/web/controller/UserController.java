@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Map;
+
 /**
  * 회원 컨트롤러
  */
@@ -92,7 +94,7 @@ public class UserController {
 
     // 회원 정보 수정
     @PutMapping("/api/user/updateInfo")
-    @ApiOperation(value = "회원 수정", notes = "회원 수정 API")
+    @ApiOperation(value = "회원 정보 수정", notes = "회원 정보 수정 API")
     public ResponseEntity<UserResponseDto> updateUser(@RequestBody UserUpdateRequestDto userUpdateRequestDto) {
         // 받아온 정보로 회원 정보 수정 및 프로필 저장
         User user = userService.updateUser(userUpdateRequestDto);
@@ -120,6 +122,14 @@ public class UserController {
             profile = awsS3Service.getS3(user.getProfile());
         }
         return ResponseEntity.ok().body(new UserResponseDto(user, profile));
+    }
+
+    // 사용자별 구매 성향 (통계)
+    @GetMapping("/api/user/propensity")
+    @ApiOperation(value = "사용자별 구매 성향", notes = "사용자별 구매 성향 API")
+    @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com", required = true)
+    public Map<String, Object> propensity(String email) {
+        return userService.propensity(email);
     }
 
     // 회원 탈퇴

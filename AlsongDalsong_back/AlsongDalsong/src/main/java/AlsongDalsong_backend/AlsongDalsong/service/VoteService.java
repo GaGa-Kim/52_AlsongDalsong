@@ -1,6 +1,5 @@
 package AlsongDalsong_backend.AlsongDalsong.service;
 
-import AlsongDalsong_backend.AlsongDalsong.domain.comment.Comment;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.PostRepository;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
@@ -25,14 +24,13 @@ public class VoteService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     
-    // 투표하기
+    // 게시글 투표하기
     @Transactional
     public Boolean vote(VoteRequestDto voteRequestDto) {
         User user = userRepository.findByEmail(voteRequestDto.getEmail());
         Post post = postRepository.findById(voteRequestDto.getPostId()).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
 
         // 한 번도 투표한 적 없다면 투표하기
-        // 이미 투표 되어있다면 좋아요 수정 불가능
         if (voteRepository.findByUserIdAndPostId(user, post) == null) {
             Vote vote = voteRequestDto.toEntity();
 
@@ -66,10 +64,10 @@ public class VoteService {
         }
     }
 
-    // 사용자에 따른 투표 조회
-    public String inquire(Long id, String email) {
+    // 게시글에 따른 투표 여부 조회
+    public String check(Long postId, String email) {
         User user = userRepository.findByEmail(email);
-        Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+        Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
 
         // 투표 했다면
         if(voteRepository.findByUserIdAndPostId(user, post) != null) {
