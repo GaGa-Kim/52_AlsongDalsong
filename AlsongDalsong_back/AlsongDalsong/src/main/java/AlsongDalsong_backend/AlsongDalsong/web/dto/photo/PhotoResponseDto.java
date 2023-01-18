@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 /**
- * 사진정보 dto
+ * 사진 정보 dto
  */
 @Getter
 public class PhotoResponseDto {

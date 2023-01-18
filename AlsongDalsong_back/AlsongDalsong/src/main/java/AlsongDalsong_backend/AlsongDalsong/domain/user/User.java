@@ -1,12 +1,8 @@
 package AlsongDalsong_backend.AlsongDalsong.domain.user;
 
 import AlsongDalsong_backend.AlsongDalsong.domain.BaseTimeEntity;
-import AlsongDalsong_backend.AlsongDalsong.domain.comment.Comment;
-import AlsongDalsong_backend.AlsongDalsong.domain.like.Like;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import AlsongDalsong_backend.AlsongDalsong.domain.scrap.Scrap;
-import AlsongDalsong_backend.AlsongDalsong.domain.sticker.Sticker;
-import AlsongDalsong_backend.AlsongDalsong.domain.vote.Vote;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -55,10 +51,10 @@ public class User extends BaseTimeEntity {
     private Integer point; // 포인트 적립
 
     @Column(nullable = false)
-    private Boolean withdraw; // 탈퇴 여부
+    private Integer sticker; // 스티커 갯수
 
-    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Sticker> stickerList = new ArrayList<>(); // 회원 스티커 리스트
+    @Column(nullable = false)
+    private Boolean withdraw; // 탈퇴 여부
 
     @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Scrap> scrapList = new ArrayList<>(); // 회원 게시글 스크랩 리스트
@@ -66,6 +62,7 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> postList = new ArrayList<>(); // 회원 게시글 리스트
 
+    /*
     @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> commentList = new ArrayList<>(); // 회원 댓글 리스트
 
@@ -74,9 +71,10 @@ public class User extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Vote> voteList = new ArrayList<>(); // 회원 게시글 투표 리스트
+    */
 
     @Builder
-    public User(Integer kakaoId, String name, String email, String nickname, String profile, String introduce, String role, Integer point, Boolean withdraw) {
+    public User(Integer kakaoId, String name, String email, String nickname, String profile, String introduce, String role, Integer point, Integer sticker, Boolean withdraw) {
         this.kakaoId = kakaoId;
         this.name = name;
         this.email = email;
@@ -85,6 +83,7 @@ public class User extends BaseTimeEntity {
         this.introduce = introduce;
         this.role = role;
         this.point = point;
+        this.sticker = sticker;
         this.withdraw = withdraw;
     }
     
@@ -95,16 +94,18 @@ public class User extends BaseTimeEntity {
         return this;
     }
 
+    // 회원 프로필 사진 수정
     public User updateProfile(String profile) {
         this.profile = profile;
         return this;
     }
     
     // 회원 포인트 적립 수정
-    public void updatePoint(Integer point) {
-        this.point = point + 1;
+    public void updatePointAndSticker(Integer point, Integer sticker) {
+        this.point = point;
         if (this.point >= 100) {
-            this.point = 0;
+            this.point = point % 100;
+            this.sticker = sticker + 1;
         }
     }
 
@@ -112,14 +113,6 @@ public class User extends BaseTimeEntity {
     public void setWithdraw() {
         this.withdraw = true;
         this.nickname = "탈퇴한 회원";
-    }
-
-    // 스티커 연관관계 메소드
-    public void addStickerList(Sticker sticker) {
-        this.stickerList.add(sticker);
-        if(sticker.getUserId() != this) {
-            sticker.setUser(this);
-        }
     }
 
     // 스크랩 연관관계 메소드
@@ -138,7 +131,7 @@ public class User extends BaseTimeEntity {
         }
     }
 
-    // 댓글 연관관계 메소드
+    /* 댓글 연관관계 메소드
     public void addCommentList(Comment comment) {
         this.commentList.add(comment);
         if(comment.getUserId() != this) {
@@ -161,4 +154,6 @@ public class User extends BaseTimeEntity {
             vote.setUser(this);
         }
     }
+     */
 }
+

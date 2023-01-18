@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * 회원가입 dto
+ * 회원 가입 dto
  */
 @Getter
 @NoArgsConstructor
@@ -47,8 +47,8 @@ public class UserSaveRequestDto {
                 .introduce(introduce)
                 .role("ROLE_USER")
                 .point(0)
+                .sticker(0)
                 .withdraw(false)
                 .build();
     }
-
 }
