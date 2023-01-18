@@ -1,11 +1,18 @@
 import alsong from "../ui/alsong.png";
 import './Drop.css';
-
+import Button from "../ui/Dropbutton";
+import { useNavigate } from "react-router-dom";
 import React, {useState, useEffect, useRef} from 'react';
 
 function Drop() {
 
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const navigateHome = () => {
+    // 👇️ navigate to /
+    navigate('/');
+  };
 
   let menuRef = useRef();
 
@@ -34,27 +41,30 @@ function Drop() {
         </div>
 
         <div className={`dropdown-menu ${open? 'active' : 'inactive'}`} >
-          <ul>
-            <DropdownItem  text = {"My Profile"}/>
-            <DropdownItem  text = {"Edit Profile"}/>
-            <DropdownItem text = {"Inbox"}/>
-            <DropdownItem  text = {"Settings"}/>
-            <DropdownItem text = {"Helps"}/>
-            <DropdownItem  text = {"Logout"}/>
-          </ul>
+        <ul>
+          <Button  title="살까 말까"
+                     onClick={navigateHome}
+                     />
+              
+                   <Button   title="갈까 말까"
+                       onClick={navigateHome}
+                />
+                   <Button   title="할까 말까"            
+                    onClick={navigateHome}
+                />
+                   <Button   title="룰렛 돌리기"           
+                     onClick={navigateHome}
+                />
+                   <Button   title="MY PAGE"            
+                   onClick={navigateHome}
+                />
+                </ul>
         </div>
       </div>
     </div>
   );
 }
 
-function DropdownItem(props){
-  return(
-    <li className = 'dropdownItem'>
-      <img src={props.img}></img>
-      <a> {props.text} </a>
-    </li>
-  );
-}
+
 
 export default Drop;
