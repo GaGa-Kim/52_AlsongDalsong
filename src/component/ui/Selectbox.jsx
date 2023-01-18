@@ -10,13 +10,14 @@ border : 5px solid;
 border-radius: 50px;
 border-color:#FFCAC5 #790F05 #790F05 #FFCAC5;
 
+
 width: 280.35px;
 height: 280.35px;
 margin-left: 13%;
 color: #940F00;
 background-color: white;
-margin-bottom:11%;
-margin-top:4%;
+margin-bottom:1%;
+margin-top:15%;
 
 `;
 
