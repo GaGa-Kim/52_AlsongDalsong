@@ -20,6 +20,7 @@ import java.util.List;
 @ToString
 @Getter
 @NoArgsConstructor
+@Table(name = "comments")
 public class Comment extends BaseTimeEntity {
 
     @Id
