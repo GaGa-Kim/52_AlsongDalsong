@@ -49,7 +49,7 @@ public class LikeService {
             
             // 좋아요 취소 시 + 1점
             user.updatePointAndSticker(user.getPoint() - 1, user.getSticker());
-            return true;
+            return false;
         }
         else {
             throw new RuntimeException("댓글 좋아요에 실패했습니다.");

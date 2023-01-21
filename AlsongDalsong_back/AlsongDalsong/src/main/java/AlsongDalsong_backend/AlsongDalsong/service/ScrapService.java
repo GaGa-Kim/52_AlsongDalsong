@@ -49,7 +49,7 @@ public class ScrapService {
         else if (scrapRepository.findByUserIdAndPostId(user, post) != null) {
             scrapRepository.delete(scrapRepository.findByUserIdAndPostId(user, post));
 
-            return true;
+            return false;
         }
         else {
             throw new RuntimeException("스크랩에 실패했습니다.");

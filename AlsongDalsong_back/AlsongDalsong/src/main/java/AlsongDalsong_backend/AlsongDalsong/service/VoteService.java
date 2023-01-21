@@ -26,7 +26,7 @@ public class VoteService {
     
     // 게시글 투표하기
     @Transactional
-    public Boolean vote(VoteRequestDto voteRequestDto) {
+    public String vote(VoteRequestDto voteRequestDto) {
         User user = userRepository.findByEmail(voteRequestDto.getEmail());
         Post post = postRepository.findById(voteRequestDto.getPostId()).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
 
@@ -42,7 +42,7 @@ public class VoteService {
             // 글 투표 시 + 1점
             user.updatePointAndSticker(user.getPoint() + 1, user.getSticker());
 
-            return true;
+            return voteRequestDto.getVote().toString();
         }
         else if (voteRepository.findByUserIdAndPostId(user, post) != null) {
             Vote vote = voteRepository.findByUserIdAndPostId(user, post);
@@ -52,12 +52,13 @@ public class VoteService {
                 // 글 투표 취소시 - 1점
                 user.updatePointAndSticker(user.getPoint() - 1, user.getSticker());
                 voteRepository.delete(vote);
+                return "투표하지 않았습니다.";
             }
             // 반대로 투표 변경하기
             else {
                 vote.update(voteRequestDto.getVote());
+                return voteRequestDto.getVote().toString();
             }
-            return true;
         }
         else {
             throw new RuntimeException("투표에 실패했습니다.");

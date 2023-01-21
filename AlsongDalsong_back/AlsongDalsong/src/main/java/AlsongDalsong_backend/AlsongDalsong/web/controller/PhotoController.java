@@ -36,7 +36,7 @@ public class PhotoController {
 
     // 사진 id로 이미지 정보 조회
     @GetMapping("/api/photo/photoInfo")
-    @ApiOperation(value = "사진 id로 이미지 정보 조회", notes = "사진 id로 이미지 정보 조회 API")
+    @ApiOperation(value = "사진 id로 이미지 정보 조회", notes = "사진 id로 이미지 정보를 조회하여 리턴합니다.")
     @ApiImplicitParam(name = "id", value = "사진 id", example = "1")
     public ResponseEntity<PhotoResponseDto> findById(@RequestParam Long id) {
         return ResponseEntity.ok().body(photoService.findByPhotoId(id));
@@ -44,7 +44,7 @@ public class PhotoController {
 
     // 사진 id로 이미지 URL 정보 조회
     @GetMapping("/api/photo/photoURL")
-    @ApiOperation(value = "사진 id로 이미지 URL 정보 조회", notes = "사진 id로 이미지 URL 정보 조회 API")
+    @ApiOperation(value = "사진 id로 이미지 URL 정보 조회", notes = "사진 id로 이미지 URL 정보를 조회하여 리턴합니다.")
     @ApiImplicitParam(name = "id", value = "사진 id", example = "1")
     public ResponseEntity<String> getS3(@RequestParam Long id) {
         Photo photo = photoRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("해당 사진이 없습니다."));
@@ -53,7 +53,7 @@ public class PhotoController {
 
     // 사진 id로 이미지 다운로드
     @GetMapping("/api/photo/photoDownload")
-    @ApiOperation(value = "사진 id로 이미지 다운로드", notes = "사진 id로 이미지 다운로드 API")
+    @ApiOperation(value = "사진 id로 이미지 다운로드", notes = "사진 id로 이미지를 다운로드하여 리턴합니다.")
     @ApiImplicitParam(name = "id", value = "사진 id", example = "1")
     public ResponseEntity<byte[]> downloadFiles(@RequestParam Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
         Photo photo = photoRepository.findById(id).orElse(null);
