@@ -36,7 +36,7 @@ public class UserController {
     /**
     // 카카오 회원가입과 로그인
     @GetMapping("/auth/kakao")
-    @ApiOperation(value = "카카오 회원가입과 로그인", notes = "카카오 회원가입과 로그인 API")
+    @ApiOperation(value = "카카오 회원가입과 로그인", notes = "카카오 회원가입과 로그인을 한 후, jwt 토큰과 사용자 이메일을 리턴합니다.")
     @ApiImplicitParam(name = "code", value = "인가코드", example = "12345", required = true)
     public ResponseEntity<String> getKakaoLogin(@RequestParam("code") String code) {
         // 인가코드로 카카오 액세스 토큰 발급하기
@@ -53,7 +53,7 @@ public class UserController {
 
     // 일반 회원가입
     @PostMapping("/auth/signup")
-    @ApiOperation(value = "일반 회원가입", notes = "일반 회원가입 API")
+    @ApiOperation(value = "일반 회원가입", notes = "일반 회원가입을 한 후, 가입된 사용자 정보를 리턴합니다.")
     public ResponseEntity<UserResponseDto> signup(@RequestBody UserSaveRequestDto userSaveRequestDto) {
         // 받아온 정보로 회원가입
         return ResponseEntity.ok().body(userService.signup(userSaveRequestDto));
@@ -61,7 +61,7 @@ public class UserController {
 
     // 일반 로그인
     @GetMapping("/auth/login")
-    @ApiOperation(value = "일반 로그인", notes = "일반 로그인 API")
+    @ApiOperation(value = "일반 로그인", notes = "일반 로그인을 한 후, jwt 토큰과 사용자 이메일을 리턴합니다.")
     @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com", required = true)
     public ResponseEntity<String> getLogin(@RequestParam String email) {
 
@@ -76,7 +76,7 @@ public class UserController {
 
     // 회원 정보
     @GetMapping("/api/user/me")
-    @ApiOperation(value = "회원 정보", notes = "회원 정보 API")
+    @ApiOperation(value = "회원 정보", notes = "회원 정보를 리턴합니다.")
     @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com", required = true)
     public ResponseEntity<UserResponseDto> getUser(@RequestParam("email") String email) {
         // 받아온 정보로 회원 정보 조회
@@ -94,7 +94,7 @@ public class UserController {
 
     // 회원 정보 수정
     @PutMapping("/api/user/updateInfo")
-    @ApiOperation(value = "회원 정보 수정", notes = "회원 정보 수정 API")
+    @ApiOperation(value = "회원 정보 수정", notes = "회원 정보 수정를 수정한 후, 수정된 회원 정보를 리턴합니다.")
     public ResponseEntity<UserResponseDto> updateUser(@RequestBody UserUpdateRequestDto userUpdateRequestDto) {
         // 받아온 정보로 회원 정보 수정 및 프로필 저장
         User user = userService.updateUser(userUpdateRequestDto);
@@ -110,7 +110,7 @@ public class UserController {
 
     // 회원 프로필 사진 수정
     @PutMapping(value = "/api/user/updateProfile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @ApiOperation(value = "회원 프로필 사진 수정", notes = "회원 프로필 사진 수정 API")
+    @ApiOperation(value = "회원 프로필 사진 수정", notes = "회원 프로필 사진을 수정한 후 수정된 회원 정보를 리턴합니다.")
     public ResponseEntity<UserResponseDto> updateProfile(@RequestParam String email, @RequestPart MultipartFile multipartFile) {
         // 받아온 정보로 회원 정보 수정 및 프로필 저장
         User user = userService.updateProfile(email, multipartFile);
@@ -126,7 +126,7 @@ public class UserController {
 
     // 사용자별 구매 성향 (통계)
     @GetMapping("/api/user/propensity")
-    @ApiOperation(value = "사용자별 구매 성향", notes = "사용자별 구매 성향 API")
+    @ApiOperation(value = "사용자별 구매 성향", notes = "사용자별 구매 성향을 리턴합니다. (살까 말까 미정/결정/취소, 할까 말까 미정/결정/취소, 갈까 말까 미정/결정/취소 갯수)")
     @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com", required = true)
     public Map<String, Object> propensity(String email) {
         return userService.propensity(email);
@@ -134,7 +134,7 @@ public class UserController {
 
     // 회원 탈퇴
     @PostMapping("/api/user/withdraw")
-    @ApiOperation(value = "회원 탈퇴", notes = "회원 탈퇴 API")
+    @ApiOperation(value = "회원 탈퇴", notes = "회원 탈퇴를 한 후, true를 리턴합니다.")
     @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com", required = true)
     public ResponseEntity<Boolean> withdrawUser(@RequestParam String email) {
         return ResponseEntity.ok().body(userService.withdrawUser(email));
