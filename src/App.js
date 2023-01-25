@@ -19,7 +19,7 @@ function App(props) {
         <BrowserRouter>
             <Routes>
                 <Route index element={<Intropage />} />
-                <Route path="select-page" element={<Selectpage />} />
+                <Route path="auth/select-page" element={<Selectpage />} />
                 <Route path="main-page" element={<MainPage />} />
                 <Route path="post-write" element={<PostWritePage />} />
                 <Route path="post/:postId" element={<PostViewPage />} />
