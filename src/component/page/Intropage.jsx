@@ -39,7 +39,7 @@ function Intropage(props) {
                 <IButton
                     title="START"
                     onClick={() => {
-                        navigate("/select-page");
+                        navigate("/login");
                     }}
                 />
         </Template>
