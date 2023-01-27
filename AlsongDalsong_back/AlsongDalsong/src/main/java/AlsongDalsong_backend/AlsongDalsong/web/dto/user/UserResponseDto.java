@@ -14,7 +14,7 @@ public class UserResponseDto {
     private Long id; // 기본키
 
     @ApiModelProperty(notes = "카카오 아이디", example = "1234")
-    private Integer kakaoId; // 카카오 아이디
+    private Long kakaoId; // 카카오 아이디
 
     @ApiModelProperty(notes = "이름", example = "김가경")
     private String name; // 이름
@@ -56,5 +56,4 @@ public class UserResponseDto {
         this.sticker = user.getSticker();
         this.withdraw = user.getWithdraw();
     }
-
 }

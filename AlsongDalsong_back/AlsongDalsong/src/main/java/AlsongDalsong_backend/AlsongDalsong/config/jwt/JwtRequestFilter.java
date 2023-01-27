@@ -6,7 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -31,8 +31,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
 
-    @Autowired
-    private final UserRepository userRepository;
+    @Value("${jwt.secret}")
+    public String secret;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -45,9 +45,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             jwtToken = jwtHeader.substring(7);
             try {
                 // 토큰으로부터 얻은 인증 객체를 전역적으로 사용하도록 저장
-                username = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(jwtToken).getSubject();
+                username = JWT.require(Algorithm.HMAC512(secret)).build().verify(jwtToken).getSubject();
                 List<GrantedAuthority> roles = new ArrayList<>();
-                String role = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(jwtToken).getClaim("role").asString();
+                String role = JWT.require(Algorithm.HMAC512(secret)).build().verify(jwtToken).getClaim("role").asString();
                 roles.add(new SimpleGrantedAuthority(role));
 
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, null, roles);

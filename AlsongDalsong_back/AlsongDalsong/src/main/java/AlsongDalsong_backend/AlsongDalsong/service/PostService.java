@@ -12,7 +12,6 @@ import AlsongDalsong_backend.AlsongDalsong.web.dto.post.PostResponseDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.post.PostSaveRequestDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.post.PostUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -28,7 +27,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostService {
 
-    @Autowired
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final PhotoRepository photoRepository;

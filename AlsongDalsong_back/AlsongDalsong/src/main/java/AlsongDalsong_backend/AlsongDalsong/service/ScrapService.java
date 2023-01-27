@@ -1,6 +1,5 @@
 package AlsongDalsong_backend.AlsongDalsong.service;
 
-import AlsongDalsong_backend.AlsongDalsong.domain.comment.Comment;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.PostRepository;
 import AlsongDalsong_backend.AlsongDalsong.domain.scrap.Scrap;
@@ -10,7 +9,6 @@ import AlsongDalsong_backend.AlsongDalsong.domain.user.UserRepository;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.scrap.ScrapRequestDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.scrap.ScrapResponseDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,7 +22,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ScrapService {
 
-    @Autowired
     private final ScrapRepository scrapRepository;
     private final UserRepository userRepository;
     private final PostRepository postRepository;

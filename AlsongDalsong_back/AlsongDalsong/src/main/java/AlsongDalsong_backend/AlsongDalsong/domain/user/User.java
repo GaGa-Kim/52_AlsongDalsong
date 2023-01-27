@@ -28,7 +28,7 @@ public class User extends BaseTimeEntity {
     private Long id; // 기본키
 
     // @Column(nullable = false)
-    private Integer kakaoId; // 카카오 아이디
+    private Long kakaoId; // 카카오 아이디
 
     @Column(nullable = false)
     private String name; // 이름
@@ -74,7 +74,7 @@ public class User extends BaseTimeEntity {
     */
 
     @Builder
-    public User(Integer kakaoId, String name, String email, String nickname, String profile, String introduce, String role, Integer point, Integer sticker, Boolean withdraw) {
+    public User(Long kakaoId, String name, String email, String nickname, String profile, String introduce, String role, Integer point, Integer sticker, Boolean withdraw) {
         this.kakaoId = kakaoId;
         this.name = name;
         this.email = email;
@@ -86,7 +86,7 @@ public class User extends BaseTimeEntity {
         this.sticker = sticker;
         this.withdraw = withdraw;
     }
-    
+
     // 회원 정보 수정
     public User update(String nickname, String introduce) {
         this.nickname = nickname;
@@ -99,7 +99,7 @@ public class User extends BaseTimeEntity {
         this.profile = profile;
         return this;
     }
-    
+
     // 회원 포인트 적립 수정
     public void updatePointAndSticker(Integer point, Integer sticker) {
         this.point = point;
@@ -156,4 +156,3 @@ public class User extends BaseTimeEntity {
     }
      */
 }
-
