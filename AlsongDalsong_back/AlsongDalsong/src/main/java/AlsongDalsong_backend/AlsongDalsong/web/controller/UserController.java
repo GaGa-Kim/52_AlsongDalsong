@@ -1,5 +1,6 @@
 package AlsongDalsong_backend.AlsongDalsong.web.controller;
 
+import AlsongDalsong_backend.AlsongDalsong.domain.user.OauthToken;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import AlsongDalsong_backend.AlsongDalsong.service.AwsS3Service;
 import AlsongDalsong_backend.AlsongDalsong.service.UserService;
@@ -11,7 +12,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,14 +29,12 @@ import java.util.Map;
 @CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
-    @Autowired
     private final UserService userService;
     private final AwsS3Service awsS3Service;
 
-    /**
     // 카카오 회원가입과 로그인
     @GetMapping("/auth/kakao")
-    @ApiOperation(value = "카카오 회원가입과 로그인", notes = "카카오 회원가입과 로그인을 한 후, jwt 토큰과 사용자 이메일을 리턴합니다.")
+    @ApiOperation(value = "카카오 회원가입과 로그인", notes = "카카오 회원가입 또는 로그인을 한 후, jwt 토큰과 사용자 이메일을 리턴합니다.")
     @ApiImplicitParam(name = "code", value = "인가코드", example = "12345", required = true)
     public ResponseEntity<String> getKakaoLogin(@RequestParam("code") String code) {
         // 인가코드로 카카오 액세스 토큰 발급하기
@@ -49,7 +47,6 @@ public class UserController {
 
         return ResponseEntity.ok().headers(headers).body(tokenDto.getEmail());
     }
-    **/
 
     // 일반 회원가입
     @PostMapping("/auth/signup")

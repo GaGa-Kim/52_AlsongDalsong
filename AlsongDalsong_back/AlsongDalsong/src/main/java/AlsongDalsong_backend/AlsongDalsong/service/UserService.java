@@ -1,17 +1,23 @@
 package AlsongDalsong_backend.AlsongDalsong.service;
 
-import AlsongDalsong_backend.AlsongDalsong.config.jwt.JwtProperties;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.PostRepository;
-import AlsongDalsong_backend.AlsongDalsong.domain.user.TokenDto;
-import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
-import AlsongDalsong_backend.AlsongDalsong.domain.user.UserRepository;
+import AlsongDalsong_backend.AlsongDalsong.domain.user.*;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.user.*;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
@@ -25,12 +31,22 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserService {
 
-    @Autowired
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final AwsS3Service awsS3Service;
 
-    /**
+    @Value("${jwt.secret}")
+    public String secret;
+
+    @Value("${jwt.expiration_time}")
+    public int expiration_time;
+
+    @Value("${kakao.client_id}")
+    public String client_id;
+
+    @Value("${kakao.redirect_uri}")
+    public String redirect_uri;
+
     // 인가코드로 카카오 access_token 발급하기
     @Transactional
     public OauthToken getAccessToken(String code) {
@@ -44,10 +60,9 @@ public class UserService {
         // HttpBody 객체 생성
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
-        params.add("client_id", "{클라이언트 앱 키}");
-        params.add("redirect_uri", "{리다이렉트 uri}");
+        params.add("client_id", client_id);
+        params.add("redirect_uri", redirect_uri);
         params.add("code", code);
-        params.add("client_secret", "{시크릿 키}");
 
         // HttpEntity 객체 생성 후 HttpHeader와 HttpBody 정보 담기
         HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, headers);
@@ -68,8 +83,8 @@ public class UserService {
     }
 
     // 액세스 토큰으로 카카오 사용자 정보 가져오기
-     @Transactional
-     public KakaoProfile findProfile(String accessToken) {
+    @Transactional
+    public KakaoProfile findProfile(String accessToken) {
         // Http 통신을 위해 생성
         RestTemplate restTemplate = new RestTemplate();
 
@@ -97,8 +112,8 @@ public class UserService {
     }
 
     // 카카오 회원가입과 로그인
-     @Transactional
-     public TokenDto kakaoSignup(String access_token) {
+    @Transactional
+    public TokenDto kakaoSignup(String access_token) {
         KakaoProfile profile = findProfile(access_token);
 
         // 사용자의 카카오 이메일로 이미 가입한 회원이 아니라면, 카카오 정보를 가지고 회원가입과 로그인
@@ -109,24 +124,24 @@ public class UserService {
                     .name(profile.getKakao_account().getEmail().substring(0, profile.getKakao_account().getEmail().indexOf("@")))
                     .email(profile.getKakao_account().getEmail())
                     .nickname(profile.getKakao_account().getProfile().getNickname())
-                    .profileUrl(profile.getKakao_account().getProfile().getProfile_image_url())
+                    .profile(profile.getKakao_account().getProfile().getProfile_image_url())
                     .introduce("")
                     .role("ROLE_USER")
                     .point(0)
+                    .sticker(0)
                     .withdraw(false)
                     .build();
             userRepository.save(user);
         }
 
         // 탈퇴한 회원이 아닐 경우 토큰 발급
-         if (!user.getNickname().equals("탈퇴한 회원")) {
-             return createToken(user);
-         }
-         else {
-             throw new RuntimeException("로그인에 실패했습니다. 탈퇴한 회원입니다.");
-         }
-     }
-     **/
+        if (!user.getNickname().equals("탈퇴한 회원")) {
+            return createToken(user);
+        }
+        else {
+            throw new RuntimeException("로그인에 실패했습니다. 탈퇴한 회원입니다.");
+        }
+    }
 
     // 일반 회원가입
     @Transactional
@@ -159,10 +174,10 @@ public class UserService {
     public TokenDto createToken(User user) {
         String jwtToken = JWT.create()
                 .withSubject(user.getName())
-                .withExpiresAt(new Date(System.currentTimeMillis()+ JwtProperties.EXPIRATION_TIME))
+                .withExpiresAt(new Date(System.currentTimeMillis()+ expiration_time))
                 .withClaim("id", user.getId()) // 아이디로 사용자 식별
                 .withClaim("role", user.getRole())
-                .sign(Algorithm.HMAC512(JwtProperties.SECRET));
+                .sign(Algorithm.HMAC512(secret));
 
         return new TokenDto(jwtToken, user.getEmail());
     }
@@ -174,7 +189,7 @@ public class UserService {
         User user = userRepository.findByEmail(email);
         return user;
     }
-    
+
     // 회원 정보 수정
     @Transactional
     public User updateUser(UserUpdateRequestDto userUpdateRequestDto) {

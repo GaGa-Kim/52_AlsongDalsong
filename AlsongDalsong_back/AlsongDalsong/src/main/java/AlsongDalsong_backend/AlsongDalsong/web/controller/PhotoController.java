@@ -9,7 +9,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +28,6 @@ import java.io.IOException;
 @CrossOrigin(origins = "http://localhost:3000")
 public class PhotoController {
 
-    @Autowired
     private final PhotoRepository photoRepository;
     private final PhotoService photoService;
     private final AwsS3Service awsS3Service;

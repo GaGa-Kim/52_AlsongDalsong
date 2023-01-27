@@ -8,7 +8,6 @@ import AlsongDalsong_backend.AlsongDalsong.domain.vote.Vote;
 import AlsongDalsong_backend.AlsongDalsong.domain.vote.VoteRepository;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.vote.VoteRequestDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class VoteService {
 
-    @Autowired
     private final VoteRepository voteRepository;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
