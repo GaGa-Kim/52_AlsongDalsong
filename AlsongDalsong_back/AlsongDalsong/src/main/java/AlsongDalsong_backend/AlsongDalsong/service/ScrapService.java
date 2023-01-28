@@ -10,6 +10,7 @@ import AlsongDalsong_backend.AlsongDalsong.web.dto.scrap.ScrapRequestDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.scrap.ScrapResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,7 @@ public class ScrapService {
     private final PostRepository postRepository;
 
     // 스크랩
+    @Transactional
     public Boolean save(ScrapRequestDto scrapRequestDto) {
         User user = userRepository.findByEmail(scrapRequestDto.getEmail());
         Post post = postRepository.findById(scrapRequestDto.getPostId()).orElseThrow(()-> new IllegalArgumentException("해당 게시글이 없습니다."));
@@ -54,6 +56,7 @@ public class ScrapService {
     }
 
     // 게시글에 따른 스크랩 여부 조회
+    @Transactional(readOnly = true)
     public Boolean check(Long postId, String email) {
         User user = userRepository.findByEmail(email);
         Post post = postRepository.findById(postId).orElseThrow(()-> new IllegalArgumentException("해당 게시글이 없습니다."));
@@ -68,20 +71,17 @@ public class ScrapService {
     }
     
     // 사용자별 스크랩 조회 (마이페이지)
+    @Transactional(readOnly = true)
     public List<ScrapResponseDto> inquire(String email) {
         // 내가 스크랩한 게시글의 정보 담기
         User user = userRepository.findByEmail(email);
-        List<Scrap> scraps = scrapRepository.findAllByUserId(user);
-        List<Post> posts = new ArrayList<>();
-        
-        for (Scrap scrap: scraps) {
-            Post post = postRepository.findById(scrap.getPostId().getId()).orElseThrow(()-> new IllegalArgumentException("해당 게시글이 없습니다."));
-            posts.add(post);
+        List<Scrap> scrapList = scrapRepository.findByUserId(user);
+        List<ScrapResponseDto> scrapResponseDtoList = new ArrayList<>();
+
+        for (Scrap scrap: scrapList) {
+            scrapResponseDtoList.add(new ScrapResponseDto(postRepository.findById(scrap.getPostId().getId()).orElseThrow(()-> new IllegalArgumentException("해당 게시글이 없습니다."))));
         }
 
-        return posts
-                .stream()
-                .map(ScrapResponseDto::new)
-                .collect(Collectors.toList());
+        return scrapResponseDtoList;
     }
 }

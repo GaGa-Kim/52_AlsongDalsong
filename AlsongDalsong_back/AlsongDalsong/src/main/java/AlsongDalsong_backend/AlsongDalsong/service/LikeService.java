@@ -55,6 +55,7 @@ public class LikeService {
     }
 
     // 댓글에 따른 좋아요 여부 조회
+    @Transactional(readOnly = true)
     public Boolean check(Long id, String email) {
         User user = userRepository.findByEmail(email);
         Comment comment = commentRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("해당 댓글이 없습니다."));
