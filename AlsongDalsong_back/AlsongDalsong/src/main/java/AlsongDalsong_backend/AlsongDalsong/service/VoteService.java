@@ -64,6 +64,7 @@ public class VoteService {
     }
 
     // 게시글에 따른 투표 여부 조회
+    @Transactional(readOnly = true)
     public String check(Long postId, String email) {
         User user = userRepository.findByEmail(email);
         Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));

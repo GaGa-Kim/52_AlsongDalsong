@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface ScrapRepository extends JpaRepository<Scrap, Long> {
     Scrap findByUserIdAndPostId(User user, Post post);
-    List<Scrap> findAllByUserId(User user);
+    List<Scrap> findByUserId(User user);
 }

@@ -19,13 +19,18 @@ public class ScrapResponseDto {
     @ApiModelProperty(notes = "무엇을", example = "신발")
     private String what; // 무엇을
 
-    @ApiModelProperty(notes = "게시글 첫 번째 사진 id (썸네일 사진 id)", example = "1")
+    @ApiModelProperty(notes = "게시글 첫 번째 사진 id (썸네일 사진 id), 사진이 없다면 0", example = "1")
     private Long photoId; // 썸네일 사진 id
 
     public ScrapResponseDto(Post post) {
         this.id = post.getId();
         this.todo = post.getTodo();
         this.what = post.getWhat();
-        this.photoId = post.getPhotoList().get(0).getId();
+        if(post.getPhotoList().size() == 0) {
+            this.photoId = 0L;
+        }
+        else {
+            this.photoId = post.getPhotoList().get(0).getId();
+        }
     }
 }
