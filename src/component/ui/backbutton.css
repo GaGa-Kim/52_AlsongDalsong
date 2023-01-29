@@ -1,0 +1,29 @@
+.styledbutton{
+    display: flex;
+    height: 40px;
+    padding: 0;
+    background: #F9F9F9;
+    border: none;
+    outline: none;
+    border-color:#F9F9F9;
+    border-radius: 30px;
+    overflow: hidden;
+    font-size: 16px;
+    font-weight: 100;
+    cursor: pointer;
+}
+.styledbutton:hover,
+.styledbutton:active {
+    background: #F0355B;
+}
+
+.button__icon{
+    display: inline-flex;
+    align-items: center;
+    padding-left: 10px;
+    color: black;
+    height: 100%;
+    font-size: 1.1em;
+    background: rgba(0,0,0,0);
+   
+}
