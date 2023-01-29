@@ -23,9 +23,6 @@ public class CommentResponseDto {
     @ApiModelProperty(notes = "댓글 작성자 닉네임", example = "가경")
     private String nickname; // 댓글 작성자 닉네임
 
-    @ApiModelProperty(notes = "댓글 작성자 프로필 사진", example = "http")
-    private String profile; // 댓글 작성자 프로필 사진
-
     @ApiModelProperty(notes = "게시글 기본키", example = "1")
     private Long postId; // 게시글 기본키
 
@@ -40,7 +37,6 @@ public class CommentResponseDto {
         this.createdDateTime = Time.calculateTime(comment.getCreatedDateTime());
         this.email = comment.getUserId().getEmail();
         this.nickname = comment.getUserId().getNickname();
-        this.profile = comment.getUserId().getProfile();
         this.postId = comment.getPostId().getId();
         this.content = comment.getContent();
         this.like = comment.getLikeList().size();

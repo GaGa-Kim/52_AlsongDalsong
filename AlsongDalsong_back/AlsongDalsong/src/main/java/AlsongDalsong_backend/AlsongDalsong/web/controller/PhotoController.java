@@ -51,7 +51,7 @@ public class PhotoController {
 
     // 사진 id로 이미지 다운로드
     @GetMapping("/api/photo/photoDownload")
-    @ApiOperation(value = "사진 id로 이미지 다운로드", notes = "사진 id로 이미지를 다운로드하여 리턴합니다.")
+    @ApiOperation(value = "사진 id로 이미지 다운로드", notes = "사진 id로 이미지를 bytearray로 리턴합니다.")
     @ApiImplicitParam(name = "id", value = "사진 id", example = "1")
     public ResponseEntity<byte[]> downloadFiles(@RequestParam Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
         Photo photo = photoRepository.findById(id).orElse(null);

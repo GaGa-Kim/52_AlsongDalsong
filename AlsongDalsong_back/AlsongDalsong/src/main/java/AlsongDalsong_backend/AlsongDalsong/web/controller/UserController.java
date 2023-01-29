@@ -1,5 +1,6 @@
 package AlsongDalsong_backend.AlsongDalsong.web.controller;
 
+import AlsongDalsong_backend.AlsongDalsong.domain.photo.Photo;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.OauthToken;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import AlsongDalsong_backend.AlsongDalsong.service.AwsS3Service;
@@ -18,6 +19,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -78,15 +82,15 @@ public class UserController {
     public ResponseEntity<UserResponseDto> getUser(@RequestParam("email") String email) {
         // 받아온 정보로 회원 정보 조회
         User user = userService.getUser(email);
-        String profile = null;
-        // 카카오에서 받아온 이미지일 경우에는 url 그대로 출력, 아닐 경우 사진이름으로 s3에서 url 받아오기
-        if(user.getProfile().startsWith("http")) {
-            profile = user.getProfile();
-        }
-        else{
-            profile = awsS3Service.getS3(user.getProfile());
-        }
-        return ResponseEntity.ok().body(new UserResponseDto(user, profile));
+        return ResponseEntity.ok().body(new UserResponseDto(user));
+    }
+
+    // 회원 프로필 사진 조회
+    @GetMapping("/api/user/profile")
+    @ApiOperation(value = "회원 프로필 사진 조회", notes = "회원 프로필 사진을 bytearray로 리턴합니다.")
+    @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com", required = true)
+    public ResponseEntity<byte[]> getProfile(@RequestParam("email") String email, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        return userService.getProfile(email);
     }
 
     // 회원 정보 수정
@@ -95,14 +99,7 @@ public class UserController {
     public ResponseEntity<UserResponseDto> updateUser(@RequestBody UserUpdateRequestDto userUpdateRequestDto) {
         // 받아온 정보로 회원 정보 수정 및 프로필 저장
         User user = userService.updateUser(userUpdateRequestDto);
-        String profile = null;
-        if(user.getProfile().startsWith("http")) {
-            profile = user.getProfile();
-        }
-        else{
-            profile = awsS3Service.getS3(user.getProfile());
-        }
-        return ResponseEntity.ok().body(new UserResponseDto(user, profile));
+        return ResponseEntity.ok().body(new UserResponseDto(user));
     }
 
     // 회원 프로필 사진 수정
@@ -111,14 +108,7 @@ public class UserController {
     public ResponseEntity<UserResponseDto> updateProfile(@RequestParam String email, @RequestPart MultipartFile multipartFile) {
         // 받아온 정보로 회원 정보 수정 및 프로필 저장
         User user = userService.updateProfile(email, multipartFile);
-        String profile = null;
-        if(user.getProfile().startsWith("http")) {
-            profile = user.getProfile();
-        }
-        else{
-            profile = awsS3Service.getS3(user.getProfile());
-        }
-        return ResponseEntity.ok().body(new UserResponseDto(user, profile));
+        return ResponseEntity.ok().body(new UserResponseDto(user));
     }
 
     // 사용자별 구매 성향 (통계)
