@@ -107,7 +107,7 @@ public class AwsS3Service {
         byte[] bytes = IOUtils.toByteArray(objectInputStream);
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        httpHeaders.setContentType(MediaType.IMAGE_PNG);
         httpHeaders.setContentLength(bytes.length);
         httpHeaders.setContentDispositionFormData("attachment", originPhotoName);
 

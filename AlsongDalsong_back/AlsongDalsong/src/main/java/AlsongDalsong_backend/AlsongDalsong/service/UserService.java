@@ -3,16 +3,17 @@ package AlsongDalsong_backend.AlsongDalsong.service;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.PostRepository;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.*;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.user.*;
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -20,6 +21,13 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -151,7 +159,7 @@ public class UserService {
             throw new RuntimeException("이미 가입되어 있는 유저입니다.");
         }
         User user = userRepository.save(userSaveRequestDto.toEntity());
-        return new UserResponseDto(user, user.getProfile());
+        return new UserResponseDto(user);
     }
 
     // 일반 로그인
@@ -188,6 +196,24 @@ public class UserService {
         // 이메일로 회원 정보 가져오기
         User user = userRepository.findByEmail(email);
         return user;
+    }
+
+    // 회원 프로필 사진
+    @Transactional(readOnly = true)
+    public ResponseEntity<byte[]> getProfile(String email) throws IOException {
+        User user = userRepository.findByEmail(email);
+
+        URL url = new URL(user.getProfile());
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        InputStream inputStream = urlConnection.getInputStream();
+        byte[] bytes = IOUtils.toByteArray(inputStream);
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.IMAGE_PNG);
+        httpHeaders.setContentLength(bytes.length);
+        httpHeaders.setContentDispositionFormData("attachment", "profile");
+
+        return new ResponseEntity<>(bytes, httpHeaders, HttpStatus.OK);
     }
 
     // 회원 정보 수정

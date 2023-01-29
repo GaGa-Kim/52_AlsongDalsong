@@ -25,9 +25,6 @@ public class PostResponseDto {
     @ApiModelProperty(notes = "작성자 닉네임", example = "가경")
     private String nickname; // 작성자 닉네임
 
-    @ApiModelProperty(notes = "작성자 프로필 사진", example = "http")
-    private String profile; // 프로필 사진
-
     @ApiModelProperty(notes = "분류", example = "살까 말까")
     private String todo; // 분류
 
@@ -81,7 +78,6 @@ public class PostResponseDto {
         this.createdDateTime = Time.calculateTime(post.getCreatedDateTime());
         this.email = post.getUserId().getEmail();
         this.nickname = post.getUserId().getNickname();
-        this.profile = post.getUserId().getProfile();
         this.todo = post.getTodo();
         this.category = post.getCategory();
         this.who = post.getWho();
