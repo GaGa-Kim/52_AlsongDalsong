@@ -1,0 +1,87 @@
+.box {
+    width: 150px;
+    height: 150px; 
+    border-radius: 70%;
+    overflow: hidden;
+    background-color: #BDBDBD;
+    margin: 0 auto; /* 페이지 중앙에 나타나도록 설정 */
+    margin-top: 300px;
+}
+
+.profile {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.name {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 24px;
+    text-align: center;
+    
+    color: #000000;
+
+    margin: 0 auto; /* 페이지 중앙에 나타나도록 설정 */
+    margin-top: 20px;
+}
+
+.introduce {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 24px;
+    /* or 185% */
+    
+    letter-spacing: 0.1px;
+    
+    color: #000000;
+
+    margin: 0 auto; /* 페이지 중앙에 나타나도록 설정 */
+    margin-top: 10px;
+}
+
+.title {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 15px;
+    /* or 185% */
+    
+    letter-spacing: 0.1px;
+    
+    color: #FA0050;
+
+    margin: 0 auto; /* 페이지 중앙에 나타나도록 설정 */
+    margin-left: 30px;
+}
+
+.flex-container{
+    display: flex;
+}
+
+.mg {
+    margin: 10px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 30px;
+    background-color: #D9D9D9;
+    font-weight: 600;
+    font-size: .8rem;
+    border-radius: 30px;
+}
+
+.progress-bar .progress {
+    width: 37%;
+    height: 30px;
+    padding: 0;
+    text-align: center;
+    background-color: #FA0050;
+    color: #111;
+    border-radius: 30px;
+}
