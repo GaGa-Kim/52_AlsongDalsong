@@ -14,6 +14,7 @@ import Selectpage from "./component/page/Selectpage";
 import Roulettepage from "./component/page/Roulettepage";
 import Login from "./component/page/Login"
 import WritePage from "./component/page/WritePage";
+import MyPage from "./component/page/MyPage";
 
 function App(props) {
     return (
@@ -27,6 +28,7 @@ function App(props) {
                 <Route path="wheel-page" element={<Roulettepage/>} />
                 <Route path="login" element={<Login/>} />
                 <Route path="writepage" element={<WritePage />} />
+                <Route path="mypage" element={<MyPage />} />
             </Routes>
         </BrowserRouter>
     );
