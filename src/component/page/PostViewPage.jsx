@@ -11,6 +11,7 @@ import BTemplate from "../ui/BackgroundBox";
 import PTemplate from "../ui/PostBox";
 import Likes from "../ui/likes";
 import UserImage from "../ui/woman.png";
+import ProgressBar from "../ui/ProgressBar";
 
 const MainTitleText = styled.p`
     font-size: 50px;
@@ -99,6 +100,9 @@ const Space = styled.div`
   height: auto;
   display: inline-block;
 `;
+const ProgressContainer = styled.div`
+  padding-top: 15px;
+`
 
 function PostViewPage(props) {
     const navigate = useNavigate();
@@ -152,6 +156,10 @@ function PostViewPage(props) {
               <LikesContainer>
                 <Likes />
               </LikesContainer>
+
+              <ProgressContainer>
+                <ProgressBar done="70" />
+              </ProgressContainer>
               
               <CommentLabel>댓글</CommentLabel>
 

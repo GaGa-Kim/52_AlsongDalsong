@@ -3,11 +3,10 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import PostList from "../list/PostList";
 import Button from "../ui/Button";
-import SButton from "../ui/SortButton";
 import data from '../../data.json';
 import Template from "../ui/template";
 import BTemplate from "../ui/BackgroundBox";
-
+import SDrop from "../ui/SelectDrop";
 
 const MainTitleText = styled.p`
     font-size: 50px;
@@ -75,10 +74,7 @@ function MainPage(props) {
                   navigate("/post-write");
                 }}
               />
-              <SButton
-                title="최신글/인기글"
-              />
-  
+              <SDrop/>
               <PostList
                 posts={data}
                 onClickItem={(item) => {
