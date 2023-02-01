@@ -3,6 +3,7 @@ section {
 }
 .flex-container{
     display: inline-flex;
+    margin: 0;
 }
 div {
     margin: 10px;
@@ -151,3 +152,286 @@ textarea::placeholder {
   .card input[type="radio"]{
     display: none;
   }
+
+  section {
+    display: flex;
+}
+.flex-container{
+    display: inline-flex;
+}
+div {
+    margin: 10px;
+}
+
+.border {
+    border: 1px solid #790F05;
+    border-radius: 10px;
+}
+.choice {
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 10px;
+    text-align: center;
+
+    
+    width: 130px;
+
+    border: 1px solid #790F05;
+    border-radius: 40px;
+}
+
+textarea {
+    box-sizing: border-box;
+
+    padding: 8px;
+    font-family: Arial, Helvetica, sans-serif;
+    width: 250px;
+
+    border: 1px solid #790F05;
+    border-radius: 40px;
+
+}
+
+.rad {
+    border-radius: 20px;
+}
+
+textarea::placeholder {
+    color: peru;
+    font-weight: 600;
+    font-style: italic;
+  }
+
+.col {
+    flex-direction: column;
+}
+
+#myform fieldset{
+    display: inline-block; /* 하위 별점 이미지들이 있는 영역만 자리를 차지함.*/
+    direction: rtl; /* 이모지 순서 반전 */
+    border: 0; /* 필드셋 테두리 제거 */
+}
+#myform fieldset legend{
+    text-align: left;
+}
+#myform input[type=radio]{
+    display: none; /* 라디오박스 감춤 */
+}
+#myform label{
+    font-size: 1.4em; /* 이모지 크기 */
+    color: transparent; /* 기존 이모지 컬러 제거 */
+    text-shadow: 0 0 0 #f0f0f0; /* 새 이모지 색상 부여 */
+}
+#myform label:hover{
+    text-shadow: 0 0 0 #a00; /* 마우스 호버 */
+}
+#myform label:hover ~ label{
+    text-shadow: 0 0 0 #a00; /* 마우스 호버 뒤에오는 이모지들 */
+}
+#myform input[type=radio]:checked ~ label{
+    text-shadow: 0 0 0 #a00; /* 마우스 클릭 체크 */
+}
+
+.filechoose {
+    border: 1px solid #790F05;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+
+
+  ::selection{
+    background: #d5bbf7;
+    
+  }
+  .card{
+    max-width: 350px;
+    width: 100%;
+    margin: 170px auto;
+    background: #fff;
+
+    
+  }
+  .card .title{
+    font-size: 22px;
+    font-weight: 500;
+    
+  }
+  .card .content{
+    margin-top: 20px;
+    display: inline-flex;
+  }
+  .card  label.box{
+    background: #ddd;
+    margin-top: 12px;
+    padding: 10px 12px;
+    display: flex;
+    border-radius: 5px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+  #one:checked ~ label.first,
+  #two:checked ~ label.second,
+  #three:checked ~ label.third{
+    border-color: #8E49E8;
+    background: #d5bbf7;
+  }
+  .card  label.box:hover{
+    background: #d5bbf7;
+  }
+  .card  label.box .circle{
+    height: 22px;
+    width: 22px;
+    background: #ccc;
+    border: 5px solid transparent;
+    display: inline-block;
+    margin-right: 15px;
+    border-radius: 50%;
+    transition: all 0.25s ease;
+    box-shadow: inset -4px -4px 10px rgba(0, 0, 0, 0.2);
+  }
+  #one:checked ~ label.first .circle,
+  #two:checked ~ label.second .circle,
+  #three:checked ~ label.third .circle{
+    border-color: #8E49E8;
+    background: #fff;
+  
+  }
+  .card  label.box .plan{
+    display: flex;
+    width: 100%;
+    align-items: center;
+  }
+  .card input[type="radio"]{
+    display: none;
+  }
+
+  .cabtn{
+    margin-top: 0px;
+    font-size: 13px;
+    font-weight: 100;
+    border-width: 4px;
+    border-radius: 50px;
+    border-color:#FFCAC5 #790F05 #790F05 #FFCAC5;
+    cursor: pointer;
+    top: 190px;
+    margin-left: 3%;
+    color:#F64177;
+    width: 73px;
+    height: 39.59px;
+}
+
+.choose {
+    background: #FFFFFF;
+box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.25);
+border-radius: 10px;
+}
+
+*{
+Margin: 0;
+Padding: 0;
+}
+
+.Btn{
+Width: 110px;
+Height: 40px;
+Display: Flex;
+Align-Items: Center;
+Margin-Top: 1.2em;
+Padding: 0 0.5em;
+}
+.Btn Input{
+Position: Relative;
+Cursor: Pointer;
+Appearance: None;
+
+}
+.Btn Input::Before,
+.Btn Input::After{
+Content: '';
+Position: Absolute;
+Width: 5px;
+Height: 5px;
+box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.25);
+border-radius: 10px;
+}
+.Btn Input:checked::Before{
+Background: #Ca4444;
+Transform: Translate(-50%,-50%);
+}
+.Btn Input::After{
+Width: 10px;
+Height: 10px;
+Background: None;
+text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+Border-Radius: 50px;
+Transform: Translate(-80%, -50%);
+Transition: All .2s;
+}
+.Btn Input:checked::After{
+Width: 110px;
+Height: 40px;
+Border-Radius: 10px;
+Transform: Translate(-15%, -50%);
+Z-Index: 10;
+}
+.Btn label{
+Margin-Left: 0.5em;
+Cursor: Pointer;
+color: #000000;
+font-weight: 700;
+}
+
+
+.Btn2{
+    Width: 60px;
+    Height: 40px;
+    Display: Flex;
+    Align-Items: Center;
+    Margin-Top: 1.2em;
+    Padding: 0 0.5em;
+    font-size: 15px;
+    }
+    .Btn2 Input{
+    Position: Relative;
+    Cursor: Pointer;
+    Appearance: None;
+    
+    }
+    .Btn2 Input::Before,
+    .Btn2 Input::After{
+    Content: '';
+    Position: Absolute;
+    Width: 5px;
+    Height: 5px;
+    border: 1px solid #790F05;
+    border-radius: 20px;
+    }
+    .Btn2 Input:checked::Before{
+    Background: #Ca4444;
+    Transform: Translate(-50%,-50%);
+    }
+    .Btn2 Input::After{
+    Width: 10px;
+    Height: 10px;
+    Background: None;
+    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    Border-Radius: 50px;
+    Transform: Translate(-80%, -50%);
+    Transition: All .2s;
+    }
+    .Btn2 Input:checked::After{
+    Width: 60px;
+    Height: 40px;
+    Border-Radius: 10px;
+    Transform: Translate(-15%, -50%);
+    Z-Index: 10;
+    }
+    .Btn2 label{
+    Margin-Left: 0.5em;
+    Cursor: Pointer;
+    color: #000000;
+    font-weight: 700;
+    }
+    
