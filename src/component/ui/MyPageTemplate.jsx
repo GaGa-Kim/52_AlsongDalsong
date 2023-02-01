@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 const TemplateBlock = styled.div`
 width: 390px;
-height: 1400px;
+height: 1850px;
 text-align: center;
 position: relative; 
 background-color : #FA0050;
