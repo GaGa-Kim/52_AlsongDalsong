@@ -3,13 +3,13 @@ import styled from "styled-components";
 
 const StyledButton = styled.button`
  
-    width: 344px;
-    height: 28px;
+    width: 300px;
     text-align: left;
     padding: 8px 16px;
     font-size: 14px;
     font-weight: bold;
     font-size: 12px;
+    font-family: 'GmarketSansTTFMedium';
     line-height: 14px;
     border-width: 1px;
     border-radius: 10px;

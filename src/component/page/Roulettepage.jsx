@@ -12,15 +12,16 @@ const Select = styled.select`
 
     position: flex;
     width: 300px;
-    font-family: 'Hancom MalangMalang';
+    font-family: 'GmarketSansTTFBold';
     font-style: normal;
     font-weight: 700;
     font-size: 30px;
     line-height: 52px;
     text-align: center;
+    margin-top: 30px;
     color: #FA0050;
     border: hidden;
-    border-radius: 20px;
+    border-radius: 10px;
 `;
 
 

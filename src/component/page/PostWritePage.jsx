@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import TextInput from "../ui/TextInput";
@@ -38,6 +38,16 @@ function PostWritePage(props) {
 
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
+
+    useEffect(() => {
+        fetch("http://localhost:8080/api/post/save")
+        .then(res => {
+            return res.json();
+        })
+        .then(data =>{
+            setTitle(data);
+        });
+    }, []);
 
     return (
         <Template> <MainTitleText>알쏭달쏭?!</MainTitleText>

@@ -5,12 +5,40 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-   background-color: ;
-
 
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+@font-face {
+  font-family: HancomMalangMalang-Regular;
+  font-weight: 900;
+  src: url(../src/fonts/HancomMalangMalang-Regular.ttf);
+}
+
+@font-face {
+  font-family: HancomMalangMalang-Bold;
+  font-weight: 900;
+  src: url(../src/fonts/HancomMalangMalang-Bold.ttf);
+}
+
+@font-face {
+  font-family: GmarketSansTTFLight;
+  font-weight: 900;
+  src: url(../src/fonts/GmarketSansTTFLight.ttf);
+}
+
+@font-face {
+  font-family: GmarketSansTTFMedium;
+  font-weight: 900;
+  src: url(../src/fonts/GmarketSansTTFMedium.ttf);
+}
+
+@font-face {
+  font-family: GmarketSansTTFBold;
+  font-weight: 900;
+  src: url(../src/fonts/GmarketSansTTFBold.ttf);
 }

@@ -7,6 +7,8 @@ import data from '../../data.json';
 import Template from "../ui/template";
 import BTemplate from "../ui/BackgroundBox";
 import SDrop from "../ui/SelectDrop";
+import Userimg from "../ui/Userimg";
+import Drop from "../ui/Drop";
 
 //chae33 branch check
 const MainTitleText = styled.p`
@@ -16,23 +18,10 @@ const MainTitleText = styled.p`
     color: #FFFFFF;
 `;
 
-const Wrapper = styled.div`
-    padding: 16px;
-    width:  calc(100% - 32px);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
- 
-
-    
-`;
-
 const Container = styled.div`
     width: 100%;
     max-width: 720px;
-
-
+    padding-right: 3%;
 
     & > * {
         :not(:last-child) {
@@ -41,7 +30,7 @@ const Container = styled.div`
     }
 `;
 const Space = styled.div`
-  width: 15px;
+  width: 0.2px;
   height: auto;
   display: inline-block;
 `;
@@ -51,9 +40,13 @@ function MainPage(props) {
   
     return (
       <Template>
-        <MainTitleText>알쏭달쏭?!</MainTitleText>
+        <Drop></Drop>
+        <MainTitleText/>
+        <Userimg
+            onClick={() => {
+            navigate("/");
+        }}/>
         <BTemplate>
-          <Wrapper>
             <Container>
               <Button
                 title="살까 말까"
@@ -83,7 +76,6 @@ function MainPage(props) {
                 }}
               />
             </Container>
-          </Wrapper>
         </BTemplate>
       </Template>
     );
