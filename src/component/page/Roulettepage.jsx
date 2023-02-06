@@ -1,38 +1,32 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import SButton from "../ui/SelectButton";
 import Template from "../ui/template";
-import Stemplate from "../ui/Selectbox"
-import B1img from "../ui/B1img";
-import B2img from "../ui/B2img";
 import Userimg from "../ui/Userimg";
 import Drop from "../ui/Drop";
-import Wheel1 from "../ui/Wheel1"
 import "../ui/styles.css";
 import DraggeableForm from "../ui/DraggeableForm";
+import BTemplate from "../ui/BackgroundBox";
 
+const Select = styled.select`
 
-
-
-const SText = styled.p`
-    font-size: 25px;
-    font-weight: 900;
+    position: flex;
+    width: 300px;
+    font-family: 'Hancom MalangMalang';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 52px;
     text-align: center;
-    color: #940F00;
-    margin-top: 6%;
-    margin-bottom: 3%;
-    letter-spacing: 2px;
-    line-height:170%;
-    
+    color: #FA0050;
+    border: hidden;
+    border-radius: 20px;
 `;
 
 
 const MainTitleText = styled.p`
 
 margin bottom:30%
-
-
 letter-spacing: 2px;
 `;
 
@@ -41,22 +35,24 @@ function Roulettepage(props) {
     const navigate = useNavigate();
 
     return (
-      
-          
         <Template>
-        <Drop/>
-        <MainTitleText/>
-          <Userimg
-             onClick={() => {
-             navigate("/new");
-          }}/>
-            
+            <Drop/>
+            <Userimg
+                onClick={() => {
+                navigate("/new");
+            }}/>
+            <BTemplate>
+                <MainTitleText/>
+
+                <Select>
+                    <option key="Key1" value="key1">무엇을 먹을까?</option>
+                    <option key="Key2" value="key2">어디를 갈까?</option>
+                    <option key="Key3" value="key3">어디서 만날까?</option>
+                </Select>
                 
-             <DraggeableForm />
-                 
-         
+                <DraggeableForm />
+            </BTemplate>
         </Template>
-      
        
     );
 }

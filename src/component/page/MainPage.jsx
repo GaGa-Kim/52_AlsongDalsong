@@ -8,6 +8,7 @@ import Template from "../ui/template";
 import BTemplate from "../ui/BackgroundBox";
 import SDrop from "../ui/SelectDrop";
 
+//chae33 branch check
 const MainTitleText = styled.p`
     font-size: 50px;
     font-weight: 900;
