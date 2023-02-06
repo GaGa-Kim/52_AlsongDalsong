@@ -8,19 +8,19 @@ const FormularioTexto = () => {
   const [inputList, setInputList] = useState([
     {
       id: uuidv4(),
-      text: "Где туалет?"
+      text: "키위스무디"
     },
     {
       id: uuidv4(),
-      text: "Можно вкусную жижу"
+      text: "홍차라떼"
     },
     {
       id: uuidv4(),
-      text: "А стики есть?"
+      text: "망고스무디"
     },
     {
       id: uuidv4(),
-      text: "А стики есть?"
+      text: "딸기라떼"
     },
     
   
@@ -59,7 +59,6 @@ const FormularioTexto = () => {
   return (
     <div className="main-form">
       <div className="text-title">
-        <h2></h2>
       </div>
       {/*  */}
       <Roulette data={inputList} />
@@ -86,7 +85,7 @@ const FormularioTexto = () => {
                           <BiGridVertical />
                           <input
                             name="text"
-                            placeholder="Введи что-нибудь(или нет)"
+                            placeholder="입력하세요"
                             value={x.text}
                             onChange={(e) => handleInputChange(e, index)}
                             className="input"

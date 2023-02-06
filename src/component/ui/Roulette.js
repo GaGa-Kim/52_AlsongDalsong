@@ -60,7 +60,7 @@ const Roulette = ({ data }) => {
           }}
         />
         <button className="button roulette-button" onClick={handleSpinClick}>
-          Крутить
+          돌리기
         </button>
       </div>
       <br />
@@ -69,7 +69,7 @@ const Roulette = ({ data }) => {
         onClick={handleSpinClick}
         disabled={mustSpin}
       >
-        {!mustSpin ? rouletteData[prizeNumber].completeOption : "Кручу..."}
+        {!mustSpin ? rouletteData[prizeNumber].completeOption : "돌리는 중..."}
       </button>
     </>
   );
