@@ -3,10 +3,15 @@ import styled from "styled-components";
 
 const StyledButton = styled.button`
     padding: 8px 16px;
-    font-size: 16px;
+    font-size: 14px;
+    font-weight: bold;
     border-width: 1px;
-    border-radius: 8px;
+    border-radius: 10px;
+    border-color:transparent;
     cursor: pointer;
+    background: #FFFFFF;
+    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.25);
+
 `;
 
 function Button(props) {

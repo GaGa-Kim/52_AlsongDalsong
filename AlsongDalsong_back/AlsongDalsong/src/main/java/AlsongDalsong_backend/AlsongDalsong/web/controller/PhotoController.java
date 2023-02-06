@@ -9,7 +9,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,31 +28,30 @@ import java.io.IOException;
 @CrossOrigin(origins = "http://localhost:3000")
 public class PhotoController {
 
-    @Autowired
     private final PhotoRepository photoRepository;
     private final PhotoService photoService;
     private final AwsS3Service awsS3Service;
 
-    // 사진 정보 조회
+    // 사진 id로 이미지 정보 조회
     @GetMapping("/api/photo/photoInfo")
-    @ApiOperation(value = "사진 id로 이미지 정보 조회", notes = "사진 id로 이미지 정보 조회 API")
+    @ApiOperation(value = "사진 id로 이미지 정보 조회", notes = "사진 id로 이미지 정보를 조회하여 리턴합니다.")
     @ApiImplicitParam(name = "id", value = "사진 id", example = "1")
     public ResponseEntity<PhotoResponseDto> findById(@RequestParam Long id) {
         return ResponseEntity.ok().body(photoService.findByPhotoId(id));
     }
 
-    // 사진 URL 정보 조회
+    // 사진 id로 이미지 URL 정보 조회
     @GetMapping("/api/photo/photoURL")
-    @ApiOperation(value = "사진 id로 이미지 URL 정보 조회", notes = "사진 id로 이미지 URL 정보 조회 API")
+    @ApiOperation(value = "사진 id로 이미지 URL 정보 조회", notes = "사진 id로 이미지 URL 정보를 조회하여 리턴합니다.")
     @ApiImplicitParam(name = "id", value = "사진 id", example = "1")
     public ResponseEntity<String> getS3(@RequestParam Long id) {
         Photo photo = photoRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("해당 사진이 없습니다."));
         return ResponseEntity.ok().body(awsS3Service.getS3(photo.getPhotoName()));
     }
 
-    // 사진 다운로드
+    // 사진 id로 이미지 다운로드
     @GetMapping("/api/photo/photoDownload")
-    @ApiOperation(value = "사진 id로 이미지 다운로드", notes = "사진 id로 이미지 다운로드 API")
+    @ApiOperation(value = "사진 id로 이미지 다운로드", notes = "사진 id로 이미지를 bytearray로 리턴합니다.")
     @ApiImplicitParam(name = "id", value = "사진 id", example = "1")
     public ResponseEntity<byte[]> downloadFiles(@RequestParam Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
         Photo photo = photoRepository.findById(id).orElse(null);

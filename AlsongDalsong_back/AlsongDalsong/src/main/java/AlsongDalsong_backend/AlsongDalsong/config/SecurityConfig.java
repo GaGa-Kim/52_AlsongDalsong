@@ -4,7 +4,6 @@ import AlsongDalsong_backend.AlsongDalsong.config.jwt.JwtAccessDeniedHandler;
 import AlsongDalsong_backend.AlsongDalsong.config.jwt.JwtAuthenticationEntryPoint;
 import AlsongDalsong_backend.AlsongDalsong.config.jwt.JwtRequestFilter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,7 +25,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
-    @Autowired
     private final JwtRequestFilter jwtRequestFilter;
 
     @Override
@@ -55,7 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().configurationSource(configurationSource());
 
         httpSecurity.authorizeRequests()
-                .antMatchers("/api/**").authenticated()
+                // .antMatchers("/api/**").authenticated()
                 .anyRequest().permitAll()
                 .and()
                 .exceptionHandling()

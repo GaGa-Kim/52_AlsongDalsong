@@ -1,0 +1,247 @@
+.box {
+    width: 150px;
+    height: 150px; 
+    border-radius: 70%;
+    overflow: hidden;
+    background-color: #BDBDBD;
+    margin: 0 auto; /* 페이지 중앙에 나타나도록 설정 */
+    margin-top: 300px;
+}
+
+.profile {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.name {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 24px;
+    text-align: center;
+    
+    color: #000000;
+
+    margin: 0 auto; /* 페이지 중앙에 나타나도록 설정 */
+    margin-top: 20px;
+}
+
+.introduce {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 24px;
+    /* or 185% */
+    
+    letter-spacing: 0.1px;
+    
+    color: #000000;
+
+    margin: 0 auto; /* 페이지 중앙에 나타나도록 설정 */
+    margin-top: 10px;
+}
+
+.title {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 15px;
+    /* or 185% */
+    
+    letter-spacing: 0.1px;
+    
+    color: #FA0050;
+
+    margin: 0 auto; /* 페이지 중앙에 나타나도록 설정 */
+    margin-left: 30px;
+}
+
+.flex-container{
+    display: flex;
+}
+
+.mg {
+    margin: 10px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 30px;
+    background-color: #D9D9D9;
+    font-weight: 600;
+    font-size: .8rem;
+    border-radius: 30px;
+    padding: 5px;
+}
+
+.progress-bar .progress {
+    width: 37%;
+    height: 30px;
+    padding: 0;
+    text-align: center;
+    background-color: #FA0050;
+    color: #111;
+    border-radius: 30px;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+
+  .wrapper{
+    text-align: left;
+  }
+  .card1{
+    display: inline-block;
+    width: 100px;
+    height: 245px;
+    border: 1px solid #cecece;
+    text-align: center;
+    margin-top: 2px;
+    background-color: #EBEBEB;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+      border-radius: 15px;
+  }
+  .card2{
+    display: inline-block;
+    width: 100px;
+    height: 205px;
+    border: 1px solid #cecece;
+    text-align: center;
+    margin-top: 2px;
+    background-color: #EBEBEB;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+      border-radius: 15px;
+  }
+  .card1 img{
+    width: 90px;
+    margin-top: 3px;
+    border: 2px solid #696969;
+    border-radius: 10px;
+  }
+  .card2 img{
+    width: 90px;
+    margin-top: 3px;
+    border: 2px solid #696969;
+    border-radius: 10px;
+  }
+
+  .dbtn{
+      border-color: #FFCAC5 #790F05 #790F05 #FFCAC5;
+      box-sizing: border-box;
+      padding: 2px 5px;
+      background: #FFFFFF;
+      border-radius: 12px;
+  }
+  .catebox {
+      background: linear-gradient(90deg, #FFFFFF 0%, #FF6959 0.01%);
+      border-radius: 15px;
+      width: 35px;
+      height: 23px;
+      font-style: normal;
+      font-weight: 700;
+      font-size: 15px;
+      line-height: 10px;
+      text-align: center;
+      padding: 4px;
+  }
+  
+
+
+
+
+/* statistics start */
+.graph{
+background-color:#ccc;
+height: 100vh;
+border-radius: 40px;
+margin:1px;
+width: 20px;
+text-align: center;
+}
+@keyframes stack{
+0%{ height: 0; opacity:0;}
+100%{ height: 75%; opacity:1;}
+}
+@keyframes stack2{
+0%{ height: 0; opacity:0;}
+100%{ height: 60%; opacity:1;}
+}
+@keyframes stack3{
+0%{ height: 0; opacity:0;}
+100%{ height: 25%; opacity:1;}
+}
+section{
+display:flex;  
+/*   flex-direction:column;   */
+justify-content:center;
+background: #EBEBEB;
+height: 350px;
+width: 110px;
+transform:rotate(180deg);
+
+}
+.catename {
+  transform:rotate(180deg);
+  position: absolute;
+left: 100px;
+top: 30px;
+}
+.graph {
+height:300px;
+}
+
+.graph span{
+display:flex;
+height:40px;
+text-align:center;
+width: 20px;
+/*   background-color:pink; */
+border-radius: 40px;
+padding: 10px;
+box-sizing: border-box;
+color:white;
+transform:rotate(180deg);
+
+}
+.graph.stack1 span{
+background-color:#BBBBBB;
+height:75%;
+animation:stack 2s 1;
+}
+.graph.stack2 span{
+background-color:violet;
+height:60%;
+animation:stack2 2s 1;
+}
+.graph.stack3 span{
+background-color:violet;
+height:25%;
+animation:stack3 2s 1;
+}
+.flex-container{
+  display: inline-flex;
+}
+.graph-content {
+  display: flex;
+  background-color: #EBEBEB;
+  width: 370px;
+  text-align: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 700;
+}
+.align {
+  flex-direction: row;
+}
+/* statistics end */
+
+.wrwr {
+    padding:10px;
+}

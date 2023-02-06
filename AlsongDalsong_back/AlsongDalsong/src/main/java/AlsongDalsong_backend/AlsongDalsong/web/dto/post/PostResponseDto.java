@@ -1,5 +1,6 @@
 package AlsongDalsong_backend.AlsongDalsong.web.dto.post;
 
+import AlsongDalsong_backend.AlsongDalsong.domain.Time;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -15,7 +16,13 @@ public class PostResponseDto {
     @ApiModelProperty(notes = "게시글 기본키", example = "1")
     private Long id;
 
-    @ApiModelProperty(notes = "작성자 닉네임", example = "1234@gmail.com")
+    @ApiModelProperty(notes = "생성 날짜 및 시간", example = "3분 전")
+    private String createdDateTime; // 생성 날짜 및 시간
+
+    @ApiModelProperty(notes = "작성자 이메일", example = "1234@gmail.com")
+    private String email; // 작성자 이메일
+
+    @ApiModelProperty(notes = "작성자 닉네임", example = "가경")
     private String nickname; // 작성자 닉네임
 
     @ApiModelProperty(notes = "분류", example = "살까 말까")
@@ -53,9 +60,23 @@ public class PostResponseDto {
 
     @ApiModelProperty(notes = "게시글 사진 id", example = "[1, 2]")
     private List<Long> photoId;
-    
-    public PostResponseDto(Post post, List<Long> photoId) {
+
+    @ApiModelProperty(notes = "찬성 투표 수", example = "3")
+    private Long agree;
+
+    @ApiModelProperty(notes = "반대 투표 수", example = "3")
+    private Long disagree;
+
+    @ApiModelProperty(notes = "댓글 수", example = "3")
+    private Integer comment;
+
+    @ApiModelProperty(notes = "스크랩 수", example = "3")
+    private Integer scrap;
+
+    public PostResponseDto(Post post, List<Long> photoId, Long agree, Long disagree) {
         this.id = post.getId();
+        this.createdDateTime = Time.calculateTime(post.getCreatedDateTime());
+        this.email = post.getUserId().getEmail();
         this.nickname = post.getUserId().getNickname();
         this.todo = post.getTodo();
         this.category = post.getCategory();
@@ -69,5 +90,9 @@ public class PostResponseDto {
         this.decision = post.getDecision();
         this.reason = post.getReason();
         this.photoId = photoId;
+        this.agree = agree;
+        this.disagree = disagree;
+        this.comment = post.getCommentList().size();
+        this.scrap = post.getScrapList().size();
     }
 }

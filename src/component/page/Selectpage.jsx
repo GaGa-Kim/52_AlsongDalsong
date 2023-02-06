@@ -7,6 +7,7 @@ import Stemplate from "../ui/Selectbox"
 import B1img from "../ui/B1img";
 import B2img from "../ui/B2img";
 import Userimg from "../ui/Userimg";
+import Drop from "../ui/Drop";
 
 
 
@@ -26,18 +27,8 @@ const SText = styled.p`
 
 const MainTitleText = styled.p`
 
-width: 241px;
-height: 58px;
-margin-top: 25px;
-margin-left: 18px;
-font-family: 'Gmarket Sans TTF';
-font-style: normal;
-font-weight: 900;
-font-size: 50px;
-line-height: 57px
-text-align: center;
 
-color: #FFFFFF;
+padding-bottom:30%
 
 letter-spacing: 2px;
 `;
@@ -50,7 +41,9 @@ function Selectpage(props) {
       
          
         <Template>
-          <MainTitleText>알쏭달쏭?!</MainTitleText>
+          <Drop></Drop>
+          <MainTitleText>  </MainTitleText>
+          <MainTitleText/>
           <Userimg
              onClick={() => {
              navigate("/");
@@ -61,7 +54,7 @@ function Selectpage(props) {
                 <SButton
                     title="룰렛 PICK"
                     onClick={() => {
-                        navigate("/main-page");
+                        navigate("/wheel-page");
                     }}
                 />
                 </Stemplate>

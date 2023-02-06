@@ -11,10 +11,11 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 /**
@@ -26,12 +27,11 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "http://localhost:3000")
 public class PostController {
 
-    @Autowired
     private final PostService postService;
 
     // 게시글 작성
     @PostMapping(value = "/api/post/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @ApiOperation(value = "게시글 작성", notes = "게시글 작성 API")
+    @ApiOperation(value = "게시글 작성", notes = "게시글을 작성한 후, 작성한 게시글을 리턴합니다.")
     public ResponseEntity<PostResponseDto> save(PostSaveRequestVO postSaveRequestVo) {
         PostSaveRequestDto postSaveRequestDto = PostSaveRequestDto
                 .builder()
@@ -50,9 +50,17 @@ public class PostController {
         return ResponseEntity.ok().body(postService.save(postSaveRequestDto, postSaveRequestVo.getPhotos()));
     }
 
+    // 게시글 상세 조회
+    @GetMapping("/api/post/inquire")
+    @ApiOperation(value = "게시글 상세 조회", notes = "게시글 id에 따라 게시글을 상세 조회하여 리턴합니다.")
+    @ApiImplicitParam(name = "id", value = "게시글 id", example = "1")
+    public ResponseEntity<PostResponseDto> inquire(Long id) {
+        return ResponseEntity.ok().body(postService.inquire(id));
+    }
+
     // 게시글 수정
     @PutMapping(value = "/api/post/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @ApiOperation(value = "게시글 수정", notes = "게시글 수정 API")
+    @ApiOperation(value = "게시글 수정", notes = "게시글을 수정한 후, 수정한 게시글을 리턴합니다.")
     public ResponseEntity<PostResponseDto> update(PostUpdateRequestVO postUpdateRequestVO) {
         PostUpdateRequestDto postUpdateRequestDto = PostUpdateRequestDto
                 .builder()
@@ -74,7 +82,7 @@ public class PostController {
 
     // 게시글 삭제
     @DeleteMapping("/api/post/delete")
-    @ApiOperation(value = "게시글 삭제", notes = "게시글 삭제 API")
+    @ApiOperation(value = "게시글 삭제", notes = "게시글을 삭제한 후, true를 리턴합니다.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "게시글 id", example = "1"),
             @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com"),
@@ -85,13 +93,49 @@ public class PostController {
 
     // 게시글 확정
     @PutMapping(value = "/api/post/updateDecision")
-    @ApiOperation(value = "게시글 확정", notes = "게시글 확정 API")
+    @ApiOperation(value = "게시글 확정", notes = "결정 미정이었던 게시글을 결정/취소에 따라 게시글을 확정한 후, 확정된 게시글을 리턴합니다.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "게시글 id", example = "1"),
-            @ApiImplicitParam(name = "decision", value = "결정 완료", example = "취소"),
+            @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com"),
+            @ApiImplicitParam(name = "decision", value = "결정 완료 (미정/결정/취소)", example = "취소"),
             @ApiImplicitParam(name = "reason", value = "결정 이유", example = "비싸서")
     })
-    public ResponseEntity<PostResponseDto> updateDecision(@RequestParam Long id, String decision, String reason) {
-        return ResponseEntity.ok().body(postService.updateDecision(id, decision, reason));
+    public ResponseEntity<PostResponseDto> updateDecision(@RequestParam Long id, String email, String decision, String reason) {
+        return ResponseEntity.ok().body(postService.updateDecision(id, email, decision, reason));
+    }
+
+
+    // 살까 말까 / 할까 말까 / 갈까 말까로 분류별 최신글 조회
+    @GetMapping("/api/post/inquireLatest")
+    @ApiOperation(value = "살까 말까 / 할까 말까 / 갈까 말까로 분류별 최신글 조회", notes = "살까 말까 / 할까 말까 / 갈까 말까로 분류별 최신글 목록을 조회하여 리턴합니다.")
+    @ApiImplicitParam(name = "todo", value = "분류", example = "살까 말까")
+    public ResponseEntity<List<PostResponseDto>> inquireLatest(String todo) {
+        return ResponseEntity.ok().body(postService.inquireLatest(todo));
+    }
+
+    // 살까 말까 / 할까 말까 / 갈까 말까로 분류별 인기글 조회
+    @GetMapping("/api/post/inquirePopular")
+    @ApiOperation(value = "살까 말까 / 할까 말까 / 갈까 말까로 분류별 인기글 조회", notes = "살까 말까 / 할까 말까 / 갈까 말까로 분류별 인기글 목록을 조회하여 리턴합니다.")
+    @ApiImplicitParam(name = "todo", value = "분류", example = "살까 말까")
+    public ResponseEntity<List<PostResponseDto>> inquirePopular(String todo) {
+        return ResponseEntity.ok().body(postService.inquirePopular(todo));
+    }
+
+    // 분류의 카테고리별 조회
+    @GetMapping("/api/post/inquireCategory")
+    @ApiOperation(value = "분류의 카테고리별 조회", notes = "분류의 카테고리별로 게시글 목록을 조회하여 리턴합니다.")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "todo", value = "분류", example = "살까 말까"),
+            @ApiImplicitParam(name = "category", value = "카테고리", example = "패션")
+    })    public ResponseEntity<List<PostResponseDto>> inquireCategory(String todo, String category) {
+        return ResponseEntity.ok().body(postService.inquireCategory(todo, category));
+    }
+
+    // 사용자별 쓴 글 조회
+    @GetMapping("/api/post/my")
+    @ApiOperation(value = "사용자별 쓴 글 조회", notes = "사용자별 쓴 글 목록을 조회하여 리턴합니다.")
+    @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com")
+    public ResponseEntity<List<PostResponseDto>> my(String email) {
+        return ResponseEntity.ok().body(postService.my(email));
     }
 }

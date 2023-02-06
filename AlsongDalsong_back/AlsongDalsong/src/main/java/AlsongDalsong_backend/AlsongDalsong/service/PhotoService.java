@@ -7,7 +7,6 @@ import AlsongDalsong_backend.AlsongDalsong.domain.post.PostRepository;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.photo.PhotoIdResponseDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.photo.PhotoResponseDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,11 +20,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PhotoService {
 
-    @Autowired
     private final PhotoRepository photoRepository;
     private final PostRepository postRepository;
 
-    // 사진 아이디에 따른 사진 개별 조회
+    // 사진 id에 따른 사진 개별 조회
     @Transactional(readOnly = true)
     public PhotoResponseDto findByPhotoId(Long id) {
         Photo photo = photoRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("해당 사진이 없습니다."));
@@ -39,7 +37,7 @@ public class PhotoService {
         return photoResponseDto;
     }
 
-    // 게시글 아이디에 따른 사진 아이디 전체 조회
+    // 게시글 id에 따른 사진 아이디 전체 조회
     @Transactional(readOnly = true)
     public List<PhotoIdResponseDto> findAllByPost(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));

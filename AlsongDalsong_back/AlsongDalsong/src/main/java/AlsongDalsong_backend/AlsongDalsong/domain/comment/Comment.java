@@ -20,6 +20,7 @@ import java.util.List;
 @ToString
 @Getter
 @NoArgsConstructor
+@Table(name = "comments")
 public class Comment extends BaseTimeEntity {
 
     @Id
@@ -44,6 +45,12 @@ public class Comment extends BaseTimeEntity {
     @Builder
     public Comment(String content) {
         this.content = content;
+    }
+
+    // 댓글 수정
+    public Comment update(String content) {
+        this.content = content;
+        return this;
     }
 
     // 회원 연관관계 메소드

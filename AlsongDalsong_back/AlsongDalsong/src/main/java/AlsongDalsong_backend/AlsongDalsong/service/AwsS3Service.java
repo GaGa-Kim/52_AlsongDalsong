@@ -6,7 +6,6 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -30,7 +29,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AwsS3Service {
 
-    @Autowired
     private final AmazonS3Client amazonS3Client;
 
     @Value("${cloud.aws.s3.bucket}")
@@ -38,15 +36,13 @@ public class AwsS3Service {
 
     // S3 버킷에 회원 프로필 이미지 저장
     public String uploadProfile(MultipartFile multipartFile) {
-
         String profileName = createPhotoName(multipartFile.getOriginalFilename());
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(multipartFile.getSize());
         objectMetadata.setContentType(multipartFile.getContentType());
 
         try(InputStream inputStream = multipartFile.getInputStream()) {
-            amazonS3Client.putObject(new PutObjectRequest(bucket, profileName, inputStream, objectMetadata)
-                    .withCannedAcl(CannedAccessControlList.PublicRead));
+            amazonS3Client.putObject(new PutObjectRequest(bucket, profileName, inputStream, objectMetadata).withCannedAcl(CannedAccessControlList.PublicRead));
         } catch(IOException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "프로필 업로드에 실패했습니다.");
         }
@@ -57,7 +53,6 @@ public class AwsS3Service {
     // S3 버킷에 게시글 이미지 저장
     @Transactional
     public List<Photo> uploadPhoto(List<MultipartFile> multipartFiles) {
-
         List<Photo> photoList = new ArrayList<>();
 
         for(MultipartFile multipartFile: multipartFiles) {
@@ -68,8 +63,7 @@ public class AwsS3Service {
             objectMetadata.setContentType(multipartFile.getContentType());
 
             try(InputStream inputStream = multipartFile.getInputStream()) {
-                amazonS3Client.putObject(new PutObjectRequest(bucket, photoName, inputStream, objectMetadata)
-                        .withCannedAcl(CannedAccessControlList.PublicRead));
+                amazonS3Client.putObject(new PutObjectRequest(bucket, photoName, inputStream, objectMetadata).withCannedAcl(CannedAccessControlList.PublicRead));
             } catch(IOException e) {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "사진 업로드에 실패했습니다.");
             }
@@ -101,7 +95,6 @@ public class AwsS3Service {
     // S3 버킷에서 사진 삭제
     @Transactional
     public void deleteS3(String photoName) {
-
         DeleteObjectRequest request = new DeleteObjectRequest(bucket, photoName);
         amazonS3Client.deleteObject(request);
     }
@@ -109,13 +102,12 @@ public class AwsS3Service {
     // S3 버킷에서 사진 가져와서 다운로드
     @Transactional
     public ResponseEntity<byte[]> getObject(String originPhotoName, String photoName) throws IOException {
-
         S3Object o = amazonS3Client.getObject(new GetObjectRequest(bucket, photoName));
         S3ObjectInputStream objectInputStream = ((S3Object) o).getObjectContent();
         byte[] bytes = IOUtils.toByteArray(objectInputStream);
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        httpHeaders.setContentType(MediaType.IMAGE_PNG);
         httpHeaders.setContentLength(bytes.length);
         httpHeaders.setContentDispositionFormData("attachment", originPhotoName);
 

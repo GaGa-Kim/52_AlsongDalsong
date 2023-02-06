@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+    <!-- 로그 패턴 변경 -->
+    <property name="LOG_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss} %p %c[%method:%line] - %msg%n" />
+
+    <appender name="STDOUT"
+              class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>${LOG_PATTERN}</Pattern>
+        </layout>
+    </appender>
+
+    <!-- 컨트롤러를 타고 서비스 repository에서 찍히는 쿼리 로그를 제거 -->
+    <logger name="AlsongDalsong_backend.AlsongDalsong.domain">
+        <level value="ERROR"/>
+    </logger>
+
+    <logger name="org.springframework.boot">
+        <level value="ERROR"/>
+    </logger>
+    <logger name="org.springframework.boot.devtools.restart">
+        <level value="ERROR"/>
+    </logger>
+    <logger name="org.springframework">
+        <level value="ERROR"/>
+    </logger>
+    <logger name="springfox">
+        <level value="ERROR"/>
+    </logger>
+    <logger name="Validator">
+        <level value="INFO"/>
+    </logger>
+    <logger name="_org.springframework.web.servlet.HandlerMapping.Mappings">
+        <level value="ERROR"/>
+    </logger>
+    <logger name="org.hibernate">
+        <level value="ERROR"/>
+    </logger>
+    <logger name="org.apache">
+        <level value="ERROR"/>
+    </logger>
+    <logger name="org.apache.http.impl.conn">
+        <level value="ERROR"/>
+    </logger>
+    <logger name="log4jdbc">
+        <level value="ERROR"/>
+    </logger>
+    <logger name="com.zaxxer">
+        <level value="ERROR"/>
+    </logger>
+    <logger name="com.amazonaws">
+        <level value="ERROR"/>
+    </logger>
+
+    <!-- Query Loggers -->
+    <logger name="jdbc" level="ERROR"/>
+    <logger name="jdbc.connection" level="ERROR"/>
+    <logger name="jdbc.sqlonly" level="ERROR"/>
+    <logger name="jdbc.sqltiming" level="ERROR"/>
+    <logger name="jdbc.resultset" level="OFF"/>
+    <logger name="jdbc.resultsettable" level="ERROR"/>
+    <logger name="jdbc.audit" level="OFF"/>
+
+    <root level="DEBUG">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>
