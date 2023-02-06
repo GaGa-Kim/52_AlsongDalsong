@@ -3,6 +3,7 @@ package AlsongDalsong_backend.AlsongDalsong.web.controller;
 import AlsongDalsong_backend.AlsongDalsong.domain.photo.Photo;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.OauthToken;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
+import AlsongDalsong_backend.AlsongDalsong.domain.user.UserRepository;
 import AlsongDalsong_backend.AlsongDalsong.service.AwsS3Service;
 import AlsongDalsong_backend.AlsongDalsong.service.UserService;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.TokenDto;
@@ -35,7 +36,8 @@ public class UserController {
 
     private final UserService userService;
     private final AwsS3Service awsS3Service;
-
+    private final UserRepository userRepository;
+    
     // 카카오 회원가입과 로그인
     @GetMapping("/auth/kakao")
     @ApiOperation(value = "카카오 회원가입과 로그인", notes = "카카오 회원가입 또는 로그인을 한 후, jwt 토큰과 사용자 이메일을 리턴합니다.")
@@ -90,7 +92,16 @@ public class UserController {
     @ApiOperation(value = "회원 프로필 사진 조회", notes = "회원 프로필 사진을 bytearray로 리턴합니다.")
     @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com", required = true)
     public ResponseEntity<byte[]> getProfile(@RequestParam("email") String email, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        return userService.getProfile(email);
+        User user = userRepository.findByEmail(email);
+
+        // 카카오에서 받아온 프로필 사진이라면
+        if(user.getProfile().startsWith("http")) {
+            return userService.getProfile(email);
+        }
+        // 카카오 프로필 사진이 아니라면
+        else {
+            return awsS3Service.getObject("profile", user.getProfile());
+        }
     }
 
     // 회원 정보 수정
