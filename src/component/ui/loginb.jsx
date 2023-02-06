@@ -6,6 +6,7 @@ const Ibutton = styled.button`
    text-align: center;
     font-size: 30px;
     font-weight: 900;
+    font-family: "GmarketSansTTFMedium";
     border-width: 4px;
     border-radius: 50px;
     border-color:#FFCAC5 #790F05 #790F05 #FFCAC5;

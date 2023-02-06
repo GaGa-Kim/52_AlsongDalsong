@@ -31,19 +31,14 @@ const Wrapper = styled.div`
   .count{
     color: #434343;
     font-weight: 500;
-    font-size: 15px;
+    font-size: 12px;
     line-height: 16px;
     align-items: center;
     text-align: center;
   }
 `;
-const Space_1 = styled.div`
-  width: 7px;
-  height: auto;
-  display: inline-block;
-`;
 const Space_2 = styled.div`
-  width: 15px;
+  width: 1px;
   height: auto;
   display: inline-block;
 `;
@@ -63,7 +58,6 @@ function Likes() {
       >
         <i className="upicon fa-regular fa-thumbs-up"></i>
       </span>
-      <Space_1/>
       <i className="count">{thumbup}</i>
      <Space_2/>
      
@@ -74,7 +68,6 @@ function Likes() {
       >
         <i className="downicon fa-regular fa-thumbs-down"></i>
       </span>
-      <Space_1/>
       <i className="count">{thumbdown}</i>
       <Space_2/>
       
@@ -85,7 +78,6 @@ function Likes() {
       >
         <i className="cmicon fa-regular fa-comment-dots"></i>
       </span>
-      <Space_1/>
       <i className="count">{msg}</i>
       <Space_2/>
       
@@ -96,7 +88,6 @@ function Likes() {
       >
         <i className="staricon fa-regular fa-star"></i>
       </span>
-      <Space_1/>
       <i className="count">{star}</i>
     </Wrapper>
   );

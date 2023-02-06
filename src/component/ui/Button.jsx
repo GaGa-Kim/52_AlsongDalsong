@@ -5,6 +5,7 @@ const StyledButton = styled.button`
     padding: 8px 16px;
     font-size: 14px;
     font-weight: bold;
+    font-family: 'GmarketSansTTFMedium';
     border-width: 1px;
     border-radius: 10px;
     border-color:transparent;

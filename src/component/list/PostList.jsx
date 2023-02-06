@@ -5,6 +5,7 @@ import PostListItem from "./PostListItem";
 const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
+    font-family: 'GmarketSansTTFMedium';
     align-items: flex-start;
     justify-content: center;
 

@@ -6,8 +6,8 @@ import Template from "../ui/template";
 import Iimg from "../ui/Introimg";
 
 const IntroText = styled.p`
-    font-size: 20px;
-    font-weight: 900;
+    font-size: 22px;
+    font-family: "HancomMalangMalang-Bold";
     text-align: center;
     color: #FFFFFF;
     margin-top: 20%;
@@ -21,11 +21,17 @@ const IntroText = styled.p`
 const MainTitleText = styled.p`
     font-size: 50px;
     font-weight: 900;
+    font-family: "GmarketSansTTFBold";
     text-align: center;
     color: #FFFFFF;
     letter-spacing: 2px;
 `;
 
+const Space = styled.div`
+  width: 0.2px;
+  height: auto;
+  display: inline-block;
+`;
 
 
 function Intropage(props) {
@@ -34,10 +40,11 @@ function Intropage(props) {
     return (
         <Template>
            <IntroText>이거 살까 말까?<br></br>여기 갈까 말까?<br></br>이거 할까 말까?<br></br>누군가가 결정해주길 원한다면?</IntroText>
-            <MainTitleText>알쏭달쏭?!</MainTitleText>
+            <Space></Space>
+            <MainTitleText>알송달송?!</MainTitleText>
                 <Iimg/>
                 <IButton
-                    title="START"
+                    title="Start"
                     onClick={() => {
                         navigate("/login");
                     }}

@@ -15,21 +15,25 @@ import Drop from "../ui/Drop";
 const SText = styled.p`
     font-size: 25px;
     font-weight: 900;
+    font-family: 'GmarketSansTTFBold';
     text-align: center;
     color: #940F00;
-    margin-top: 6%;
+    margin-top: 5%;
     margin-bottom: 3%;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
     line-height:170%;
     
 `;
 
+const Space = styled.div`
+  width: 15px;
+  height: auto;
+  display: inline-block;
+`;
+
 
 const MainTitleText = styled.p`
-
-
 padding-bottom:30%
-
 letter-spacing: 2px;
 `;
 
@@ -39,15 +43,14 @@ function Selectpage(props) {
 
     return (
       
-         
         <Template>
           <Drop></Drop>
-          <MainTitleText>  </MainTitleText>
           <MainTitleText/>
           <Userimg
              onClick={() => {
              navigate("/");
           }}/>
+          <Space></Space>   
                 <Stemplate>
                   <SText>시간이 없다면?</SText>
                   <B1img/>
@@ -64,7 +67,7 @@ function Selectpage(props) {
                  <SButton
                     title="투표 받기"
                     onClick={() => {
-                        navigate("/main-page");
+                        navigate("/writepage");
                     }}
                 />
                 </Stemplate>

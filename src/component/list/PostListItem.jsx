@@ -49,7 +49,9 @@ const TitleText = styled.p`
   font-style: normal;
   font-weight: 600;
   font-size: 17px;
+  font-family: 'GmarketSansTTFMedium';
   text-align: left;
+  padding-top: 10px;
   color: #000000;
   
 `;
@@ -59,10 +61,12 @@ const ContentText = styled.p`
   font-style: normal;
   font-weight: 500;
   font-size: 12px;
+  font-family: 'GmarketSansTTFMedium';
   line-height: 15px;
   display: flex;
   text-align: left;
   padding-bottom: 20px;
+  padding-top: 30px;
   color: #000000;
 `;
 const Space = styled.div`
