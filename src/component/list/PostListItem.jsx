@@ -1,7 +1,8 @@
-import React from "react";
 import styled from "styled-components";
 import HorizonLine from "../ui/HorizontalLine";
 import Likes from "../ui/likes";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const Wrapper = styled.div`
   width: calc(100% - 32px);
@@ -75,19 +76,35 @@ const Space = styled.div`
   display: inline-block;
 `;
 
-function PostListItem(props) {
-  const { post, onClick } = props;
+const TestPage = () => {
+
+  const [data , setData] = useState([]);
+  
+  useEffect(() => {
+      axios.get('http://35.216.20.124:8080/api/post/inquire?id=1').then(Response => {
+      setData(Response.data);
+      console.log(Response.data);
+  }).catch((Error)=> {
+      console.log(Error) ;
+  })
+      }, [])
 
   return (
-    <Wrapper onClick={onClick}>
+      <>
+      {data.length}
+    {data && 
+      <Wrapper>
       <NameandDay></NameandDay>
-      <TitleText>{post.title}</TitleText>
+      <TitleText>{data.content}</TitleText>
       <i className="DecisionIcon fa-regular fa-circle-check"></i>
-      <ContentText>{post.content}</ContentText>
+      <ContentText>{data.content}</ContentText>
       <HorizonLine />
       <Likes />
     </Wrapper>
+    
+    }
+      </>
   );
-}
+};
 
-export default PostListItem;
+export default TestPage;
