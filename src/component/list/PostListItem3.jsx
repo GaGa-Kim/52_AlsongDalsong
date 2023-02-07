@@ -1,4 +1,3 @@
-
 import styled from "styled-components";
 import HorizonLine from "../ui/HorizontalLine";
 import Likes from "../ui/likes";
@@ -82,7 +81,7 @@ const TestPage = () => {
   const [data , setData] = useState([]);
   
   useEffect(() => {
-      axios.get().then(Response => {
+      axios.get('http://35.216.20.124:8080/api/post/inquire?id=3').then(Response => {
       setData(Response.data);
       console.log(Response.data);
   }).catch((Error)=> {

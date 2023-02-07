@@ -110,7 +110,7 @@ const TestPage = () => {
   const navigate = useNavigate();
   
   useEffect(() => {
-      axios.get().then(Response => {
+      axios.get('http://35.216.20.124:8080/api/post/inquire?id=1').then(Response => {
       setData(Response.data);
       console.log(Response.data);
   }).catch((Error)=> {
@@ -173,7 +173,7 @@ const TestPage = () => {
               
               <CommentLabel>댓글</CommentLabel>
 
-             
+              <CommentList />
 
               <Button
                 title="댓글 작성하기"
