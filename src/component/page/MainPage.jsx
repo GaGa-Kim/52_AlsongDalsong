@@ -21,7 +21,6 @@ const MainTitleText = styled.p`
 const Container = styled.div`
     width: 100%;
     max-width: 720px;
-    padding-right: 3%;
 
     & > * {
         :not(:last-child) {
@@ -30,8 +29,8 @@ const Container = styled.div`
     }
 `;
 const Space = styled.div`
-  width: 0.2px;
-  height: auto;
+  width: 10px;
+  height: 0.2px;
   display: inline-block;
 `;
 
@@ -42,11 +41,12 @@ function MainPage(props) {
       <Template>
         <Drop></Drop>
         <MainTitleText/>
-        <Userimg
-            onClick={() => {
-            navigate("/");
-        }}/>
+          <Userimg
+             onClick={() => {
+             navigate("/auth/select-page");
+          }}/>
         <BTemplate>
+          <Space></Space>
             <Container>
               <Button
                 title="살까 말까"
