@@ -1,11 +1,11 @@
-import React from "react";
 import styled from "styled-components";
 import HorizonLine from "../ui/HorizontalLine";
 import Likes from "../ui/likes";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const Wrapper = styled.div`
   width: calc(100% - 32px);
-
   padding-top: 10px;
   padding-right: 16px;
   padding-bottom: 10px;
@@ -22,12 +22,11 @@ const Wrapper = styled.div`
     background: lightgrey;
   }
   box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.25);
-
   .DecisionIcon {
     font-size: 30px;
     position: absolute;
-    margin-left: 250px;
-    margin-top: -120px;
+    margin-left: 75%;
+    margin-top: -40%;
     color: #fa0050;
   }
 `;
@@ -75,19 +74,35 @@ const Space = styled.div`
   display: inline-block;
 `;
 
-function PostListItem(props) {
-  const { post, onClick } = props;
+const TestPage = () => {
+
+  const [data , setData] = useState([]);
+  
+  useEffect(() => {
+      axios.get('http://35.216.20.124:8080/api/post/inquire?id=1').then(Response => {
+      setData(Response.data);
+      console.log(Response.data);
+  }).catch((Error)=> {
+      console.log(Error) ;
+  })
+      }, [])
 
   return (
-    <Wrapper onClick={onClick}>
+      <>
+      {data.length}
+    {data && 
+      <Wrapper>
       <NameandDay></NameandDay>
-      <TitleText>{post.title}</TitleText>
+      <TitleText>{data.what} 살까 말까</TitleText>
       <i className="DecisionIcon fa-regular fa-circle-check"></i>
-      <ContentText>{post.content}</ContentText>
+      <ContentText>{data.content}</ContentText>
       <HorizonLine />
       <Likes />
     </Wrapper>
+    
+    }
+      </>
   );
-}
+};
 
-export default PostListItem;
+export default TestPage;
