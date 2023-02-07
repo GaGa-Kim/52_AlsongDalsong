@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const TemplateBlock = styled.div`
 text-align: center;
-font-size: 25px;
+font-size: 20px;
 font-weight: 700;
 border : 5px solid;
 border-radius: 50px;
@@ -13,7 +13,7 @@ height: 810px;
 margin: auto;
 color: #940F00;
 background-color: white;
-margin-top:10%;
+margin-top:15%;
 `;
 
 

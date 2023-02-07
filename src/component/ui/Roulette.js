@@ -34,7 +34,7 @@ const Roulette = ({ data }) => {
           prizeNumber={prizeNumber}
           data={rouletteData}
           outerBorderColor={["#ccc"]}
-          outerBorderWidth={[9]}
+          outerBorderWidth={[5]}
           innerBorderColor={["#f2f2f2"]}
           radiusLineColor={["tranparent"]}
           radiusLineWidth={[1]}
@@ -42,18 +42,15 @@ const Roulette = ({ data }) => {
           textDistance={55}
           fontSize={[10]}
           backgroundColors={[
-            "#3f297e",
-            "#175fa9",
-            "#169ed8",
-            "#239b63",
-            "#64b031",
-            "#efe61f",
-            "#f7a416",
             "#e6471d",
             "#dc0936",
+            "#efe61f",
+            "#f7a416",
             "#e5177b",
             "#be1180",
-            "#871f7f"
+            "#871f7f",
+            "#239b63",
+            "#64b031",
           ]}
           onStopSpinning={() => {
             setMustSpin(false);

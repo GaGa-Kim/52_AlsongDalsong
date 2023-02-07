@@ -51,21 +51,21 @@ function MainPage(props) {
               <Button
                 title="살까 말까"
                 onClick={() => {
-                  navigate("/post-write");
+                  navigate("/main-page");
                 }}
               />
               <Space></Space>
               <Button
                 title="할까 말까"
                 onClick={() => {
-                  navigate("/post-write");
+                  navigate("/main-page");
                 }}
               />
               <Space></Space>
               <Button
                 title="갈까 말까"
                 onClick={() => {
-                  navigate("/post-write");
+                  navigate("/main-page");
                 }}
               />
               <SDrop/>

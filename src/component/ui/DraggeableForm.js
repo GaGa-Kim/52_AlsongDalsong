@@ -14,14 +14,6 @@ const FormularioTexto = () => {
       id: uuidv4(),
       text: "홍차라떼"
     },
-    {
-      id: uuidv4(),
-      text: "망고스무디"
-    },
-    {
-      id: uuidv4(),
-      text: "딸기라떼"
-    },
     
   
   
@@ -113,7 +105,7 @@ const FormularioTexto = () => {
       </DragDropContext>
       <button
         onClick={handleAddClick}
-        style={{ marginLeft: "2.1rem" }}
+        style={{ marginLeft: "0.2rem" }}
         className="button"
       >
         <BiPlus />

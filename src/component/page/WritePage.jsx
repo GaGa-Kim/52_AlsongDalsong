@@ -1,18 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
 import MNButton from "../ui/menuBT";
 import Template from "../ui/template";
 import Userimg from "../ui/Userimg";
 import Drop from "../ui/Drop";
 import BTemplate from "../ui/BackgroundBox";
+import SButton from "../ui/SelectButton";
 import './writepage.css';
 
 
 function Writepage(props) {
 
     const navigate = useNavigate();
-
     return (
         <Template>
             <Drop/>
@@ -124,8 +123,9 @@ function Writepage(props) {
             </span>
             
             <span className="flex-container">
-                <div><MNButton 
-                        title="등록" 
+                <div>
+                    <SButton 
+                        title="등록하기" 
                         onClick={() => {
                             navigate("/main-page");
                         }}

@@ -10,7 +10,7 @@ const IntroText = styled.p`
     font-family: "HancomMalangMalang-Bold";
     text-align: center;
     color: #FFFFFF;
-    margin-top: 20%;
+    margin-top: 8%;
     margin-bottom: 1%;
     letter-spacing: 2px;
     line-height:170%;
@@ -50,8 +50,6 @@ function Intropage(props) {
                     }}
                 />
         </Template>
-           
-       
     );
 }
 
