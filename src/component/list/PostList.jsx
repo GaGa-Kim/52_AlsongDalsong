@@ -8,7 +8,7 @@ const Wrapper = styled.div`
     font-family: 'GmarketSansTTFMedium';
     align-items: flex-start;
     justify-content: center;
-
+    margin-left: 30px;
     & > * {
         :not(:last-child) {
             margin-bottom: 20px;

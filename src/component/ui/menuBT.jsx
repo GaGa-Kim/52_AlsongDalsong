@@ -1,26 +1,27 @@
 import React from "react";
 import styled from "styled-components";
 
-const StyledIButton = styled.button`
+const StyledIButton = styled.p`
     margin-top: 0px;
     font-size: 13px;
     font-weight: 100;
-    border-width: 4px;
-    border-radius: 50px;
-    border-color:#FFCAC5 #790F05 #790F05 #FFCAC5;
+    font-family: 'GMarketSansTTFBold';
+    border-width: 2px;
     cursor: pointer;
     top: 190px;
     margin-left: 3%;
     color:#F64177;
-    width: 73px;
-    height: 39.59px;
+    width: 70px;
+    height: 35px;
+    padding-top: 12px;
+    margin-right: 20px;
     `;
     
 
-function Button(props) {
+function button(props) {
     const { title } = props;
 
     return <StyledIButton>{title || "button"}</StyledIButton>;
 }
 
-export default Button;
+export default button;

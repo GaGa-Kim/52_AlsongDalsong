@@ -4,6 +4,9 @@ import styled from "styled-components";
 import TextInput from "../ui/TextInput";
 import Button from "../ui/Button";
 import Template from "../ui/template";
+import Userimg from "../ui/Userimg";
+import BTemplate from "../ui/BackgroundBox";
+import Drop from "../ui/Drop";
 
 const MainTitleText = styled.p`
     font-size: 50px;
@@ -50,9 +53,16 @@ function PostWritePage(props) {
     }, []);
 
     return (
-        <Template> <MainTitleText>알쏭달쏭?!</MainTitleText>
-        <Wrapper>
+      <Template>
+        <Drop></Drop>
+        <MainTitleText/>
+          <Userimg
+             onClick={() => {
+             navigate("/auth/select-page");
+          }}/>
+        <BTemplate>
             <Container>
+                <br></br>
                 <TextInput
                     height={20}
                     value={title}
@@ -76,8 +86,8 @@ function PostWritePage(props) {
                     }}
                 />
             </Container>
-        </Wrapper>
-        </Template>
+      </BTemplate>
+    </Template>
     );
 }
 
