@@ -49,12 +49,21 @@ public class PhotoController {
         return ResponseEntity.ok().body(awsS3Service.getS3(photo.getPhotoName()));
     }
 
-    // 사진 id로 이미지 다운로드
-    @GetMapping("/api/photo/photoDownload")
-    @ApiOperation(value = "사진 id로 이미지 다운로드", notes = "사진 id로 이미지를 bytearray로 리턴합니다.")
+    // 사진 id로 이미지 bytearray 정보 조회
+    @GetMapping("/api/photo/photoByte")
+    @ApiOperation(value = "사진 id로 이미지 bytearray 정보 조회", notes = "사진 id로 이미지를 bytearray로 리턴합니다.")
     @ApiImplicitParam(name = "id", value = "사진 id", example = "1")
-    public ResponseEntity<byte[]> downloadFiles(@RequestParam Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public ResponseEntity<byte[]> getByte(@RequestParam Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
         Photo photo = photoRepository.findById(id).orElse(null);
         return awsS3Service.getObject(photo.getOrigPhotoName(), photo.getPhotoName());
+    }
+
+    // 사진 id로 이미지 Base64 정보 조회
+    @GetMapping("/api/photo/photoBase")
+    @ApiOperation(value = "사진 id로 이미지 Base64 정보 조회", notes = "사진 id로 이미지를 Base64로 리턴합니다.")
+    @ApiImplicitParam(name = "id", value = "사진 id", example = "1")
+    public ResponseEntity<String> getBase(@RequestParam Long id) throws IOException {
+        Photo photo = photoRepository.findById(id).orElse(null);
+        return awsS3Service.getBase(photo.getOrigPhotoName(), photo.getPhotoName());
     }
 }

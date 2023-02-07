@@ -3,9 +3,6 @@ package AlsongDalsong_backend.AlsongDalsong.service;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.PostRepository;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.*;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.user.*;
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -21,13 +18,10 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -198,9 +192,9 @@ public class UserService {
         return user;
     }
 
-    // 회원 프로필 사진
+    // 회원 프로필 사진 Bytearray
     @Transactional(readOnly = true)
-    public ResponseEntity<byte[]> getProfile(String email) throws IOException {
+    public ResponseEntity<byte[]> getProfileByte(String email) throws IOException {
         User user = userRepository.findByEmail(email);
 
         URL url = new URL(user.getProfile());
@@ -214,6 +208,20 @@ public class UserService {
         httpHeaders.setContentDispositionFormData("attachment", "profile");
 
         return new ResponseEntity<>(bytes, httpHeaders, HttpStatus.OK);
+    }
+
+    // 회원 프로필 사진 Base64
+    @Transactional(readOnly = true)
+    public ResponseEntity<String> getProfileBase(String email) throws IOException {
+        User user = userRepository.findByEmail(email);
+
+        URL url = new URL(user.getProfile());
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        InputStream inputStream = urlConnection.getInputStream();
+        byte[] bytes = IOUtils.toByteArray(inputStream);
+        String encodedString = Base64.getEncoder().encodeToString(bytes);
+
+        return new ResponseEntity<>(encodedString, HttpStatus.OK);
     }
 
     // 회원 정보 수정

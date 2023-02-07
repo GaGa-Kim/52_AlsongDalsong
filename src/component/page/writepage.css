@@ -83,7 +83,6 @@ textarea::placeholder {
     border-radius: 10px;
     padding: 5px;
 }
-
   ::selection{
     background: #d5bbf7;
     
