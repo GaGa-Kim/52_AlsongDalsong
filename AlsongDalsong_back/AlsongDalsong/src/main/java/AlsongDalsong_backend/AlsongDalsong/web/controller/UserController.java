@@ -87,16 +87,34 @@ public class UserController {
         return ResponseEntity.ok().body(new UserResponseDto(user));
     }
 
-    // 회원 프로필 사진 조회
-    @GetMapping("/api/user/profile")
-    @ApiOperation(value = "회원 프로필 사진 조회", notes = "회원 프로필 사진을 bytearray로 리턴합니다.")
+    // 회원 프로필 사진 URL 정보 조회
+    @GetMapping("/api/user/profileUrl")
+    @ApiOperation(value = "회원 프로필 URL 정보 조회", notes = "회원 프로필 사진 URL 정보를 조회하여 리턴합니다.")
     @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com", required = true)
-    public ResponseEntity<byte[]> getProfile(@RequestParam("email") String email, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public ResponseEntity<String> getProfileUrl(@RequestParam("email") String email) throws IOException {
         User user = userRepository.findByEmail(email);
 
         // 카카오에서 받아온 프로필 사진이라면
         if(user.getProfile().startsWith("http")) {
-            return userService.getProfile(email);
+            return ResponseEntity.ok().body(user.getProfile());
+        }
+        // 카카오 프로필 사진이 아니라면
+        else {
+            return  ResponseEntity.ok().body(awsS3Service.getS3(user.getProfile()));
+        }
+    }
+
+
+    // 회원 프로필 사진 bytearray 정보 조회
+    @GetMapping("/api/user/profileByte")
+    @ApiOperation(value = "회원 프로필 bytearray 정보 조회", notes = "회원 프로필 사진을 bytearray로 리턴합니다.")
+    @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com", required = true)
+    public ResponseEntity<byte[]> getProfileByte(@RequestParam("email") String email, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        User user = userRepository.findByEmail(email);
+
+        // 카카오에서 받아온 프로필 사진이라면
+        if(user.getProfile().startsWith("http")) {
+            return userService.getProfileByte(email);
         }
         // 카카오 프로필 사진이 아니라면
         else {
@@ -104,13 +122,21 @@ public class UserController {
         }
     }
 
-    // 회원 정보 수정
-    @PutMapping("/api/user/updateInfo")
-    @ApiOperation(value = "회원 정보 수정", notes = "회원 정보 수정를 수정한 후, 수정된 회원 정보를 리턴합니다.")
-    public ResponseEntity<UserResponseDto> updateUser(@RequestBody UserUpdateRequestDto userUpdateRequestDto) {
-        // 받아온 정보로 회원 정보 수정 및 프로필 저장
-        User user = userService.updateUser(userUpdateRequestDto);
-        return ResponseEntity.ok().body(new UserResponseDto(user));
+    // 회원 프로필 사진 Base64 정보 조회
+    @GetMapping("/api/user/profileBase")
+    @ApiOperation(value = "회원 프로필 Base64 정보 조회", notes = "회원 프로필 사진을 Base64로 리턴합니다.")
+    @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com", required = true)
+    public ResponseEntity<String> getProfileBase(@RequestParam("email") String email) throws IOException {
+        User user = userRepository.findByEmail(email);
+
+        // 카카오에서 받아온 프로필 사진이라면
+        if (user.getProfile().startsWith("http")) {
+            return userService.getProfileBase(email);
+        }
+        // 카카오 프로필 사진이 아니라면
+        else {
+            return awsS3Service.getBase("profile", user.getProfile());
+        }
     }
 
     // 회원 프로필 사진 수정
