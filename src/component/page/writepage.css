@@ -4,12 +4,15 @@ section {
 
 .flex-container {
   display: inline-flex;
-  margin: 0;
   float: left;
+  margin-top: 3px;
+
 }
 
-div {
-  margin: 10px;
+.addButton {
+  display: inline-flex;
+  padding-top: 50px;
+  margin: 0 auto;
 }
 
 .border {
@@ -19,14 +22,13 @@ div {
 
 .choice {
   box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'GMarketSansTTFMedium';
   padding: 10px;
-  text-align: center;
+  text-align: start;
+  width: 250px;
+  height: 38px;
 
-
-  width: 130px;
-
-  border: 1px solid #790F05;
+  border: 1px solid #b6493f;
   border-radius: 40px;
 }
 
@@ -34,10 +36,11 @@ textarea {
   box-sizing: border-box;
 
   padding: 8px;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'GMarketSansTTFMedium';
   width: 250px;
+  height: 38px;
 
-  border: 1px solid #790F05;
+  border: 1px solid #b6493f;
   border-radius: 40px;
 
 }
@@ -47,9 +50,11 @@ textarea {
 }
 
 textarea::placeholder {
-  color: peru;
-  font-weight: 600;
-  font-style: italic;
+  color: rgb(133, 133, 133);
+  font-weight: 900;
+  padding-top: 3px;
+  font-family: 'GMarketSansTTFMedium';
+  letter-spacing: 0.2px;
 }
 
 .col {
@@ -84,24 +89,28 @@ textarea::placeholder {
 }
 
 #myform label:hover {
-  text-shadow: 0 0 0 #a00;
+  text-shadow: 0 0 0 rgb(255, 217, 0);
   /* 마우스 호버 */
 }
 
 #myform label:hover~label {
-  text-shadow: 0 0 0 #a00;
+  text-shadow: 0 0 0 rgb(255, 217, 0);
   /* 마우스 호버 뒤에오는 이모지들 */
 }
 
 #myform input[type=radio]:checked~label {
-  text-shadow: 0 0 0 #a00;
+  text-shadow: 0 0 0 rgb(255, 217, 0);
   /* 마우스 클릭 체크 */
 }
 
 .filechoose {
-  border: 1px solid #790F05;
-  border-radius: 10px;
-  padding: 5px;
+  width: 250px;
+  height: 38px;
+  border: 1px solid #b6493f;
+  border-radius: 40px;
+  padding: 7px;
+  padding-left: 13px;
+  font-family: 'GMarketSansTTFMedium';
 }
 
 ::selection {
@@ -212,8 +221,8 @@ textarea::placeholder {
   Height: 40px;
   Display: Flex;
   Align-Items: Center;
-  Margin-Top: 1.2em;
-  Padding: 0 0.5em;
+  Margin-Top: 0.1em;
+  margin-left: 17px;
   font-size: 16px;
   font-family: 'GMarketSansTTFMedium';
 }
@@ -266,19 +275,18 @@ textarea::placeholder {
 
 
 .Btn2 {
-  Width: 60px;
+  Width: 70px;
   Height: 40px;
   Display: Flex;
   Align-Items: Center;
-  Margin-Top: 1.2em;
   Padding: 0 0.5em;
-  font-size: 15px;
+  font-size: 13px;
+  font-family: 'GMarketSansTTFMedium';
 }
 
 .Btn2 Input {
   Position: Relative;
   Cursor: Pointer;
-  Appearance: None;
 
 }
 
@@ -288,12 +296,10 @@ textarea::placeholder {
   Position: Absolute;
   Width: 5px;
   Height: 5px;
-  border: 1px solid #790F05;
   border-radius: 20px;
 }
 
 .Btn2 Input:checked::Before {
-  Background: #Ca4444;
   Transform: Translate(-50%, -50%);
 }
 

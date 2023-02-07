@@ -29,6 +29,11 @@ const Wrapper_2 = styled.div`
     color: #d9d9d9;
   }
   justify-content: space-between;
+`;
+
+const Wrapper_3=styled.div`
+  margin-top: -7px;
+  margin-left: auto;
 `
 
 const ContentText = styled.p`
