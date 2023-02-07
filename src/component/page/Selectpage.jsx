@@ -27,7 +27,7 @@ const SText = styled.p`
 
 const Space = styled.div`
   width: 15px;
-  height: auto;
+  height: 20px;
   display: inline-block;
 `;
 
@@ -50,7 +50,8 @@ function Selectpage(props) {
              onClick={() => {
              navigate("/post-a");
           }}/>
-          <Space></Space>   
+          <Space></Space> 
+          <Space></Space> 
                 <Stemplate>
                   <SText>시간이 없다면?</SText>
                   <B1img/>

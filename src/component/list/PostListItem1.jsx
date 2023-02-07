@@ -1,4 +1,3 @@
-
 import styled from "styled-components";
 import HorizonLine from "../ui/HorizontalLine";
 import Likes from "../ui/likes";
@@ -7,7 +6,6 @@ import axios from 'axios';
 
 const Wrapper = styled.div`
   width: calc(100% - 32px);
-
   padding-top: 10px;
   padding-right: 16px;
   padding-bottom: 10px;

@@ -28,13 +28,7 @@ const Wrapper_2 = styled.div`
     font-size: 30px;
     color: #d9d9d9;
   }
-  justify-content: space-beteween;
-
-`;
-const Wrapper_3=styled.div`
-  margin-top: -7px;
-  margin-left: auto;
-
+  justify-content: space-between;
 `
 
 const ContentText = styled.p`
@@ -83,4 +77,3 @@ const TestPage = () => {
 };
 
 export default TestPage;
-

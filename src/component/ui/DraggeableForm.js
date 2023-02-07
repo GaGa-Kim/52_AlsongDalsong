@@ -14,7 +14,10 @@ const FormularioTexto = () => {
       id: uuidv4(),
       text: "홍차라떼"
     },
-    
+    {
+      id: uuidv4(),
+      text: "아이스티"
+    },
   
   
   ]);
