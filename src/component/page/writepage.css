@@ -4,6 +4,7 @@ section {
 .flex-container{
     display: inline-flex;
     margin: 0;
+    float: left;
 }
 div {
     margin: 10px;
