@@ -13,6 +13,7 @@ import Likes from "../ui/likes";
 import UserImage from "../ui/woman.png";
 import ProgressBar from "../ui/ProgressBar";
 import axios from 'axios';
+import Commenta from '../list/posts';
 const MainTitleText = styled.p`
     font-size: 50px;
     font-weight: 900;
@@ -172,8 +173,9 @@ const TestPage = () => {
               </ProgressContainer>
               
               <CommentLabel>댓글</CommentLabel>
+              <Commenta></Commenta>
 
-              <CommentList />
+  
 
               <Button
                 title="댓글 작성하기"
