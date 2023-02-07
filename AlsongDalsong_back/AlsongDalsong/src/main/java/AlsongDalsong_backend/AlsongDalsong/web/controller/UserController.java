@@ -87,6 +87,15 @@ public class UserController {
         return ResponseEntity.ok().body(new UserResponseDto(user));
     }
 
+    // 회원 정보 수정
+    @PutMapping("/api/user/updateInfo")
+    @ApiOperation(value = "회원 정보 수정", notes = "회원 정보 수정를 수정한 후, 수정된 회원 정보를 리턴합니다.")
+    public ResponseEntity<UserResponseDto> updateUser(@RequestBody UserUpdateRequestDto userUpdateRequestDto) {
+        // 받아온 정보로 회원 정보 수정 및 프로필 저장
+        User user = userService.updateUser(userUpdateRequestDto);
+        return ResponseEntity.ok().body(new UserResponseDto(user));
+    }
+
     // 회원 프로필 사진 URL 정보 조회
     @GetMapping("/api/user/profileUrl")
     @ApiOperation(value = "회원 프로필 URL 정보 조회", notes = "회원 프로필 사진 URL 정보를 조회하여 리턴합니다.")
