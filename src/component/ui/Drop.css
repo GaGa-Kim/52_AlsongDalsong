@@ -87,6 +87,7 @@ a {
   left: 20px;
   background-color: #fff;
   border-radius: var(--border-radius);
+  Z-Index: 10;
   padding: 10px 20px;
   width: 200px;
 }

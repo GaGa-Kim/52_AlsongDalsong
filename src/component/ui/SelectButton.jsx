@@ -14,6 +14,7 @@ const StyledIButton = styled.button`
     height: 57.65px;
     color: #940F00;
     background-color: white;
+    margin-top: 5px;
     margin: 0 auto;
     `;
     

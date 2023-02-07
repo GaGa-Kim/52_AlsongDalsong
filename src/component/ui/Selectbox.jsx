@@ -17,7 +17,7 @@ margin: 0 auto;
 color: #940F00;
 background-color: white;
 margin-bottom:1%;
-margin-top: 5%;
+margin-top: 10%;
 
 `;
 
