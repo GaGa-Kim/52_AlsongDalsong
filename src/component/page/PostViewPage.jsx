@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import CommentList from "../list/CommentList";
@@ -12,7 +12,7 @@ import PTemplate from "../ui/PostBox";
 import Likes from "../ui/likes";
 import UserImage from "../ui/woman.png";
 import ProgressBar from "../ui/ProgressBar";
-
+import axios from 'axios';
 const MainTitleText = styled.p`
     font-size: 50px;
     font-weight: 900;
@@ -104,17 +104,25 @@ const ProgressContainer = styled.div`
   padding-top: 15px;
 `
 
-function PostViewPage(props) {
-    const navigate = useNavigate();
-    const { postId } = useParams();
+const TestPage = () => {
 
-    const post = data.find((item) => {
-        return item.id == postId;
-    });
+  const [data , setData] = useState([]);
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+      axios.get('http://35.216.20.124:8080/api/post/inquire?id=1').then(Response => {
+      setData(Response.data);
+      console.log(Response.data);
+  }).catch((Error)=> {
+      console.log(Error) ;
+  })
+      }, [])
 
-    const [comment, setComment] = useState("");
-    return (
-    <Template>
+  return (
+      <>
+      {data.length}
+    {data && 
+      <Template>
       <MainTitleText>알쏭달쏭?!</MainTitleText>
       <BTemplate>
         <Wrapper>
@@ -149,10 +157,12 @@ function PostViewPage(props) {
                 />
                 <img id="userimage" src={UserImage} />
               </TopContainer>
+              
               <PostContainer>
-                <TitleText>{post.title}</TitleText>
-                <ContentText>{post.content}</ContentText>
+                <TitleText>{data.what} 살까 말까 </TitleText>
+                <ContentText>{data.content}</ContentText>
               </PostContainer>
+
               <LikesContainer>
                 <Likes />
               </LikesContainer>
@@ -163,15 +173,7 @@ function PostViewPage(props) {
               
               <CommentLabel>댓글</CommentLabel>
 
-              <CommentList comments={post.comments} />
-
-              <TextInput
-                height={20}
-                value={comment}
-                onChange={(event) => {
-                  setComment(event.target.value);
-                }}
-              />
+             
 
               <Button
                 title="댓글 작성하기"
@@ -184,8 +186,10 @@ function PostViewPage(props) {
         </Wrapper>
       </BTemplate>
     </Template>
+    
+    }
+      </>
   );
-}
-        
+};
 
-export default PostViewPage;
+export default TestPage;
