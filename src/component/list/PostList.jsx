@@ -1,6 +1,9 @@
 import React from "react";
 import styled from "styled-components";
-import PostListItem from "./PostListItem";
+import PostListItem1 from "./PostListItem1";
+import PostListItem2 from "./PostListItem2";
+import PostListItem3 from "./PostListItem3";
+import PostListItem4 from "./PostListItem4";
 
 const Wrapper = styled.div`
     display: flex;
@@ -21,17 +24,10 @@ function PostList(props) {
 
     return (
         <Wrapper>
-            {posts.map((post, index) => {
-                return (
-                    <PostListItem
-                        key={post.id}
-                        post={post}
-                        onClick={() => {
-                            onClickItem(post);
-                        }}
-                    />
-                );
-            })}
+          <PostListItem1 />
+          <PostListItem2 />
+          <PostListItem3 />
+          <PostListItem4 />
         </Wrapper>
     );
 }

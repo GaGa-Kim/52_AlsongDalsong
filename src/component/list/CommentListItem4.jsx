@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from 'react';
 import styled from "styled-components";
 import HorizonLine from "../ui/HorizontalLine";
 import HButton from "../ui/HeartButton";
+import axios from 'axios';
 
 const Wrapper = styled.div`
   width: calc(100% - 32px);
@@ -47,21 +48,39 @@ const ContentText = styled.p`
   
 `;
 
-function CommentListItem(props) {
-  const { comment } = props;
-  
-  return (
-    <Wrapper>
-      <HorizonLine />
-      <Wrapper_2>
-        <i className="usericon fa-solid fa-circle-user"></i>
-        <ContentText>{comment.content}</ContentText>
-      </Wrapper_2>
-      <Wrapper_3>
-        <HButton />
-      </Wrapper_3>
-    </Wrapper>
-  );
-}
 
-export default CommentListItem;
+const TestPage = () => {
+
+  const [data , setData] = useState([]);
+  
+  useEffect(() => {
+      axios.get('http://35.216.20.124:8080/api/comment/inquire?postId=4').then(Response => {
+      setData(Response.data);
+      console.log(Response.data);
+  }).catch((Error)=> {
+      console.log(Error) ;
+  })
+      }, [])
+
+  return (
+      <>
+      {data.length}
+    {data && 
+     <Wrapper>
+     <HorizonLine />
+     <Wrapper_2>
+       <i className="usericon fa-solid fa-circle-user"></i>
+       <ContentText>{data.content}</ContentText>
+     </Wrapper_2>
+     <Wrapper_3>
+       <HButton />
+     </Wrapper_3>
+   </Wrapper>
+    
+    }
+      </>
+  );
+};
+
+export default TestPage;
+
