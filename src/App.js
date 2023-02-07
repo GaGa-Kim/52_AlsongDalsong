@@ -15,6 +15,7 @@ import Roulettepage from "./component/page/Roulettepage";
 import Login from "./component/page/Login"
 import WritePage from "./component/page/WritePage";
 import MyPage from "./component/page/MyPage";
+import Posta from "./component/list/posts";
 
 function App(props) {
     return (
@@ -29,6 +30,7 @@ function App(props) {
                 <Route path="login" element={<Login/>} />
                 <Route path="writepage" element={<WritePage />} />
                 <Route path="mypage" element={<MyPage />} />
+                <Route path="post-a" element={<Posta />} />
             </Routes>
         </BrowserRouter>
     );
