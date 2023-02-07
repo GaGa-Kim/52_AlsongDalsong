@@ -158,6 +158,7 @@ textarea::placeholder {
 }
 .flex-container{
     display: inline-flex;
+    float: left;
 }
 div {
     margin: 10px;
