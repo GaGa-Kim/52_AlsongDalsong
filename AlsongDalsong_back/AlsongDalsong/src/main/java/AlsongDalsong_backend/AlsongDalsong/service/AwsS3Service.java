@@ -19,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -112,6 +113,17 @@ public class AwsS3Service {
         httpHeaders.setContentDispositionFormData("attachment", originPhotoName);
 
         return new ResponseEntity<>(bytes, httpHeaders, HttpStatus.OK);
+    }
+
+    // S3 버킷에서 사진 가져와서 Base64 변환
+    @Transactional
+    public ResponseEntity<String> getBase(String originPhotoName, String photoName) throws IOException {
+        S3Object o = amazonS3Client.getObject(new GetObjectRequest(bucket, photoName));
+        S3ObjectInputStream objectInputStream = ((S3Object) o).getObjectContent();
+        byte[] bytes = IOUtils.toByteArray(objectInputStream);
+        String encodedString = Base64.getEncoder().encodeToString(bytes);
+
+        return new ResponseEntity<>(encodedString, HttpStatus.OK);
     }
 
     // 사진 이름 변환
