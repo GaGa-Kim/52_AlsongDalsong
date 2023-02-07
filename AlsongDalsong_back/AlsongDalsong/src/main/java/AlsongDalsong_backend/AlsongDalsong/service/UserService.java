@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -191,9 +192,9 @@ public class UserService {
         return user;
     }
 
-    // 회원 프로필 사진
+    // 회원 프로필 사진 Bytearray
     @Transactional(readOnly = true)
-    public ResponseEntity<byte[]> getProfile(String email) throws IOException {
+    public ResponseEntity<byte[]> getProfileByte(String email) throws IOException {
         User user = userRepository.findByEmail(email);
 
         URL url = new URL(user.getProfile());
@@ -207,6 +208,20 @@ public class UserService {
         httpHeaders.setContentDispositionFormData("attachment", "profile");
 
         return new ResponseEntity<>(bytes, httpHeaders, HttpStatus.OK);
+    }
+
+    // 회원 프로필 사진 Base64
+    @Transactional(readOnly = true)
+    public ResponseEntity<String> getProfileBase(String email) throws IOException {
+        User user = userRepository.findByEmail(email);
+
+        URL url = new URL(user.getProfile());
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        InputStream inputStream = urlConnection.getInputStream();
+        byte[] bytes = IOUtils.toByteArray(inputStream);
+        String encodedString = Base64.getEncoder().encodeToString(bytes);
+
+        return new ResponseEntity<>(encodedString, HttpStatus.OK);
     }
 
     // 회원 정보 수정
