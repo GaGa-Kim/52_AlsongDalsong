@@ -19,6 +19,7 @@ const Wrapper = styled.div`
     background: lightgrey;
   }
 `;
+
 const Wrapper_2 = styled.div`
   display: flex;
   flex-direction: row;
@@ -35,8 +36,8 @@ const Wrapper_2 = styled.div`
 const Wrapper_3=styled.div`
   margin-top: -7px;
   margin-left: auto;
+`;
 
-`
 const ContentText = styled.p`
   font-size: 13px;
   white-space: pre-wrap;
