@@ -96,7 +96,7 @@ const TestPage = () => {
     {data && 
       <Wrapper>
       <NameandDay></NameandDay>
-      <TitleText>{data.content}</TitleText>
+      <TitleText>{data.what} 살까 말까</TitleText>
       <i className="DecisionIcon fa-regular fa-circle-check"></i>
       <ContentText>{data.content}</ContentText>
       <HorizonLine />
