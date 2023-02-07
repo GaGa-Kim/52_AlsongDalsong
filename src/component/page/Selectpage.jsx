@@ -48,7 +48,7 @@ function Selectpage(props) {
           <MainTitleText/>
           <Userimg
              onClick={() => {
-             navigate("/");
+             navigate("/post-a");
           }}/>
           <Space></Space>   
                 <Stemplate>
