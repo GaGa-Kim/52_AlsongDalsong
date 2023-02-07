@@ -110,7 +110,7 @@ const TestPage = () => {
   const navigate = useNavigate();
   
   useEffect(() => {
-      axios.get('http://35.216.20.124:8080/api/post/inquire?id=1').then(Response => {
+      axios.get().then(Response => {
       setData(Response.data);
       console.log(Response.data);
   }).catch((Error)=> {
