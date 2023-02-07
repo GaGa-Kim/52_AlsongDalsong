@@ -44,8 +44,8 @@ const Roulette = ({ data }) => {
           backgroundColors={[
             "#e6471d",
             "#dc0936",
-            "#efe61f",
             "#f7a416",
+            "#efe61f",
             "#e5177b",
             "#be1180",
             "#871f7f",

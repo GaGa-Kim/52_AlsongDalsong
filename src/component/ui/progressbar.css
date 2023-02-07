@@ -1,22 +1,25 @@
-.body{
+.body {
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100vh;
     margin: 0;
-    
-    
+
+
 }
+
 .progress {
     background-color: #000000;
     border-radius: 20px;
+    font-family: 'GMarketSansTTFMedium';
     height: 30px;
     width: 300px;
-    
-
+    margin-top: 10px;
+    margin-left: 17px;
 }
-.progress-done{
-    
+
+.progress-done {
+
     background-color: #FA0050;
     box-shadow: 0 3px 3px -5px #F2709C;
     border-radius: 20px;

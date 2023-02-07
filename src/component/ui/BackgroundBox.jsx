@@ -13,7 +13,7 @@ height: 810px;
 margin: auto;
 color: #940F00;
 background-color: white;
-margin-top:15%;
+margin-top:25%;
 `;
 
 

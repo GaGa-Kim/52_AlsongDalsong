@@ -28,8 +28,8 @@ const MainTitleText = styled.p`
 `;
 
 const Space = styled.div`
-  width: 0.2px;
-  height: auto;
+  width: 0.5px;
+  height: 30px;
   display: inline-block;
 `;
 
@@ -42,6 +42,7 @@ function Intropage(props) {
            <IntroText>이거 살까 말까?<br></br>여기 갈까 말까?<br></br>이거 할까 말까?<br></br>누군가가 결정해주길 원한다면?</IntroText>
             <Space></Space>
             <MainTitleText>알송달송?!</MainTitleText>
+            <Space></Space>
                 <Iimg/>
                 <IButton
                     title="Start"

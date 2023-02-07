@@ -27,6 +27,7 @@ const Wrapper_2 = styled.div`
     font-size: 30px;
     color: #d9d9d9;
   }
+  margin-left: 15px
   justify-content: space-beteween;
 
 `;
@@ -37,12 +38,14 @@ const Wrapper_3=styled.div`
 `
 
 const ContentText = styled.p`
-  font-size: 13px;
+  font-size: 11px;
   white-space: pre-wrap;
   text-align: left;
   font-style: normal;
+  font-family: 'GMarketSansTTFMedium';
   font-weight: 500;
   line-height: 1.5;
+  margin-top: 10px;
   color:#000000;
   
 `;

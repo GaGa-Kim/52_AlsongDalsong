@@ -11,7 +11,7 @@ margin: 0 auto; /* 페이지 중앙에 나타나도록 설정 */
 
 display: flex;
 flex-direction: column;
-padding-bottom: 300px;
+padding-bottom: 60px;
 `;
 
 function Template({ children }) {
