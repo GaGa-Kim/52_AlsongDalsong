@@ -27,8 +27,8 @@ const Wrapper = styled.div`
   .DecisionIcon {
     font-size: 30px;
     position: absolute;
-    margin-left: 75%;
-    margin-top: -40%;
+    margin-left: 60%;
+    margin-top: -18%;
     color: #fa0050;
   }
 `;

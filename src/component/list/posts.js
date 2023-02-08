@@ -5,11 +5,13 @@ import HButton from "../ui/HeartButton";
 import axios from 'axios';
 
 const Wrapper = styled.div`
-  width: calc(100% - 32px);
+  width: 340px;
   padding: 0px 16px;
+  margin-bottom:7px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  font-family: 'GmarketSansTTFMedium';
   justify-content: center;
   border: transper;
   border-radius: 8px;
@@ -35,7 +37,7 @@ const Wrapper_3=styled.div`
   margin-top: -7px;
   margin-left: auto;
 
-`
+`;
 
 const ContentText = styled.p`
   font-size: 13px;
@@ -43,9 +45,9 @@ const ContentText = styled.p`
   text-align: left;
   font-style: normal;
   font-weight: 500;
+  font-family: 'GmarketSansTTFMedium';
   line-height: 1.5;
   color:#000000;
-  
 `;
 
 
@@ -81,20 +83,19 @@ function Users() {
   return (
     <ul>
       {users.map(user => (
-             <li key={user.id}>
-            <Wrapper>
+        <li key={user.id}>
+          <Wrapper>
             <HorizonLine />
             <Wrapper_2>
               <i className="usericon fa-solid fa-circle-user"></i>
               <ContentText>
-         {user.nickname}<br/> {user.content} </ContentText>
+                {user.nickname}<br/> {user.content} 
+              </ContentText>
             </Wrapper_2>
             <Wrapper_3>
               <HButton />
             </Wrapper_3>
           </Wrapper>
-           
-   
         </li>
       ))}
     </ul>

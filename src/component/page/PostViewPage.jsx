@@ -14,6 +14,9 @@ import UserImage from "../ui/woman.png";
 import ProgressBar from "../ui/ProgressBar";
 import axios from 'axios';
 import Commenta from '../list/posts';
+import Drop from "../ui/Drop";
+import Userimg from "../ui/Userimg";
+
 const MainTitleText = styled.p`
     font-size: 50px;
     font-weight: 900;
@@ -50,7 +53,7 @@ const TopContainer = styled.div`
     position: absolute;
     left: 20%;
     right: 0%;
-    top: 10%;
+    top: 20%;
     bottom: 0%;
   }
 `;
@@ -72,15 +75,19 @@ const LikesContainer = styled.div`
 const TitleText = styled.p`
   font-size: 17px;
   font-weight: 600;
+  font-family: 'GmarketSansTTFMedium';
   line-height: 23px;
   color: #000000;
   text-align: left;
+  padding-top:5px;
+  padding-bottom: 10px;
 `;
 
 const ContentText = styled.p`
     font-style: normal;
     font-size: 13px;
     font-weight: 500;
+    font-family: 'GmarketSansTTFMedium';
     text-align: left;
     line-height: 1.5;
     white-space: pre-wrap;
@@ -90,19 +97,21 @@ const ContentText = styled.p`
 const CommentLabel = styled.p`
     padding-top: 15px;
     padding-left: 15px;
+    padding-bottom: 8px;
     font-weight: 600;
     font-size: 15px;
+    font-family: 'GmarketSansTTFMedium';
     line-height: 18px;
     color: #000000;
 `;
 const Space = styled.div`
   width: 15px;
-  height: auto;
+  height: 10px;
   display: inline-block;
 `;
 const ProgressContainer = styled.div`
   padding-top: 15px;
-`
+`;
 
 const TestPage = () => {
 
@@ -123,9 +132,13 @@ const TestPage = () => {
       {data.length}
     {data && 
       <Template>
-      <MainTitleText>알쏭달쏭?!</MainTitleText>
-      <BTemplate>
-        <Wrapper>
+          <Drop/>
+          <Userimg
+              onClick={() => {
+              navigate("/new");
+          }}/>
+          <BTemplate>
+        <Space></Space>
           <Container>
             <Button
               title="살까 말까"
@@ -184,7 +197,6 @@ const TestPage = () => {
               />
             </PTemplate>
           </Container>
-        </Wrapper>
       </BTemplate>
     </Template>
     

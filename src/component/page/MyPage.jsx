@@ -17,10 +17,6 @@ const MainTitleText = styled.p`
     top: 27px;
 `;
 
-
-
-
-
 function MyPage(props) {
 
     return (
