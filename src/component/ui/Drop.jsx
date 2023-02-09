@@ -13,6 +13,15 @@ function Drop() {
     // 👇️ navigate to /
     navigate('/');
   };
+  const navigateSelect = () => {
+    // 👇️ navigate to /
+    navigate('/auth/select-page');
+  };
+
+  const navigateMy = () => {
+    // 👇️ navigate to /
+    navigate('/mypage');
+  };
 
   let menuRef = useRef();
 
@@ -55,8 +64,11 @@ function Drop() {
                    <Button   title="룰렛 돌리기"           
                      onClick={navigateHome}
                 />
-                   <Button   title="MY PAGE"            
-                   onClick={navigateHome}
+                   <Button   title="Select Page"            
+                   onClick={navigateSelect}
+                />
+                 <Button   title="MY PAGE"            
+                   onClick={navigateMy}
                 />
                 </ul>
         </div>
