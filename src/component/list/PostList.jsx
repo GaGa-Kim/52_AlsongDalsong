@@ -90,7 +90,7 @@ function Users(props) {
           setUsers(null);
           // loading 상태를 true 로 바꿉니다.
           setLoading(true);
-          const response = await axios.get('http://35.216.20.124:8080/api/post/inquireLatest?todo=%EC%82%B4%EA%B9%8C%20%EB%A7%90%EA%B9%8C');
+          const response = await axios.get();
           setUsers(response.data); // 데이터는 response.data 안에 들어있습니다.
         } catch (e) {
           setError(e);
