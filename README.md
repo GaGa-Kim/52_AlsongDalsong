@@ -65,4 +65,4 @@
 | :-: | :-: | :-: | :-: | :-: |
 | [@GaGa-Kim](https://github.com/GaGa-Kim) | [@YeowonAhn](https://github.com/YeowonAhn) | [@chae33](https://github.com/chae33) | [@yush0831](https://github.com/yush0831) | [@Jiyoongrace](https://github.com/Jiyoongrace) |
 |<img src="https://github.com/GaGa-Kim.png" style="width:150px; height:150px;">|<img src="https://github.com/YeowonAhn.png" style="width:150px; height:150px;">|<img src="https://github.com/chae33.png" style="width:150px; height:150px;">|<img src="https://github.com/yush0831.png" style="width:150px; height:150px;">|<img src="https://github.com/Jiyoongrace.png" style="width:150px; height:150px;">|
-| Backend Developer | Frontend Developer | Frontend Developer | Frontend Developer | Frontend Developer |
+| Backend<br/>Developer | Frontend<br/>Developer | Frontend<br/>Developer | Frontend<br/>Developer | Frontend<br/>Developer |
