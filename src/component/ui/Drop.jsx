@@ -52,23 +52,33 @@ function Drop() {
         <div className={`dropdown-menu ${open? 'active' : 'inactive'}`} >
         <ul>
           <Button  title="살까 말까"
-                     onClick={navigateHome}
+                     onClick={() => {
+                      navigate("/main-page");
+                    }}
                      />
               
                    <Button   title="갈까 말까"
-                       onClick={navigateHome}
+                       onClick={() => {
+                      navigate("/main-page");
+                    }}
                 />
                    <Button   title="할까 말까"            
-                    onClick={navigateHome}
+                    onClick={() => {
+                      navigate("/main-page");
+                    }}
                 />
                    <Button   title="룰렛 돌리기"           
-                     onClick={navigateHome}
+                     onClick={() => {
+                      navigate("/wheel-page");
+                    }}
                 />
                    <Button   title="Select Page"            
                    onClick={navigateSelect}
                 />
                  <Button   title="MY PAGE"            
-                   onClick={navigateMy}
+                   onClick={() => {
+                    navigate("/mypage");
+                  }}
                 />
                 </ul>
         </div>
