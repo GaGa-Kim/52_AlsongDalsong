@@ -76,10 +76,11 @@ const Space = styled.div`
 `;
 
 
-function Users() {
+function Users(props) {
     const [users, setUsers] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const { posts, onClickItem } = props;
   
     useEffect(() => {
       const fetchUsers = async () => {
@@ -89,9 +90,7 @@ function Users() {
           setUsers(null);
           // loading 상태를 true 로 바꿉니다.
           setLoading(true);
-          const response = await axios.get(
-      
-          );
+          const response = await axios.get();
           setUsers(response.data); // 데이터는 response.data 안에 들어있습니다.
         } catch (e) {
           setError(e);
@@ -109,7 +108,9 @@ function Users() {
       <ul>
         {users.map(user => (
                <li key={user.id}>
-           <Wrapper>
+             <Wrapper onClick={()=>{
+            onClickItem(posts);
+          }}>
       <NameandDay></NameandDay>
       <TitleText>{user.what} 살까 말까</TitleText>
       <i className="DecisionIcon fa-regular fa-circle-check"></i>
