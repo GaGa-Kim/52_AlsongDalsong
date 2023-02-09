@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+
 import styled from "styled-components";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const Wrapper = styled.div`
   width: 300px;
@@ -46,8 +48,18 @@ const Space_2 = styled.div`
 function Likes() {
   const [thumbup, setThumbUp] = useState(0); //좋아요 버튼구현
   const [thumbdown, setThumbDown] = useState(0); //좋아요 버튼구현
-  const [msg, setMsg] = useState(0); //좋아요 버튼구현
+
   const [star, setStar] = useState(0); //좋아요 버튼구현
+  const [data , setData] = useState([]);
+  
+  useEffect(() => {
+    axios.get('http://35.216.20.124:8080/api/post/inquire?id=1').then(Response => {
+    setData(Response.data);
+    console.log(Response.data);
+}).catch((Error)=> {
+    console.log(Error) ;
+})
+    }, [])
 
   return (
     <Wrapper>
@@ -71,14 +83,12 @@ function Likes() {
       <i className="count">{thumbdown}</i>
       <Space_2/>
       
-      <span
-        onClick={() => {
-            setMsg(msg + 1);
-        }}
-      >
-        <i className="cmicon fa-regular fa-comment-dots"></i>
-      </span>
-      <i className="count">{msg}</i>
+   
+   <i className="cmicon fa-regular fa-comment-dots"></i>
+   {data && 
+ <i className="count">{data.comment}</i>
+}
+     
       <Space_2/>
       
       <span

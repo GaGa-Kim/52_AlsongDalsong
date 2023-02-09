@@ -5,7 +5,6 @@ import CommentList from "../list/CommentList";
 import TextInput from "../ui/TextInput";
 import Button from "../ui/Button";
 import Bbutton from "../ui/BackButton";
-import data from "../../data.json";
 import Template from "../ui/template";
 import BTemplate from "../ui/BackgroundBox";
 import PTemplate from "../ui/PostBox";
@@ -192,7 +191,7 @@ const TestPage = () => {
               <Button
                 title="댓글 작성하기"
                 onClick={() => {
-                  navigate("/");
+                  navigate("/post/:postId");
                 }}
               />
             </PTemplate>
