@@ -8,7 +8,7 @@ height: 1850px;
 text-align: center;
 position: relative; 
 background-color : #FA0050;
-border : 2px solid black;
+
 border-radius: 16px;
 box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.04);
 
