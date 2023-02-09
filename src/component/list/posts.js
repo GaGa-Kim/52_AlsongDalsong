@@ -65,7 +65,7 @@ function Users() {
         // loading 상태를 true 로 바꿉니다.
         setLoading(true);
         const response = await axios.get(
-          'http://35.216.20.124:8080/api/comment/inquire?postId=1'
+          ''
         );
         setUsers(response.data); // 데이터는 response.data 안에 들어있습니다.
       } catch (e) {

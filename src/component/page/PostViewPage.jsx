@@ -119,7 +119,7 @@ const TestPage = () => {
   const navigate = useNavigate();
   
   useEffect(() => {
-      axios.get().then(Response => {
+      axios.get('').then(Response => {
       setData(Response.data);
       console.log(Response.data);
   }).catch((Error)=> {
@@ -135,7 +135,7 @@ const TestPage = () => {
           <Drop/>
           <Userimg
               onClick={() => {
-              navigate("/new");
+              navigate("/mypage");
           }}/>
           <BTemplate>
         <Space></Space>
