@@ -18,6 +18,12 @@ function Selectpage(props) {
              onClick={() => {
              navigate("/auth/select-page");
           }}/>
+          <br/>
+          <br/>
+          <br/>
+          <br/>
+          <br/> <br/>
+          
           <Button></Button>
           <BButton
                     title="룰렛 바로가기"
