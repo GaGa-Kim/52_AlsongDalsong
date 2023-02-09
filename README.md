@@ -17,7 +17,7 @@
 > **Frontend** : React, HTML, JavaScript, CSS<br/>
 > **Backend** : JAVA 11, Spring Boot (Gradle), Spring Data JPA, Spring Security, OAuth2<br/>
 > **Deploy** : GCP Compute Engine (CentOS), GCP SQL (MySQL), AWS S3<br/>
-> **REST API Documentation** : Swagger<br/>
+> **REST API Documentation** : [Swagger](https://github.com/GaGa-Kim/52_AlsongDalsong/blob/main/AlsongDalsong_Swagger.html)<br/>
 
 ![기술 스택](https://user-images.githubusercontent.com/87821678/217711761-2a003935-f0a3-4ce9-93a3-939addea4b21.png)<br/>
 ![ERD](https://user-images.githubusercontent.com/87821678/217704470-dcae1880-a896-4348-9ae2-0bf85aff4b19.PNG)<br/>
