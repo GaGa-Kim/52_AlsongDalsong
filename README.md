@@ -28,7 +28,7 @@
 - **소개 및 메인 페이지**<br/>
 > 알송달송 프로젝트의 서비스 소개 페이지<br/>Start 버튼 클릭 시, 두 가지 방법인 룰렛과 투표 커뮤니티 기능을 제공<br/>
 
-![소개 및 메인 페이지](https://user-images.githubusercontent.com/87821678/217712342-0cc8fcd0-be0c-4185-b8ee-d32bcbbf1fb4.png)
+![소개 및 메인 페이지](https://user-images.githubusercontent.com/87821678/218007664-ba5ee70e-bca0-4934-8ff8-d5460ad5cdb6.png)
 
 - **룰렛 페이지**<br/>
 > 시간이 없거나 혼자 결정 시에 룰렛을 이용해 빠르게 결정 가능한 룰렛 페이지<br/>
