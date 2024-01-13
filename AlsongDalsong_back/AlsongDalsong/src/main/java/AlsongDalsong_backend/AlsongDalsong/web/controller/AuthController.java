@@ -41,6 +41,13 @@ public class AuthController {
         return ResponseEntity.ok().headers(createHeader(tokenDto)).body(tokenDto.getEmail());
     }
 
+    // 응답 헤더 생성 및 JWT 토큰 삽입
+    private HttpHeaders createHeader(TokenDto tokenDto) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HEADER_AUTHORIZATION, BEARER_PREFIX + tokenDto.getToken());
+        return headers;
+    }
+
     // 일반 회원가입
     @PostMapping("/auth/signup")
     @ApiOperation(value = "일반 회원가입", notes = "일반 회원가입을 한 후, 가입된 사용자 정보를 리턴합니다.")
@@ -55,12 +62,5 @@ public class AuthController {
     public ResponseEntity<String> login(@RequestParam String email) {
         TokenDto tokenDto = authService.login(email);
         return ResponseEntity.ok().headers(createHeader(tokenDto)).body(tokenDto.getEmail());
-    }
-
-    // 응답 헤더 생성 및 JWT 토큰 삽입
-    private HttpHeaders createHeader(TokenDto tokenDto) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HEADER_AUTHORIZATION, BEARER_PREFIX + tokenDto.getToken());
-        return headers;
     }
 }

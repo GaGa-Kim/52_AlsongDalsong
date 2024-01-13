@@ -65,6 +65,16 @@ public class UserController {
         return ResponseEntity.ok().body(awsS3Service.getS3(user.getProfile()));
     }
 
+    // 카카오 프로필 사진 URL인지 확인
+    private boolean isKakaoProfile(User user) {
+        return isStartHttpString(user.getProfile());
+    }
+
+    // URL이 http로 시작하는지 확인
+    private boolean isStartHttpString(String url) {
+        return url.startsWith(HTTP_URL);
+    }
+
     // 회원 프로필 사진 bytearray 정보 조회
     @GetMapping("/api/user/profileByte")
     @ApiOperation(value = "회원 프로필 bytearray 정보 조회", notes = "회원 프로필 사진을 bytearray로 리턴합니다.")
@@ -112,15 +122,5 @@ public class UserController {
     @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com", required = true)
     public ResponseEntity<Boolean> withdraw(@RequestParam String email) {
         return ResponseEntity.ok().body(userService.withdrawUser(email));
-    }
-
-    // 카카오 프로필 사진 URL인지 확인
-    private boolean isKakaoProfile(User user) {
-        return isStartHttpString(user.getProfile());
-    }
-
-    // URL이 http로 시작하는지 확인
-    private boolean isStartHttpString(String url) {
-        return url.startsWith(HTTP_URL);
     }
 }
