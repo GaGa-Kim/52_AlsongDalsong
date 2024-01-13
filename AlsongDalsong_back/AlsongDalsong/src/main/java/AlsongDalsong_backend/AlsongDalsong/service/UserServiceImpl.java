@@ -108,7 +108,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 회원 별 구매 성향 통계를 조회한다.
+     * 회원별 구매 성향 통계를 조회한다.
      *
      * @param email (회원 이메일)
      * @return Map<String, Object> (회원의 구매 성향 통계)
@@ -127,16 +127,6 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 투두에 따른 회원 통계 정보를 저장한다.
-     *
-     * @param propensityMap (구매 성향 통계), user (회원), todo (투두 분류), decision (구매 결정 여부)
-     */
-    private void addPropensityToMap(Map<String, Object> propensityMap, User user, Todo todo, Decision decision) {
-        propensityMap.put(todo.getTodo() + " " + decision.getDecision(),
-                postRepository.countByUserIdAndTodoAndDecision(user, todo, decision));
-    }
-
-    /**
      * 회원을 탈퇴 처리한다.
      *
      * @param email (회원 이메일)
@@ -147,6 +137,16 @@ public class UserServiceImpl implements UserService {
         User user = findUserByEmail(email);
         user.withdrawUser();
         return true;
+    }
+
+    /**
+     * 이메일로 회원을 조회한다.
+     *
+     * @param email (회원 이메일)
+     * @return User (이메일로 조회한 회원)
+     */
+    private User findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     /**
@@ -164,16 +164,6 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 이메일로 회원을 조회한다.
-     *
-     * @param email (회원 이메일)
-     * @return User (이메일로 조회한 회원)
-     */
-    private User findUserByEmail(String email) {
-        return userRepository.findByEmail(email);
-    }
-
-    /**
      * 기존의 프로필 이미지를 삭제한 후, 새로운 프로필 이미지로 변경한다.
      *
      * @param user (프로필 이미지를 변경할 회원), multipartFile (프로필 이미지)
@@ -182,5 +172,15 @@ public class UserServiceImpl implements UserService {
         awsS3Service.deleteS3(user.getProfile());
         String profile = awsS3Service.uploadProfile(multipartFile);
         user.updateProfile(profile);
+    }
+
+    /**
+     * 투두에 따른 회원 통계 정보를 저장한다.
+     *
+     * @param propensityMap (구매 성향 통계), user (회원), todo (투두 분류), decision (구매 결정 여부)
+     */
+    private void addPropensityToMap(Map<String, Object> propensityMap, User user, Todo todo, Decision decision) {
+        propensityMap.put(todo.getTodo() + " " + decision.getDecision(),
+                postRepository.countByUserIdAndTodoAndDecision(user, todo, decision));
     }
 }
