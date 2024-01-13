@@ -113,7 +113,7 @@ public class UserController {
     @ApiOperation(value = "사용자별 구매 성향", notes = "사용자별 구매 성향을 리턴합니다. (살까 말까 미정/결정/취소, 할까 말까 미정/결정/취소, 갈까 말까 미정/결정/취소 갯수)")
     @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com", required = true)
     public Map<String, Object> propensity(String email) {
-        return userService.propensity(email);
+        return userService.getUserPropensity(email);
     }
 
     // 회원 탈퇴
