@@ -21,12 +21,13 @@ public class VoteService {
     private final VoteRepository voteRepository;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
-    
+
     // 게시글 투표하기
     @Transactional
     public String vote(VoteRequestDto voteRequestDto) {
         User user = userRepository.findByEmail(voteRequestDto.getEmail());
-        Post post = postRepository.findById(voteRequestDto.getPostId()).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+        Post post = postRepository.findById(voteRequestDto.getPostId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
 
         // 한 번도 투표한 적 없다면 투표하기
         if (voteRepository.findByUserIdAndPostId(user, post) == null) {
@@ -38,17 +39,16 @@ public class VoteService {
             post.addVoteList(voteRepository.save(vote));
 
             // 글 투표 시 + 1점
-            user.updatePointAndSticker(user.getPoint() + 1, user.getSticker());
+            user.updatePoint(user.getPoint() + 1);
 
             return voteRequestDto.getVote().toString();
-        }
-        else if (voteRepository.findByUserIdAndPostId(user, post) != null) {
+        } else if (voteRepository.findByUserIdAndPostId(user, post) != null) {
             Vote vote = voteRepository.findByUserIdAndPostId(user, post);
 
             // 투표 취소하기
             if ((voteRequestDto.getVote().equals(voteRepository.findByUserIdAndPostId(user, post).getVote()))) {
                 // 글 투표 취소시 - 1점
-                user.updatePointAndSticker(user.getPoint() - 1, user.getSticker());
+                user.updatePoint(user.getPoint() - 1);
                 voteRepository.delete(vote);
                 return "투표하지 않았습니다.";
             }
@@ -57,8 +57,7 @@ public class VoteService {
                 vote.update(voteRequestDto.getVote());
                 return voteRequestDto.getVote().toString();
             }
-        }
-        else {
+        } else {
             throw new RuntimeException("투표에 실패했습니다.");
         }
     }
@@ -70,10 +69,9 @@ public class VoteService {
         Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
 
         // 투표 했다면
-        if(voteRepository.findByUserIdAndPostId(user, post) != null) {
+        if (voteRepository.findByUserIdAndPostId(user, post) != null) {
             return voteRepository.findByUserIdAndPostId(user, post).getVote().toString();
-        }
-        else {
+        } else {
             return "투표하지 않았습니다.";
         }
     }

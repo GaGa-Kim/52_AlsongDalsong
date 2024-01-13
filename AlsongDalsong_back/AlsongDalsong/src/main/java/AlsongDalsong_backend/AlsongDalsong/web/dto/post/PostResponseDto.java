@@ -3,9 +3,8 @@ package AlsongDalsong_backend.AlsongDalsong.web.dto.post;
 import AlsongDalsong_backend.AlsongDalsong.domain.Time;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Getter;
-
 import java.util.List;
+import lombok.Getter;
 
 /**
  * 게시글 정보 dto
@@ -78,16 +77,16 @@ public class PostResponseDto {
         this.createdDateTime = Time.calculateTime(post.getCreatedDateTime());
         this.email = post.getUserId().getEmail();
         this.nickname = post.getUserId().getNickname();
-        this.todo = post.getTodo();
-        this.category = post.getCategory();
-        this.who = post.getWho();
-        this.old = post.getOld();
+        this.todo = post.getTodo().getTodo();
+        this.category = post.getCategory().getCategory();
+        this.who = post.getWho().getWho();
+        this.old = post.getOld().getOld();
         this.date = post.getDate();
         this.what = post.getWhat();
         this.content = post.getContent();
         this.link = post.getLink();
         this.importance = post.getImportance();
-        this.decision = post.getDecision();
+        this.decision = post.getDecision().getDecision();
         this.reason = post.getReason();
         this.photoId = photoId;
         this.agree = agree;

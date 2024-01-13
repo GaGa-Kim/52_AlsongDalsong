@@ -24,12 +24,11 @@ public class ScrapResponseDto {
 
     public ScrapResponseDto(Post post) {
         this.id = post.getId();
-        this.todo = post.getTodo();
+        this.todo = post.getTodo().getTodo();
         this.what = post.getWhat();
-        if(post.getPhotoList().size() == 0) {
+        if (post.getPhotoList().size() == 0) {
             this.photoId = 0L;
-        }
-        else {
+        } else {
             this.photoId = post.getPhotoList().get(0).getId();
         }
     }

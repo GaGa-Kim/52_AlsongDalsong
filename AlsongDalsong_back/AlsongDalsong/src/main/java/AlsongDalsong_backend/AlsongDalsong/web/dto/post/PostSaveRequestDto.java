@@ -1,6 +1,11 @@
 package AlsongDalsong_backend.AlsongDalsong.web.dto.post;
 
+import AlsongDalsong_backend.AlsongDalsong.domain.post.Category;
+import AlsongDalsong_backend.AlsongDalsong.domain.post.Decision;
+import AlsongDalsong_backend.AlsongDalsong.domain.post.Old;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
+import AlsongDalsong_backend.AlsongDalsong.domain.post.Todo;
+import AlsongDalsong_backend.AlsongDalsong.domain.post.Who;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,7 +29,7 @@ public class PostSaveRequestDto {
 
     @ApiModelProperty(notes = "누가", example = "여성", required = true)
     private String who; // 누가
-    
+
     @ApiModelProperty(notes = "연령", example = "20대", required = true)
     private String old; // 연령
 
@@ -44,7 +49,8 @@ public class PostSaveRequestDto {
     private Integer importance; // 중요도
 
     @Builder
-    public PostSaveRequestDto(String email, String todo, String category, String who, String old, String date, String what, String content, String link, Integer importance) {
+    public PostSaveRequestDto(String email, String todo, String category, String who, String old, String date,
+                              String what, String content, String link, Integer importance) {
         this.email = email;
         this.todo = todo;
         this.category = category;
@@ -59,16 +65,16 @@ public class PostSaveRequestDto {
 
     public Post toEntity() {
         return Post.builder()
-                .todo(todo)
-                .category(category)
-                .who(who)
-                .old(old)
+                .todo(Todo.ofTodo(todo))
+                .category(Category.ofCategory(category))
+                .who(Who.ofWho(who))
+                .old(Old.ofOld(old))
                 .date(date)
                 .what(what)
                 .content(content)
                 .link(link)
                 .importance(importance)
-                .decision("미정")
+                .decision(Decision.UNDECIDED)
                 .reason(null)
                 .build();
     }
