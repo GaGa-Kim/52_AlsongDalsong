@@ -29,7 +29,7 @@ public interface UserService {
     User modifyUserProfile(UserUpdateRequestDto userUpdateRequestDto);
 
     // 회원 프로필 이미지를 수정한다.
-    User modifyUserProfileImage(String email, MultipartFile multipartFile);
+    User modifyUserProfileImage(String email, MultipartFile profileImage);
 
     // 회원별 구매 성향 통계를 조회한다.
     @Transactional(readOnly = true)

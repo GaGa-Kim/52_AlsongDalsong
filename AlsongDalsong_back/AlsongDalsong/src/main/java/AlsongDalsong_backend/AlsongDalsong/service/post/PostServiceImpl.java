@@ -9,7 +9,8 @@ import AlsongDalsong_backend.AlsongDalsong.domain.post.PostRepository;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Todo;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import AlsongDalsong_backend.AlsongDalsong.domain.vote.VoteRepository;
-import AlsongDalsong_backend.AlsongDalsong.exception.UnauthorizedPostEditException;
+import AlsongDalsong_backend.AlsongDalsong.exception.NotFoundException;
+import AlsongDalsong_backend.AlsongDalsong.exception.UnauthorizedEditException;
 import AlsongDalsong_backend.AlsongDalsong.service.photo.AwsS3ServiceImpl;
 import AlsongDalsong_backend.AlsongDalsong.service.photo.PhotoServiceImpl;
 import AlsongDalsong_backend.AlsongDalsong.service.user.UserService;
@@ -57,14 +58,25 @@ public class PostServiceImpl implements PostService {
     }
 
     /**
+     * 게시글 아이디로 게시글을 조회한다.
+     *
+     * @param postId (게시글 아이디)
+     * @return Post (게시글)
+     */
+    @Override
+    public Post findPostByPostId(Long postId) {
+        return postRepository.findById(postId).orElseThrow(NotFoundException::new);
+    }
+
+    /**
      * 게시글 아이디로 게시글을 상세 조회한다.
      *
      * @param postId (게시글 아이디)
      * @return PostResponseDto (게시글 정보 DTO)
      */
     @Override
-    public PostResponseDto findPostByPostId(Long postId) {
-        Post post = findPostById(postId);
+    public PostResponseDto findPostDetailByPostId(Long postId) {
+        Post post = findPostByPostId(postId);
         return new PostResponseDto(post, findPhotoIdByPost(postId), countVote(post));
     }
 
@@ -123,14 +135,14 @@ public class PostServiceImpl implements PostService {
     public PostResponseDto modifyPost(PostUpdateRequestDto postUpdateRequestDto, List<MultipartFile> photos,
                                       List<Long> deletePhotoIds) {
         User user = userService.findUserByEmail(postUpdateRequestDto.getEmail());
-        Post post = findPostById(postUpdateRequestDto.getId());
+        Post post = findPostByPostId(postUpdateRequestDto.getId());
         if (isSameUser(user, post)) {
             removePostPhotos(deletePhotoIds);
             savePostPhotos(post, photos);
             updatePost(post, postUpdateRequestDto);
             return new PostResponseDto(post, findPhotoIdByPost(post.getId()), countVote(post));
         }
-        throw new UnauthorizedPostEditException();
+        throw new UnauthorizedEditException();
     }
 
     /**
@@ -142,13 +154,13 @@ public class PostServiceImpl implements PostService {
     @Override
     public Boolean removePost(Long postId, String email) {
         User user = userService.findUserByEmail(email);
-        Post post = findPostById(postId);
+        Post post = findPostByPostId(postId);
         if (isSameUser(user, post)) {
             removeAllPostPhotos(post);
             postRepository.delete(post);
             return true;
         }
-        throw new UnauthorizedPostEditException();
+        throw new UnauthorizedEditException();
     }
 
     /**
@@ -160,23 +172,13 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostResponseDto modifyPostDecision(Long postId, String email, String decision, String reason) {
         User user = userService.findUserByEmail(email);
-        Post post = findPostById(postId);
+        Post post = findPostByPostId(postId);
         if (isSameUser(user, post) && isNotDecided(post)) {
             post.setDecision(decision, reason);
             increasePoint(user, POINTS_PER_DECISION);
             return new PostResponseDto(post, findPhotoIdByPost(post.getId()), countVote(post));
         }
-        throw new UnauthorizedPostEditException();
-    }
-
-    /**
-     * 게시글 아이디로 게시글을 조회한다.
-     *
-     * @param postId (게시글 아이디)
-     * @return Post (게시글)
-     */
-    private Post findPostById(Long postId) {
-        return postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+        throw new UnauthorizedEditException();
     }
 
     /**

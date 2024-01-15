@@ -36,10 +36,10 @@ public class PostController {
     // 게시글 작성
     @PostMapping(value = "/api/post/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiOperation(value = "게시글 작성", notes = "게시글을 작성한 후, 작성한 게시글을 리턴합니다.")
-    public ResponseEntity<PostResponseDto> postAdd(PostSaveRequestVO postSaveRequestVo) {
-        PostSaveRequestDto postSaveRequestDto = converToPostSaveRequestDto(postSaveRequestVo);
+    public ResponseEntity<PostResponseDto> postAdd(PostSaveRequestVO postSaveRequestVO) {
+        PostSaveRequestDto postSaveRequestDto = converToPostSaveRequestDto(postSaveRequestVO);
         return ResponseEntity.ok()
-                .body(postService.addPostWithPhotos(postSaveRequestDto, postSaveRequestVo.getPhotos()));
+                .body(postService.addPostWithPhotos(postSaveRequestDto, postSaveRequestVO.getPhotos()));
     }
 
     // 게시글 상세 조회
@@ -47,7 +47,7 @@ public class PostController {
     @ApiOperation(value = "게시글 상세 조회", notes = "게시글 id에 따라 게시글을 상세 조회하여 리턴합니다.")
     @ApiImplicitParam(name = "id", value = "게시글 id", example = "1")
     public ResponseEntity<PostResponseDto> postDetails(Long id) {
-        return ResponseEntity.ok().body(postService.findPostByPostId(id));
+        return ResponseEntity.ok().body(postService.findPostDetailByPostId(id));
     }
 
     // 살까 말까 / 할까 말까 / 갈까 말까로 분류별 최신글 조회
