@@ -1,4 +1,4 @@
-package AlsongDalsong_backend.AlsongDalsong.service;
+package AlsongDalsong_backend.AlsongDalsong.service.comment;
 
 import AlsongDalsong_backend.AlsongDalsong.domain.comment.Comment;
 import AlsongDalsong_backend.AlsongDalsong.domain.comment.CommentRepository;
@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @RequiredArgsConstructor
-public class CommentService {
+public class CommentServiceImpl implements CommentService {
 
     private final UserRepository userRepository;
     private final PostRepository postRepository;

@@ -1,4 +1,4 @@
-package AlsongDalsong_backend.AlsongDalsong.service;
+package AlsongDalsong_backend.AlsongDalsong.service.vote;
 
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.PostRepository;
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @RequiredArgsConstructor
-public class VoteService {
+public class VoteServiceImpl implements VoteService {
 
     private final VoteRepository voteRepository;
     private final UserRepository userRepository;

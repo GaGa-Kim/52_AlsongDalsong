@@ -1,4 +1,4 @@
-package AlsongDalsong_backend.AlsongDalsong.service;
+package AlsongDalsong_backend.AlsongDalsong.service.like;
 
 import AlsongDalsong_backend.AlsongDalsong.domain.comment.Comment;
 import AlsongDalsong_backend.AlsongDalsong.domain.comment.CommentRepository;
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @RequiredArgsConstructor
-public class LikeService {
+public class LikeServiceImpl implements LikeService {
 
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;

@@ -1,10 +1,11 @@
-package AlsongDalsong_backend.AlsongDalsong.service;
+package AlsongDalsong_backend.AlsongDalsong.service.user;
 
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Decision;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.PostRepository;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Todo;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.UserRepository;
+import AlsongDalsong_backend.AlsongDalsong.service.photo.AwsS3ServiceImpl;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.user.UserUpdateRequestDto;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,7 +21,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -28,22 +28,20 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class UserServiceImpl implements UserService {
-    private final UserRepository userRepository; // 회원 레포지토리
-    private final PostRepository postRepository; // 게시글 레포지토리
-    private final AwsS3Service awsS3Service; // AWS S3 레포지토리
+    private final UserRepository userRepository;
+    private final PostRepository postRepository;
+    private final AwsS3ServiceImpl awsS3ServiceImpl;
 
     /**
-     * 회원 정보를 조회한다.
+     * 이메일로 회원 정보를 조회한다.
      *
      * @param email (회원 이메일)
      * @return User (이메일로 조회한 회원)
      */
     @Override
-    @Transactional(readOnly = true)
-    public User getUser(String email) {
-        return findUserByEmail(email);
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     /**
@@ -54,10 +52,9 @@ public class UserServiceImpl implements UserService {
      * @throws IOException
      */
     @Override
-    @Transactional(readOnly = true)
-    public ResponseEntity<byte[]> getProfileByte(String email) throws IOException {
+    public ResponseEntity<byte[]> findUserProfileImageAsBytes(String email) throws IOException {
         User user = findUserByEmail(email);
-        byte[] bytes = convertProfileImage(user.getProfile());
+        byte[] bytes = convertImageToBytes(user.getProfile());
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.IMAGE_PNG);
         httpHeaders.setContentLength(bytes.length);
@@ -73,10 +70,9 @@ public class UserServiceImpl implements UserService {
      * @throws IOException
      */
     @Override
-    @Transactional(readOnly = true)
-    public ResponseEntity<String> getProfileBase(String email) throws IOException {
+    public ResponseEntity<String> findUserProfileImageAsBase64(String email) throws IOException {
         User user = findUserByEmail(email);
-        byte[] bytes = convertProfileImage(user.getProfile());
+        byte[] bytes = convertImageToBytes(user.getProfile());
         String encodedString = Base64.getEncoder().encodeToString(bytes);
         return new ResponseEntity<>(encodedString, HttpStatus.OK);
     }
@@ -88,7 +84,7 @@ public class UserServiceImpl implements UserService {
      * @return User (정보가 수정된 회원)
      */
     @Override
-    public User updateUser(UserUpdateRequestDto userUpdateRequestDto) {
+    public User modifyUserProfile(UserUpdateRequestDto userUpdateRequestDto) {
         User user = findUserByEmail(userUpdateRequestDto.getEmail());
         user.updateInfo(userUpdateRequestDto.getNickname(), userUpdateRequestDto.getIntroduce());
         return user;
@@ -97,13 +93,13 @@ public class UserServiceImpl implements UserService {
     /**
      * 회원 프로필 이미지를 수정한다.
      *
-     * @param email (회원 이메일), multipartFile (변경할 프로필 이미지)
+     * @param email (회원 이메일), profileImage (변경할 프로필 이미지)
      * @return User (프로필 이미지가 수정된 회원)
      */
     @Override
-    public User updateProfile(String email, MultipartFile multipartFile) {
+    public User modifyUserProfileImage(String email, MultipartFile profileImage) {
         User user = findUserByEmail(email);
-        deletePreAndUpdateProfile(user, multipartFile);
+        deletePrevAndUpdateProfile(user, profileImage);
         return user;
     }
 
@@ -114,9 +110,8 @@ public class UserServiceImpl implements UserService {
      * @return Map<String, Object> (회원의 구매 성향 통계)
      */
     @Override
-    @Transactional(readOnly = true)
-    public Map<String, Object> getUserPropensity(String email) {
-        User user = userRepository.findByEmail(email);
+    public Map<String, Object> findUserDecisionPropensity(String email) {
+        User user = findUserByEmail(email);
         Map<String, Object> propensityMap = new HashMap<>();
         for (Todo todo : Todo.values()) {
             for (Decision decision : Decision.values()) {
@@ -133,31 +128,21 @@ public class UserServiceImpl implements UserService {
      * @return boolean (탈퇴 성공 여부)
      */
     @Override
-    public Boolean withdrawUser(String email) {
+    public Boolean withdrawUserAccount(String email) {
         User user = findUserByEmail(email);
         user.withdrawUser();
         return true;
     }
 
     /**
-     * 이메일로 회원을 조회한다.
-     *
-     * @param email (회원 이메일)
-     * @return User (이메일로 조회한 회원)
-     */
-    private User findUserByEmail(String email) {
-        return userRepository.findByEmail(email);
-    }
-
-    /**
      * 회원 프로필 이미지를 Byte 배열로 변환한다.
      *
-     * @param profileUrl (회원 프로필 이미지 URL)
+     * @param profileImageUrl (회원 프로필 이미지 URL)
      * @return byte[] (회원 프로필 이미지 Byte 배열)
      * @throws IOException
      */
-    private byte[] convertProfileImage(String profileUrl) throws IOException {
-        URL url = new URL(profileUrl);
+    private byte[] convertImageToBytes(String profileImageUrl) throws IOException {
+        URL url = new URL(profileImageUrl);
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         InputStream inputStream = urlConnection.getInputStream();
         return IOUtils.toByteArray(inputStream);
@@ -166,11 +151,11 @@ public class UserServiceImpl implements UserService {
     /**
      * 기존의 프로필 이미지를 삭제한 후, 새로운 프로필 이미지로 변경한다.
      *
-     * @param user (프로필 이미지를 변경할 회원), multipartFile (프로필 이미지)
+     * @param user (프로필 이미지를 변경할 회원), profileImage (프로필 이미지)
      */
-    private void deletePreAndUpdateProfile(User user, MultipartFile multipartFile) {
-        awsS3Service.deleteS3(user.getProfile());
-        String profile = awsS3Service.uploadProfile(multipartFile);
+    private void deletePrevAndUpdateProfile(User user, MultipartFile profileImage) {
+        awsS3ServiceImpl.deleteS3(user.getProfile());
+        String profile = awsS3ServiceImpl.uploadProfile(profileImage);
         user.updateProfile(profile);
     }
 

@@ -1,6 +1,6 @@
 package AlsongDalsong_backend.AlsongDalsong.web.controller;
 
-import AlsongDalsong_backend.AlsongDalsong.service.VoteService;
+import AlsongDalsong_backend.AlsongDalsong.service.vote.VoteServiceImpl;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.vote.VoteRequestDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -8,24 +8,28 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 투표 컨트롤러
  */
-@Api(tags={"Vote API (투표 API)"})
+@Api(tags = {"Vote API (투표 API)"})
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
 public class VoteController {
 
-    private final VoteService voteService;
+    private final VoteServiceImpl voteServiceImpl;
 
     // 게시글 투표하기
     @PostMapping("/api/vote/save")
     @ApiOperation(value = "게시글 투표하기", notes = "게시글에 투표/변경/취소를 한 후, 투표가 찬성이면 true, 반대면 false가 리턴합니다. 투표를 취소할 경우에는 '투표하지 않았습니다.'를 리턴합니다.")
     public ResponseEntity<String> vote(@RequestBody VoteRequestDto voteRequestDto) {
-        return ResponseEntity.ok().body(voteService.vote(voteRequestDto));
+        return ResponseEntity.ok().body(voteServiceImpl.vote(voteRequestDto));
     }
 
     // 사용자별 게시글에 따른 투표 여부 조회
@@ -36,6 +40,6 @@ public class VoteController {
             @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com")
     })
     public ResponseEntity<String> check(@RequestParam Long postId, String email) {
-        return ResponseEntity.ok().body(voteService.check(postId, email));
+        return ResponseEntity.ok().body(voteServiceImpl.check(postId, email));
     }
 }

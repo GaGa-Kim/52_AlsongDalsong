@@ -1,9 +1,21 @@
-package AlsongDalsong_backend.AlsongDalsong.service;
+package AlsongDalsong_backend.AlsongDalsong.service.photo;
 
 import AlsongDalsong_backend.AlsongDalsong.domain.photo.Photo;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.photo.PhotoResponseDto;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.*;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,19 +28,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.UUID;
-
 /**
  * AWS S3 프로필/사진 저장 서비스
  */
 @Service
 @RequiredArgsConstructor
-public class AwsS3Service {
+@Transactional
+public class AwsS3ServiceImpl implements StorageService {
 
     private final AmazonS3Client amazonS3Client;
 
@@ -42,9 +48,11 @@ public class AwsS3Service {
         objectMetadata.setContentLength(multipartFile.getSize());
         objectMetadata.setContentType(multipartFile.getContentType());
 
-        try(InputStream inputStream = multipartFile.getInputStream()) {
-            amazonS3Client.putObject(new PutObjectRequest(bucket, profileName, inputStream, objectMetadata).withCannedAcl(CannedAccessControlList.PublicRead));
-        } catch(IOException e) {
+        try (InputStream inputStream = multipartFile.getInputStream()) {
+            amazonS3Client.putObject(
+                    new PutObjectRequest(bucket, profileName, inputStream, objectMetadata).withCannedAcl(
+                            CannedAccessControlList.PublicRead));
+        } catch (IOException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "프로필 업로드에 실패했습니다.");
         }
 
@@ -52,20 +60,21 @@ public class AwsS3Service {
     }
 
     // S3 버킷에 게시글 이미지 저장
-    @Transactional
     public List<Photo> uploadPhoto(List<MultipartFile> multipartFiles) {
         List<Photo> photoList = new ArrayList<>();
 
-        for(MultipartFile multipartFile: multipartFiles) {
+        for (MultipartFile multipartFile : multipartFiles) {
 
             String photoName = createPhotoName(multipartFile.getOriginalFilename());
             ObjectMetadata objectMetadata = new ObjectMetadata();
             objectMetadata.setContentLength(multipartFile.getSize());
             objectMetadata.setContentType(multipartFile.getContentType());
 
-            try(InputStream inputStream = multipartFile.getInputStream()) {
-                amazonS3Client.putObject(new PutObjectRequest(bucket, photoName, inputStream, objectMetadata).withCannedAcl(CannedAccessControlList.PublicRead));
-            } catch(IOException e) {
+            try (InputStream inputStream = multipartFile.getInputStream()) {
+                amazonS3Client.putObject(
+                        new PutObjectRequest(bucket, photoName, inputStream, objectMetadata).withCannedAcl(
+                                CannedAccessControlList.PublicRead));
+            } catch (IOException e) {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "사진 업로드에 실패했습니다.");
             }
 
@@ -88,20 +97,17 @@ public class AwsS3Service {
     }
 
     // S3 버킷에서 사진 URL 가져오기
-    @Transactional(readOnly = true)
     public String getS3(String photoName) {
         return amazonS3Client.getUrl(bucket, photoName).toString();
     }
 
     // S3 버킷에서 사진 삭제
-    @Transactional
     public void deleteS3(String photoName) {
         DeleteObjectRequest request = new DeleteObjectRequest(bucket, photoName);
         amazonS3Client.deleteObject(request);
     }
 
     // S3 버킷에서 사진 가져와서 다운로드
-    @Transactional
     public ResponseEntity<byte[]> getObject(String originPhotoName, String photoName) throws IOException {
         S3Object o = amazonS3Client.getObject(new GetObjectRequest(bucket, photoName));
         S3ObjectInputStream objectInputStream = ((S3Object) o).getObjectContent();
@@ -116,7 +122,6 @@ public class AwsS3Service {
     }
 
     // S3 버킷에서 사진 가져와서 Base64 변환
-    @Transactional
     public ResponseEntity<String> getBase(String originPhotoName, String photoName) throws IOException {
         S3Object o = amazonS3Client.getObject(new GetObjectRequest(bucket, photoName));
         S3ObjectInputStream objectInputStream = ((S3Object) o).getObjectContent();

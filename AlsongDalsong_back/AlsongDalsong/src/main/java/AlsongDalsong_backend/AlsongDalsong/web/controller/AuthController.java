@@ -1,7 +1,7 @@
 package AlsongDalsong_backend.AlsongDalsong.web.controller;
 
 import AlsongDalsong_backend.AlsongDalsong.domain.user.TokenDto;
-import AlsongDalsong_backend.AlsongDalsong.service.AuthService;
+import AlsongDalsong_backend.AlsongDalsong.service.user.AuthService;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.user.UserResponseDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.user.UserSaveRequestDto;
 import io.swagger.annotations.Api;
@@ -28,14 +28,31 @@ public class AuthController {
     private static final String HEADER_AUTHORIZATION = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";
 
-    private final AuthService authService;
+    private final AuthService authService; // 인증 서비스
 
     // 카카오 회원가입과 로그인 및 JWT 토큰 발급
     @GetMapping("/auth/kakao")
-    @ApiOperation(value = "카카오 회원가입과 로그인", notes = "카카오 회원가입 또는 로그인을 한 후, jwt 토큰과 사용자 이메일을 리턴합니다.")
-    @ApiImplicitParam(name = "code", value = "인가코드", example = "12345", required = true)
-    public ResponseEntity<String> kakaoLogin(@RequestParam("code") String code) {
-        TokenDto tokenDto = authService.kakaoSignupOrLogin(code);
+    @ApiOperation(value = "카카오 회원가입과 로그인", notes = "카카오 회원가입 또는 로그인을 한 후, jwt 토큰과 회원 이메일을 리턴합니다.")
+    @ApiImplicitParam(name = "code", value = "회원 카카오 인가코드", example = "12345", required = true)
+    public ResponseEntity<String> socialSignup(@RequestParam("code") String code) {
+        TokenDto tokenDto = authService.socialSignupAndGenerateToken(code);
+        return ResponseEntity.ok().headers(createHeader(tokenDto)).body(tokenDto.getEmail());
+    }
+
+    // 일반 회원가입
+    @PostMapping("/auth/signup")
+    @ApiOperation(value = "일반 회원가입", notes = "일반 회원가입을 한 후, 가입된 회원 정보를 리턴합니다.")
+    @ApiImplicitParam(name = "userSaveRequestDto", value = "회원 가입 정보", required = true)
+    public ResponseEntity<UserResponseDto> signup(@RequestBody UserSaveRequestDto userSaveRequestDto) {
+        return ResponseEntity.ok().body(authService.signupAndReturnUser(userSaveRequestDto));
+    }
+
+    // 일반 로그인 및 JWT 토큰 발급
+    @GetMapping("/auth/login")
+    @ApiOperation(value = "일반 로그인", notes = "일반 로그인을 한 후, jwt 토큰과 회원 이메일을 리턴합니다.")
+    @ApiImplicitParam(name = "email", value = "회원 이메일", example = "1234@gmail.com", required = true)
+    public ResponseEntity<String> login(@RequestParam String email) {
+        TokenDto tokenDto = authService.loginAndGenerateToken(email);
         return ResponseEntity.ok().headers(createHeader(tokenDto)).body(tokenDto.getEmail());
     }
 
@@ -44,21 +61,5 @@ public class AuthController {
         HttpHeaders headers = new HttpHeaders();
         headers.add(HEADER_AUTHORIZATION, BEARER_PREFIX + tokenDto.getToken());
         return headers;
-    }
-
-    // 일반 회원가입
-    @PostMapping("/auth/signup")
-    @ApiOperation(value = "일반 회원가입", notes = "일반 회원가입을 한 후, 가입된 사용자 정보를 리턴합니다.")
-    public ResponseEntity<UserResponseDto> signup(@RequestBody UserSaveRequestDto userSaveRequestDto) {
-        return ResponseEntity.ok().body(authService.regularSignup(userSaveRequestDto));
-    }
-
-    // 일반 로그인 및 JWT 토큰 발급
-    @GetMapping("/auth/login")
-    @ApiOperation(value = "일반 로그인", notes = "일반 로그인을 한 후, jwt 토큰과 사용자 이메일을 리턴합니다.")
-    @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com", required = true)
-    public ResponseEntity<String> login(@RequestParam String email) {
-        TokenDto tokenDto = authService.regularLogin(email);
-        return ResponseEntity.ok().headers(createHeader(tokenDto)).body(tokenDto.getEmail());
     }
 }

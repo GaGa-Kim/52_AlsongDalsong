@@ -1,4 +1,4 @@
-package AlsongDalsong_backend.AlsongDalsong.service;
+package AlsongDalsong_backend.AlsongDalsong.service.user;
 
 import AlsongDalsong_backend.AlsongDalsong.domain.user.KakaoProfile;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.KakaoProfile.KakaoAccount;
@@ -21,7 +21,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -31,14 +30,13 @@ import org.springframework.web.client.RestTemplate;
  */
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class AuthServiceImpl implements AuthService {
-    private static final String KAKAO_TOKEN_URL = "https://kauth.kakao.com/oauth/token"; // 카카오 액세스 토큰 발급 URL
-    private static final String KAKAO_USER_INFO_URL = "https://kapi.kakao.com/v2/user/me"; // 카카오 사용자 정보 조회 URL
-    private static final String AUTHORIZATION_HEADER = "Authorization"; // JWT 인증 헤더
-    private static final String BEARER_PREFIX = "Bearer "; // JWT 토큰 인증 타입
+    private static final String KAKAO_ACCESS_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
+    private static final String KAKAO_USER_INFO_URL = "https://kapi.kakao.com/v2/user/me";
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+    private static final String BEARER_PREFIX = "Bearer ";
 
-    private final UserRepository userRepository; // 회원 레포지토리
+    private final UserRepository userRepository;
 
     @Value("${jwt.secret}")
     public String secret;
@@ -60,10 +58,10 @@ public class AuthServiceImpl implements AuthService {
      * @throws WithdrawnException (회원이 탈퇴한 경우 발생하는 예외)
      */
     @Override
-    public TokenDto kakaoSignupOrLogin(String code) {
+    public TokenDto socialSignupAndGenerateToken(String code) {
         OauthToken access_token = getAccessToken(code);
         KakaoProfile profile = getKakaoProfile(access_token.getAccess_token());
-        User user = findOrSaveUser(profile);
+        User user = findOrAddUser(profile);
         if (isWithdrawn(user)) {
             throw new WithdrawnException();
         }
@@ -71,14 +69,14 @@ public class AuthServiceImpl implements AuthService {
     }
 
     /**
-     * 일반 회원가입을 진행한 후, 사용자 정보를 생성한다.
+     * 일반 회원가입을 진행한 후, 회원 정보를 생성한다.
      *
      * @param userSaveRequestDto (회원 저장 정보 DTO)
-     * @return UserResponseDto (회원가입된 회원 정보 DTO)
+     * @return UserResponseDto (회 원가입된 회원 정보 DTO)
      * @throws DuplicateEmailException (동일한 이메일의 회원이 있을 경우 발생하는 예외)
      */
     @Override
-    public UserResponseDto regularSignup(UserSaveRequestDto userSaveRequestDto) {
+    public UserResponseDto signupAndReturnUser(UserSaveRequestDto userSaveRequestDto) {
         if (doesUserExistWithEmail(userSaveRequestDto.getEmail())) {
             throw new DuplicateEmailException();
         }
@@ -94,7 +92,7 @@ public class AuthServiceImpl implements AuthService {
      * @throws WithdrawnException (회원이 탈퇴한 경우 발생하는 예외)
      */
     @Override
-    public TokenDto regularLogin(String email) {
+    public TokenDto loginAndGenerateToken(String email) {
         User user = findUserByEmail(email);
         if (isWithdrawn(user)) {
             throw new WithdrawnException();
@@ -112,7 +110,7 @@ public class AuthServiceImpl implements AuthService {
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(createParam(code), createTokenHeader());
         ResponseEntity<OauthToken> accessTokenResponse = restTemplate.exchange(
-                KAKAO_TOKEN_URL,
+                KAKAO_ACCESS_TOKEN_URL,
                 HttpMethod.POST,
                 request,
                 OauthToken.class);
@@ -146,10 +144,10 @@ public class AuthServiceImpl implements AuthService {
     }
 
     /**
-     * 액세스 토큰으로 카카오 사용자 정보를 가져온다.
+     * 액세스 토큰으로 카카오 회원 정보를 가져온다.
      *
      * @param accessToken (카카오에서 발급된 액세스 토큰)
-     * @return KakaoProfile (카카오로부터 받은 사용자 정보)
+     * @return KakaoProfile (카카오로부터 받은 회원 정보)
      */
     private KakaoProfile getKakaoProfile(String accessToken) {
         RestTemplate restTemplate = new RestTemplate();
@@ -163,7 +161,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     /**
-     * 사용자 정보 획득을 위한 HttpHeader 객체를 생성한다.
+     * 회원 정보 획득을 위한 HttpHeader 객체를 생성한다.
      *
      * @param accessToken (카카오에서 발급된 액세스 토큰)
      * @return HttpHeaders (HTTP 통신을 위한 헤더)
@@ -176,12 +174,12 @@ public class AuthServiceImpl implements AuthService {
     }
 
     /**
-     * 카카오 사용자 정보의 이메일로 이미 가입이 되어 있다면 회원 정보를 가져오고, 그렇지 않다면 회원을 생성한다.
+     * 카카오 회원 정보의 이메일로 이미 가입이 되어 있다면 회원 정보를 가져오고, 그렇지 않다면 회원을 생성한다.
      *
-     * @param profile (카카오로부터 받은 사용자 정보)
+     * @param profile (카카오로부터 받은 회원 정보)
      * @return User (회원가입된 회원 또는 로그인된 회원)
      */
-    private User findOrSaveUser(KakaoProfile profile) {
+    private User findOrAddUser(KakaoProfile profile) {
         String email = profile.getKakao_account().getEmail();
         if (doesUserExistWithEmail(email)) {
             return findUserByEmail(email);
@@ -194,7 +192,7 @@ public class AuthServiceImpl implements AuthService {
     /**
      * 카카오 회원가입을 위한 회원을 생성한다.
      *
-     * @param profile (카카오로부터 받은 사용자 정보)
+     * @param profile (카카오로부터 받은 회원 정보)
      * @return User (회원가입될 회원)
      */
     private User createUserFromKakao(KakaoProfile profile) {

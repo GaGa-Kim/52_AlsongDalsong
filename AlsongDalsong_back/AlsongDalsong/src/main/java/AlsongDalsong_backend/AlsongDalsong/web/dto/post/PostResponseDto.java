@@ -5,6 +5,7 @@ import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import lombok.Getter;
+import org.springframework.data.util.Pair;
 
 /**
  * 게시글 정보 dto
@@ -72,7 +73,7 @@ public class PostResponseDto {
     @ApiModelProperty(notes = "스크랩 수", example = "3")
     private Integer scrap;
 
-    public PostResponseDto(Post post, List<Long> photoId, Long agree, Long disagree) {
+    public PostResponseDto(Post post, List<Long> photoId, Pair<Long, Long> vote) {
         this.id = post.getId();
         this.createdDateTime = Time.calculateTime(post.getCreatedDateTime());
         this.email = post.getUserId().getEmail();
@@ -89,8 +90,8 @@ public class PostResponseDto {
         this.decision = post.getDecision().getDecision();
         this.reason = post.getReason();
         this.photoId = photoId;
-        this.agree = agree;
-        this.disagree = disagree;
+        this.agree = vote.getFirst();
+        this.disagree = vote.getSecond();
         this.comment = post.getCommentList().size();
         this.scrap = post.getScrapList().size();
     }
