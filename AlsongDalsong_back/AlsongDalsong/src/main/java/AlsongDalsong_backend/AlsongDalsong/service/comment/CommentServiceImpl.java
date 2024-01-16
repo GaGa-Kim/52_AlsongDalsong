@@ -38,7 +38,7 @@ public class CommentServiceImpl implements CommentService {
     public List<CommentResponseDto> addComment(CommentSaveRequestDto commentSaveRequestDto) {
         User user = userService.findUserByEmail(commentSaveRequestDto.getEmail());
         Post post = postService.findPostByPostId(commentSaveRequestDto.getPostId());
-        saveComment(user, post, commentSaveRequestDto);
+        createComment(user, post, commentSaveRequestDto);
         return findPostCommentsByLikes(post.getId());
     }
 
@@ -106,7 +106,7 @@ public class CommentServiceImpl implements CommentService {
      *
      * @param user (회원), post (게시글), commentSaveRequestDto (댓글 저장 정보 DTO)
      */
-    private void saveComment(User user, Post post, CommentSaveRequestDto commentSaveRequestDto) {
+    private void createComment(User user, Post post, CommentSaveRequestDto commentSaveRequestDto) {
         Comment comment = commentRepository.save(commentSaveRequestDto.toEntity());
         comment.setUser(user);
         comment.setPost(post);

@@ -7,4 +7,3 @@ public class NotFoundException extends IllegalArgumentException {
         super(ERROR_MESSAGE);
     }
 }
-

@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
 public class CommentController {
-
     private final CommentService commentService;
 
     // 게시글에 댓글 작성
@@ -67,5 +66,4 @@ public class CommentController {
     public ResponseEntity<Boolean> commentRemove(@RequestParam Long id, String email) {
         return ResponseEntity.ok().body(commentService.removeComment(id, email));
     }
-
 }

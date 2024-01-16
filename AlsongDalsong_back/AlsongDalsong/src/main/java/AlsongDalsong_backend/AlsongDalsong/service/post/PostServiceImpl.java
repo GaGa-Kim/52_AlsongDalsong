@@ -52,8 +52,8 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostResponseDto addPostWithPhotos(PostSaveRequestDto postSaveRequestDto, List<MultipartFile> photos) {
         User user = userService.findUserByEmail(postSaveRequestDto.getEmail());
-        Post post = savePost(user, postSaveRequestDto);
-        savePostPhotos(post, photos);
+        Post post = createPost(user, postSaveRequestDto);
+        createPostPhotos(post, photos);
         return new PostResponseDto(post, findPhotoIdByPost(post.getId()), Pair.of(VOTE_INIT, VOTE_INIT));
     }
 
@@ -137,8 +137,8 @@ public class PostServiceImpl implements PostService {
         User user = userService.findUserByEmail(postUpdateRequestDto.getEmail());
         Post post = findPostByPostId(postUpdateRequestDto.getId());
         if (isSameUser(user, post)) {
-            removePostPhotos(deletePhotoIds);
-            savePostPhotos(post, photos);
+            deletePostPhotos(deletePhotoIds);
+            createPostPhotos(post, photos);
             updatePost(post, postUpdateRequestDto);
             return new PostResponseDto(post, findPhotoIdByPost(post.getId()), countVote(post));
         }
@@ -156,7 +156,7 @@ public class PostServiceImpl implements PostService {
         User user = userService.findUserByEmail(email);
         Post post = findPostByPostId(postId);
         if (isSameUser(user, post)) {
-            removeAllPostPhotos(post);
+            deleteAllPostPhotos(post);
             postRepository.delete(post);
             return true;
         }
@@ -200,7 +200,7 @@ public class PostServiceImpl implements PostService {
      * @param user (회원), postSaveRequestDto (게시글 저장 정보 DTO)
      * @return Post (게시글)
      */
-    private Post savePost(User user, PostSaveRequestDto postSaveRequestDto) {
+    private Post createPost(User user, PostSaveRequestDto postSaveRequestDto) {
         Post post = postRepository.save(postSaveRequestDto.toEntity());
         post.setUser(user);
         user.addPostList(post);
@@ -222,7 +222,7 @@ public class PostServiceImpl implements PostService {
      *
      * @param post (게시글), photos (사진)
      */
-    private void savePostPhotos(Post post, List<MultipartFile> photos) {
+    private void createPostPhotos(Post post, List<MultipartFile> photos) {
         Optional.ofNullable(photos)
                 .map(awsS3ServiceImpl::uploadPhoto)
                 .ifPresent(photo -> photo.forEach(p -> post.addPhotoList(photoRepository.save(p))));
@@ -243,7 +243,7 @@ public class PostServiceImpl implements PostService {
      *
      * @param deletePhotoIds (삭제할 사진 아이디)
      */
-    private void removePostPhotos(List<Long> deletePhotoIds) {
+    private void deletePostPhotos(List<Long> deletePhotoIds) {
         if (!deletePhotoIds.isEmpty()) {
             for (Long deleteFileId : deletePhotoIds) {
                 awsS3ServiceImpl.deleteS3(photoServiceImpl.findByPhotoId(deleteFileId).getPhotoName());
@@ -296,7 +296,7 @@ public class PostServiceImpl implements PostService {
      *
      * @param post (게시글)
      */
-    private void removeAllPostPhotos(Post post) {
+    private void deleteAllPostPhotos(Post post) {
         for (Photo photo : findPhotoByPost(post)) {
             awsS3ServiceImpl.deleteS3(photo.getPhotoName());
         }

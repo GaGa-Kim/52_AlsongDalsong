@@ -3,11 +3,18 @@ package AlsongDalsong_backend.AlsongDalsong.domain.like;
 import AlsongDalsong_backend.AlsongDalsong.domain.BaseTimeEntity;
 import AlsongDalsong_backend.AlsongDalsong.domain.comment.Comment;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
-import javax.persistence.*;
 
 /**
  * 댓글 좋아요 테이블
@@ -44,8 +51,8 @@ public class Like extends BaseTimeEntity {
     // 댓글 연관관계 메소드
     public void setComment(Comment comment) {
         this.commentId = comment;
-        if(!commentId.getLikeList().contains(this))
+        if (!commentId.getLikeList().contains(this)) {
             comment.getLikeList().add(this);
+        }
     }
-
 }

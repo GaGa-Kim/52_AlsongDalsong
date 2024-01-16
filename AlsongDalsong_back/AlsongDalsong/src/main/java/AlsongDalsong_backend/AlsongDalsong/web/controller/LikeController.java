@@ -1,6 +1,6 @@
 package AlsongDalsong_backend.AlsongDalsong.web.controller;
 
-import AlsongDalsong_backend.AlsongDalsong.service.like.LikeServiceImpl;
+import AlsongDalsong_backend.AlsongDalsong.service.like.LikeService;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.like.LikeRequestDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -22,14 +22,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
 public class LikeController {
-
-    private final LikeServiceImpl likeServiceImpl;
+    private final LikeService likeService;
 
     // 댓글 좋아요
     @PostMapping("/api/like/save")
     @ApiOperation(value = "댓글 좋아요 작성/취소", notes = "댓글에 좋아요를 작성한 후, true를 리턴합니다. 댓글이 이미 좋아요일 경우 좋아요가 취소되고 false를 리턴합니다. ")
     public ResponseEntity<Boolean> save(@RequestBody LikeRequestDto likeSaveRequestDto) {
-        return ResponseEntity.ok().body(likeServiceImpl.save(likeSaveRequestDto));
+        return ResponseEntity.ok().body(likeService.saveLike(likeSaveRequestDto));
     }
 
     // 사용자별 댓글에 따른 좋아요 여부 조회
@@ -40,6 +39,6 @@ public class LikeController {
             @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com")
     })
     public ResponseEntity<Boolean> check(@RequestParam Long id, String email) {
-        return ResponseEntity.ok().body(likeServiceImpl.check(id, email));
+        return ResponseEntity.ok().body(likeService.findLike(id, email));
     }
 }
