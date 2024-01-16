@@ -34,7 +34,7 @@ public class LikeServiceImpl implements LikeService {
     public Boolean saveLike(LikeRequestDto likeSaveRequestDto) {
         User user = userService.findUserByEmail(likeSaveRequestDto.getEmail());
         Comment comment = commentService.findCommentByCommentId(likeSaveRequestDto.getCommentId());
-        if (exitsCommentByUserId(user, comment)) {
+        if (!exitsCommentByUserId(user, comment)) {
             createLike(user, comment, likeSaveRequestDto);
             return true;
         }
