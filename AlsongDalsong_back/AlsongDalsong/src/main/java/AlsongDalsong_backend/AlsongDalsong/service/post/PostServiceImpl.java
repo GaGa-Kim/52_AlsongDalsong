@@ -188,7 +188,7 @@ public class PostServiceImpl implements PostService {
      * @return List<Long> 사진 아이디 리스트
      */
     private List<Long> findPhotoIdByPost(Long postId) {
-        return photoServiceImpl.findAllByPost(postId)
+        return photoServiceImpl.findPhotoList(postId)
                 .stream()
                 .map(PhotoIdResponseDto::getPhotoId)
                 .collect(Collectors.toList());
@@ -224,7 +224,7 @@ public class PostServiceImpl implements PostService {
      */
     private void createPostPhotos(Post post, List<MultipartFile> photos) {
         Optional.ofNullable(photos)
-                .map(awsS3ServiceImpl::uploadPhoto)
+                .map(awsS3ServiceImpl::addPhoto)
                 .ifPresent(photo -> photo.forEach(p -> post.addPhotoList(photoRepository.save(p))));
     }
 
@@ -246,8 +246,8 @@ public class PostServiceImpl implements PostService {
     private void deletePostPhotos(List<Long> deletePhotoIds) {
         if (!deletePhotoIds.isEmpty()) {
             for (Long deleteFileId : deletePhotoIds) {
-                awsS3ServiceImpl.deleteS3(photoServiceImpl.findByPhotoId(deleteFileId).getPhotoName());
-                photoServiceImpl.delete(deleteFileId);
+                awsS3ServiceImpl.removeFile(photoServiceImpl.findPhoto(deleteFileId).getPhotoName());
+                photoServiceImpl.removePhoto(deleteFileId);
             }
         }
     }
@@ -298,7 +298,7 @@ public class PostServiceImpl implements PostService {
      */
     private void deleteAllPostPhotos(Post post) {
         for (Photo photo : findPhotoByPost(post)) {
-            awsS3ServiceImpl.deleteS3(photo.getPhotoName());
+            awsS3ServiceImpl.removeFile(photo.getPhotoName());
         }
     }
 

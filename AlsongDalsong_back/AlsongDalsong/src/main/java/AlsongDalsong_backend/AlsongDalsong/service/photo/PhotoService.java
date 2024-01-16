@@ -1,4 +1,28 @@
 package AlsongDalsong_backend.AlsongDalsong.service.photo;
 
+import AlsongDalsong_backend.AlsongDalsong.domain.photo.Photo;
+import AlsongDalsong_backend.AlsongDalsong.web.dto.photo.PhotoIdResponseDto;
+import AlsongDalsong_backend.AlsongDalsong.web.dto.photo.PhotoResponseDto;
+import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
+
+/**
+ * 게시글 사진을 위한 비즈니스 로직 인터페이스
+ */
+@Transactional
 public interface PhotoService {
+    // 사진 아이디로 사진을 조회한다.
+    @Transactional(readOnly = true)
+    Photo findPhotoByPhotoId(Long photoId);
+
+    // 사진 아이디로 사진을 상세 조회한다.
+    @Transactional(readOnly = true)
+    PhotoResponseDto findPhoto(Long photoId);
+
+    // 게시글 아이디로 사진 아이디 리스트를 조회한다.
+    @Transactional(readOnly = true)
+    List<PhotoIdResponseDto> findPhotoList(Long postId);
+
+    // 사진 아이디로 사진을 삭제한다.
+    void removePhoto(Long photoId);
 }

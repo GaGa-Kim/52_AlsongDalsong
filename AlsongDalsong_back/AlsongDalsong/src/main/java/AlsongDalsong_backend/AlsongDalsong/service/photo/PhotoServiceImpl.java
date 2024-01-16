@@ -3,54 +3,74 @@ package AlsongDalsong_backend.AlsongDalsong.service.photo;
 import AlsongDalsong_backend.AlsongDalsong.domain.photo.Photo;
 import AlsongDalsong_backend.AlsongDalsong.domain.photo.PhotoRepository;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
-import AlsongDalsong_backend.AlsongDalsong.domain.post.PostRepository;
+import AlsongDalsong_backend.AlsongDalsong.exception.NotFoundException;
+import AlsongDalsong_backend.AlsongDalsong.service.post.PostService;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.photo.PhotoIdResponseDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.photo.PhotoResponseDto;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
- * 사진 서비스
+ * 게시글 사진을 위한 비즈니스 로직 구현 클래스
  */
 @Service
 @RequiredArgsConstructor
 public class PhotoServiceImpl implements PhotoService {
-
     private final PhotoRepository photoRepository;
-    private final PostRepository postRepository;
+    private final PostService postService;
 
-    // 사진 id에 따른 사진 개별 조회
-    @Transactional(readOnly = true)
-    public PhotoResponseDto findByPhotoId(Long id) {
-        Photo photo = photoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 사진이 없습니다."));
+    /**
+     * 사진 아이디로 사진을 조회한다.
+     *
+     * @param photoId (사진 아이디)
+     * @return Photo (사진)
+     */
+    @Override
+    public Photo findPhotoByPhotoId(Long photoId) {
+        return photoRepository.findById(photoId).orElseThrow(NotFoundException::new);
+    }
 
-        PhotoResponseDto photoResponseDto = PhotoResponseDto.builder()
+    /**
+     * 사진 아이디로 사진을 상세 조회한다.
+     *
+     * @param photoId (사진 아이디)
+     * @return PhotoResponseDto (게시글 정보 DTO)
+     */
+    @Override
+    public PhotoResponseDto findPhoto(Long photoId) {
+        Photo photo = findPhotoByPhotoId(photoId);
+        return PhotoResponseDto.builder()
                 .origPhotoName(photo.getOrigPhotoName())
                 .photoName(photo.getPhotoName())
                 .photoUrl(photo.getPhotoUrl())
                 .build();
-
-        return photoResponseDto;
     }
 
-    // 게시글 id에 따른 사진 아이디 전체 조회
-    @Transactional(readOnly = true)
-    public List<PhotoIdResponseDto> findAllByPost(Long postId) {
-        Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
-        List<Photo> photoList = photoRepository.findAllByPostId(post);
-
-        return photoList.stream()
+    /**
+     * 게시글 아이디로 사진 아이디 리스트를 조회한다.
+     *
+     * @param postId (게시글 아이디)
+     * @return List<PhotoIdResponseDto> (사진 아이디 DTO 리스트)
+     */
+    @Override
+    public List<PhotoIdResponseDto> findPhotoList(Long postId) {
+        Post post = postService.findPostByPostId(postId);
+        return photoRepository.findAllByPostId(post)
+                .stream()
                 .map(PhotoIdResponseDto::new)
                 .collect(Collectors.toList());
     }
 
-    // 사진 삭제
-    @Transactional
-    public void delete(Long id) {
-        Photo photo = photoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 사진이 없습니다."));
+    /**
+     * 사진 아이디로 사진을 삭제한다.
+     *
+     * @param photoId (사진 아이디)
+     */
+    @Override
+    public void removePhoto(Long photoId) {
+        Photo photo = findPhotoByPhotoId(photoId);
         photoRepository.delete(photo);
     }
 }

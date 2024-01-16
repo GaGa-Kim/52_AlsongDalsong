@@ -75,7 +75,7 @@ public class ScrapServiceImpl implements ScrapService {
      * @return boolean (스크랩 여부)
      */
     private boolean exitsScrapByUserId(User user, Post post) {
-        return scrapRepository.existsUserIdAndPostId(user, post);
+        return scrapRepository.existsByUserIdAndPostId(user, post);
     }
 
     /**

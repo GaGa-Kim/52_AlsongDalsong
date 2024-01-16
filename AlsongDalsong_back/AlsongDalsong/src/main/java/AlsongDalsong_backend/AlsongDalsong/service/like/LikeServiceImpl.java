@@ -57,10 +57,10 @@ public class LikeServiceImpl implements LikeService {
      * 댓글과 회원에 따른 좋아요 여부를 조회한다.
      *
      * @param user (회원), comment (댓글)
-     * @return Boolean (좋아요 여부)
+     * @return boolean (좋아요 여부)
      */
     private boolean exitsCommentByUserId(User user, Comment comment) {
-        return likeRepository.existsUserIdAndCommentId(user, comment);
+        return likeRepository.existsByUserIdAndCommentId(user, comment);
     }
 
     /**

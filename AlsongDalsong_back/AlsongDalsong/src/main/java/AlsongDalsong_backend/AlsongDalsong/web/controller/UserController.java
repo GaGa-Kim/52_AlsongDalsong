@@ -64,7 +64,7 @@ public class UserController {
         if (isKakaoProfile(user)) {
             return ResponseEntity.ok().body(user.getProfile());
         }
-        return ResponseEntity.ok().body(awsS3ServiceImpl.getS3(user.getProfile()));
+        return ResponseEntity.ok().body(awsS3ServiceImpl.findFileUrl(user.getProfile()));
     }
 
     // 회원 프로필 사진 bytearray 정보 조회
@@ -76,7 +76,7 @@ public class UserController {
         if (isKakaoProfile(user)) {
             return userService.findUserProfileImageAsBytes(email);
         }
-        return awsS3ServiceImpl.getObject("profile", user.getProfile());
+        return awsS3ServiceImpl.findFileObject("profile", user.getProfile());
     }
 
     // 회원 프로필 사진 Base64 정보 조회
@@ -88,7 +88,7 @@ public class UserController {
         if (isKakaoProfile(user)) {
             return userService.findUserProfileImageAsBase64(email);
         }
-        return awsS3ServiceImpl.getBase("profile", user.getProfile());
+        return awsS3ServiceImpl.findFileBase64("profile", user.getProfile());
     }
 
     // 회원 프로필 사진 수정

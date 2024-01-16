@@ -154,8 +154,8 @@ public class UserServiceImpl implements UserService {
      * @param user (프로필 이미지를 변경할 회원), profileImage (프로필 이미지)
      */
     private void deletePrevAndUpdateProfile(User user, MultipartFile profileImage) {
-        awsS3ServiceImpl.deleteS3(user.getProfile());
-        String profile = awsS3ServiceImpl.uploadProfile(profileImage);
+        awsS3ServiceImpl.removeFile(user.getProfile());
+        String profile = awsS3ServiceImpl.addProfileImage(profileImage);
         user.updateProfile(profile);
     }
 

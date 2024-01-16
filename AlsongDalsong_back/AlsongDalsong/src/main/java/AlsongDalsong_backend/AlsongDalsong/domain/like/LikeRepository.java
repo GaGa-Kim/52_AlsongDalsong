@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface LikeRepository extends JpaRepository<Like, Long> {
     Like findByUserIdAndCommentId(User user, Comment comment);
 
-    boolean existsUserIdAndCommentId(User user, Comment comment);
+    boolean existsByUserIdAndCommentId(User user, Comment comment);
 }
