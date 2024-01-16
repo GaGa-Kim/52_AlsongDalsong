@@ -1,85 +1,121 @@
 package AlsongDalsong_backend.AlsongDalsong.service.scrap;
 
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
-import AlsongDalsong_backend.AlsongDalsong.domain.post.PostRepository;
 import AlsongDalsong_backend.AlsongDalsong.domain.scrap.Scrap;
 import AlsongDalsong_backend.AlsongDalsong.domain.scrap.ScrapRepository;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
-import AlsongDalsong_backend.AlsongDalsong.domain.user.UserRepository;
+import AlsongDalsong_backend.AlsongDalsong.exception.NotFoundException;
+import AlsongDalsong_backend.AlsongDalsong.service.post.PostService;
+import AlsongDalsong_backend.AlsongDalsong.service.user.UserService;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.scrap.ScrapRequestDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.scrap.ScrapResponseDto;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
- * 스크랩 서비스
+ * 스크랩을 위한 비즈니스 로직 구현 클래스
  */
 @Service
 @RequiredArgsConstructor
 public class ScrapServiceImpl implements ScrapService {
-
     private final ScrapRepository scrapRepository;
-    private final UserRepository userRepository;
-    private final PostRepository postRepository;
+    private final UserService userService;
+    private final PostService postService;
 
-    // 스크랩
-    @Transactional
-    public Boolean save(ScrapRequestDto scrapRequestDto) {
-        User user = userRepository.findByEmail(scrapRequestDto.getEmail());
-        Post post = postRepository.findById(scrapRequestDto.getPostId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
-
-        // 한 번도 스크랩한 적 없다면 스크랩하기
-        if (scrapRepository.findByUserIdAndPostId(user, post) == null) {
-            Scrap scrap = new Scrap();
-            // 연관관계 설정
-            scrap.setUser(user);
-            scrap.setPost(post);
-            user.addScrapList(scrapRepository.save(scrap));
-            post.addScrapList(scrapRepository.save(scrap));
-
-            return true;
+    /**
+     * 스크랩을 추가하거나 스크랩을 취소한다.
+     *
+     * @param scrapRequestDto (스크랩 저장 정보 DTO)
+     * @return Boolean (스크랩 또는 스크랩 취소 여부)
+     */
+    @Override
+    public Boolean saveScrap(ScrapRequestDto scrapRequestDto) {
+        User user = userService.findUserByEmail(scrapRequestDto.getEmail());
+        Post post = postService.findPostByPostId(scrapRequestDto.getPostId());
+        if (!exitsScrapByUserId(user, post)) {
+            return createLike(user, post);
         }
-        // 이미 스크랩 되어있다면 스크랩 취소하기
-        else if (scrapRepository.findByUserIdAndPostId(user, post) != null) {
-            scrapRepository.delete(scrapRepository.findByUserIdAndPostId(user, post));
-
-            return false;
-        } else {
-            throw new RuntimeException("스크랩에 실패했습니다.");
-        }
+        return deleteLike(user, post);
     }
 
-    // 게시글에 따른 스크랩 여부 조회
-    @Transactional(readOnly = true)
-    public Boolean check(Long postId, String email) {
-        User user = userRepository.findByEmail(email);
-        Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
-
-        // 글을 스크랩 했다면
-        if (scrapRepository.findByUserIdAndPostId(user, post) != null) {
-            return true;
-        } else {
-            return false;
-        }
+    /**
+     * 게시글 아이디와 회원 이메일에 따른 스크랩 여부를 조회한다.
+     *
+     * @param postId (게시글 아이디), email (회원 이메일)
+     * @return Boolean (스크랩 여부)
+     */
+    @Override
+    public Boolean findScrap(Long postId, String email) {
+        User user = userService.findUserByEmail(email);
+        Post post = postService.findPostByPostId(postId);
+        return exitsScrapByUserId(user, post);
     }
 
-    // 사용자별 스크랩 조회 (마이페이지)
-    @Transactional(readOnly = true)
-    public List<ScrapResponseDto> inquire(String email) {
-        // 내가 스크랩한 게시글의 정보 담기
-        User user = userRepository.findByEmail(email);
-        List<Scrap> scrapList = scrapRepository.findByUserId(user);
-        List<ScrapResponseDto> scrapResponseDtoList = new ArrayList<>();
+    /**
+     * 회원 아이디에 따른 스크랩 리스트를 조회한다.
+     *
+     * @param email (회원 이메일)
+     * @return List<ScrapResponseDto> (회원 스크랩 DTO 리스트)
+     */
+    @Override
+    public List<ScrapResponseDto> findUserScraps(String email) {
+        User user = userService.findUserByEmail(email);
+        return scrapRepository.findByUserId(user)
+                .stream()
+                .map(scrap -> new ScrapResponseDto(postService.findPostByPostId(scrap.getPostId().getId())))
+                .collect(Collectors.toList());
+    }
 
-        for (Scrap scrap : scrapList) {
-            scrapResponseDtoList.add(new ScrapResponseDto(postRepository.findById(scrap.getPostId().getId())
-                    .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."))));
+    /**
+     * 게시글과 회원에 따른 스크랩 여부를 조회한다.
+     *
+     * @param user (회원), post (게시글)
+     * @return boolean (스크랩 여부)
+     */
+    private boolean exitsScrapByUserId(User user, Post post) {
+        return scrapRepository.existsUserIdAndPostId(user, post);
+    }
+
+    /**
+     * 스크랩읉 저장한다.
+     *
+     * @param user (회원), post (게시글)
+     * @return boolean (스크랩 저장에 따른 true 반환)
+     */
+    private boolean createLike(User user, Post post) {
+        Scrap scrap = new Scrap();
+        scrap.setUser(user);
+        scrap.setPost(post);
+        scrapRepository.save(scrap);
+        user.addScrapList(scrap);
+        post.addScrapList(scrap);
+        return true;
+    }
+
+    /**
+     * 스크랩을 삭제한다.
+     *
+     * @param user (회원), post (게시글)
+     * @return boolean (스크랩 삭제에 따른 false 반환)
+     */
+    private boolean deleteLike(User user, Post post) {
+        Scrap scrap = scrapRepository.findByUserIdAndPostId(user, post);
+        if (isSameUser(user, scrap)) {
+            scrapRepository.delete(scrap);
+            return false;
         }
+        throw new NotFoundException();
+    }
 
-        return scrapResponseDtoList;
+    /**
+     * 스크랩 작성자와 스크랩 편집자가 같은지 확인한다.
+     *
+     * @param user (회원), scrap (스크랩)
+     * @return boolean (스크랩 작성자와 편집자 동일 여부)
+     */
+    private boolean isSameUser(User user, Scrap scrap) {
+        return user.equals(scrap.getUserId());
     }
 }

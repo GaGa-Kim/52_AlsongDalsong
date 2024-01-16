@@ -4,7 +4,7 @@ import AlsongDalsong_backend.AlsongDalsong.web.dto.like.LikeRequestDto;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * 댓글 좋아요을 위한 비즈니스 로직 인터페이스
+ * 댓글 좋아요를 위한 비즈니스 로직 인터페이스
  */
 @Transactional
 public interface LikeService {

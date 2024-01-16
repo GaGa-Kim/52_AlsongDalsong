@@ -35,15 +35,9 @@ public class LikeServiceImpl implements LikeService {
         User user = userService.findUserByEmail(likeSaveRequestDto.getEmail());
         Comment comment = commentService.findCommentByCommentId(likeSaveRequestDto.getCommentId());
         if (!exitsCommentByUserId(user, comment)) {
-            createLike(user, comment, likeSaveRequestDto);
-            return true;
+            return createLike(user, comment);
         }
-        Like like = findLikeByLikeId(user, comment);
-        if (isSameUser(user, like)) {
-            deleteLike(user, like);
-            return false;
-        }
-        throw new NotFoundException();
+        return deleteLike(user, comment);
     }
 
     /**
@@ -82,24 +76,32 @@ public class LikeServiceImpl implements LikeService {
     /**
      * 좋아요를 저장한다.
      *
-     * @param user (회원), comment (댓글), likeRequestDto (좋아요 저장 정보 DTO)
+     * @param user (회원), comment (댓글)
+     * @return boolean (좋아요 저장에 따른 true 반환)
      */
-    private void createLike(User user, Comment comment, LikeRequestDto likeRequestDto) {
+    private boolean createLike(User user, Comment comment) {
         Like like = new Like();
         like.setUser(user);
         like.setComment(comment);
         comment.addLikeList(likeRepository.save(like));
         increasePoint(user, POINTS_PER_LIKE);
+        return true;
     }
 
     /**
      * 좋아요를 삭제한다.
      *
-     * @param user (회원), like (좋아요)
+     * @param user (회원), comment (댓글)
+     * @return boolean (좋아요 삭제에 따른 false 반환)
      */
-    private void deleteLike(User user, Like like) {
-        likeRepository.delete(like);
-        increasePoint(user, POINTS_PER_CANCEL);
+    private boolean deleteLike(User user, Comment comment) {
+        Like like = findLikeByLikeId(user, comment);
+        if (isSameUser(user, like)) {
+            likeRepository.delete(like);
+            increasePoint(user, POINTS_PER_CANCEL);
+            return false;
+        }
+        throw new NotFoundException();
     }
 
     /**

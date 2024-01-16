@@ -27,7 +27,8 @@ public class LikeController {
     // 댓글 좋아요
     @PostMapping("/api/like/save")
     @ApiOperation(value = "댓글 좋아요 작성/취소", notes = "댓글에 좋아요를 작성한 후, true를 리턴합니다. 댓글이 이미 좋아요일 경우 좋아요가 취소되고 false를 리턴합니다. ")
-    public ResponseEntity<Boolean> save(@RequestBody LikeRequestDto likeSaveRequestDto) {
+    @ApiImplicitParam(name = "likeSaveRequestDto", value = "좋아요 작성 정보", required = true)
+    public ResponseEntity<Boolean> likeSave(@RequestBody LikeRequestDto likeSaveRequestDto) {
         return ResponseEntity.ok().body(likeService.saveLike(likeSaveRequestDto));
     }
 
@@ -38,7 +39,7 @@ public class LikeController {
             @ApiImplicitParam(name = "id", value = "댓글 id", example = "1"),
             @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com")
     })
-    public ResponseEntity<Boolean> check(@RequestParam Long id, String email) {
+    public ResponseEntity<Boolean> likeDetails(@RequestParam Long id, String email) {
         return ResponseEntity.ok().body(likeService.findLike(id, email));
     }
 }
