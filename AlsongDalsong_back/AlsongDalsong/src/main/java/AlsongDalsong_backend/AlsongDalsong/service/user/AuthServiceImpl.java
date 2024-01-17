@@ -1,5 +1,6 @@
 package AlsongDalsong_backend.AlsongDalsong.service.user;
 
+import AlsongDalsong_backend.AlsongDalsong.config.jwt.TokenProvider;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.KakaoProfile;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.KakaoProfile.KakaoAccount;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.OauthToken;
@@ -10,9 +11,6 @@ import AlsongDalsong_backend.AlsongDalsong.exception.DuplicateEmailException;
 import AlsongDalsong_backend.AlsongDalsong.exception.WithdrawnException;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.user.UserResponseDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.user.UserSaveRequestDto;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -37,12 +35,7 @@ public class AuthServiceImpl implements AuthService {
     private static final String BEARER_PREFIX = "Bearer ";
 
     private final UserRepository userRepository;
-
-    @Value("${jwt.secret}")
-    public String secret;
-
-    @Value("${jwt.expiration_time}")
-    public int expiration_time;
+    private final TokenProvider tokenProvider;
 
     @Value("${kakao.client_id}")
     public String client_id;
@@ -243,12 +236,7 @@ public class AuthServiceImpl implements AuthService {
      * @return TokenDto (토큰과 회원 정보 DTO)
      */
     private TokenDto createJwtToken(User user) {
-        String jwtToken = JWT.create()
-                .withSubject(user.getName())
-                .withExpiresAt(new Date(System.currentTimeMillis() + expiration_time))
-                .withClaim("id", user.getId())
-                .withClaim("role", user.getRole().getRole())
-                .sign(Algorithm.HMAC512(secret));
+        String jwtToken = tokenProvider.createToken(user);
         return new TokenDto(jwtToken, user.getEmail());
     }
 }
