@@ -3,12 +3,18 @@ package AlsongDalsong_backend.AlsongDalsong.domain.vote;
 import AlsongDalsong_backend.AlsongDalsong.domain.BaseTimeEntity;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
-import javax.persistence.*;
 
 /**
  * 투표 테이블
@@ -49,16 +55,13 @@ public class Vote extends BaseTimeEntity {
     // 회원 연관관계 메소드
     public void setUser(User user) {
         this.userId = user;
-        /*
-        if(!userId.getVoteList().contains(this))
-            user.getVoteList().add(this);
-         */
     }
 
     // 게시글 연관관계 메소드
     public void setPost(Post post) {
         this.postId = post;
-        if(!postId.getVoteList().contains(this))
+        if (!postId.getVoteList().contains(this)) {
             post.getVoteList().add(this);
+        }
     }
 }

@@ -2,13 +2,8 @@ package AlsongDalsong_backend.AlsongDalsong.service.photo;
 
 import AlsongDalsong_backend.AlsongDalsong.domain.photo.Photo;
 import AlsongDalsong_backend.AlsongDalsong.domain.photo.PhotoRepository;
-import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import AlsongDalsong_backend.AlsongDalsong.exception.NotFoundException;
-import AlsongDalsong_backend.AlsongDalsong.service.post.PostService;
-import AlsongDalsong_backend.AlsongDalsong.web.dto.photo.PhotoIdResponseDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.photo.PhotoResponseDto;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +14,17 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PhotoServiceImpl implements PhotoService {
     private final PhotoRepository photoRepository;
-    private final PostService postService;
+
+    /**
+     * 사진을 추가한다.
+     *
+     * @param photo (사진)
+     * @return
+     */
+    @Override
+    public Photo addPhoto(Photo photo) {
+        return photoRepository.save(photo);
+    }
 
     /**
      * 사진 아이디로 사진을 조회한다.
@@ -49,28 +54,12 @@ public class PhotoServiceImpl implements PhotoService {
     }
 
     /**
-     * 게시글 아이디로 사진 아이디 리스트를 조회한다.
+     * 사진을 삭제한다.
      *
-     * @param postId (게시글 아이디)
-     * @return List<PhotoIdResponseDto> (사진 아이디 DTO 리스트)
+     * @param photo (사진)
      */
     @Override
-    public List<PhotoIdResponseDto> findPhotoList(Long postId) {
-        Post post = postService.findPostByPostId(postId);
-        return photoRepository.findAllByPostId(post)
-                .stream()
-                .map(PhotoIdResponseDto::new)
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * 사진 아이디로 사진을 삭제한다.
-     *
-     * @param photoId (사진 아이디)
-     */
-    @Override
-    public void removePhoto(Long photoId) {
-        Photo photo = findPhotoByPhotoId(photoId);
+    public void removePhoto(Photo photo) {
         photoRepository.delete(photo);
     }
 }

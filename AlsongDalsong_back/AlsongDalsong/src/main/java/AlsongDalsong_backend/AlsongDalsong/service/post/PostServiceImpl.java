@@ -1,24 +1,23 @@
 package AlsongDalsong_backend.AlsongDalsong.service.post;
 
 import AlsongDalsong_backend.AlsongDalsong.domain.photo.Photo;
-import AlsongDalsong_backend.AlsongDalsong.domain.photo.PhotoRepository;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Category;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Decision;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.PostRepository;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Todo;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
-import AlsongDalsong_backend.AlsongDalsong.domain.vote.VoteRepository;
+import AlsongDalsong_backend.AlsongDalsong.domain.vote.Vote;
 import AlsongDalsong_backend.AlsongDalsong.exception.NotFoundException;
 import AlsongDalsong_backend.AlsongDalsong.exception.UnauthorizedEditException;
-import AlsongDalsong_backend.AlsongDalsong.service.photo.AwsS3ServiceImpl;
-import AlsongDalsong_backend.AlsongDalsong.service.photo.PhotoServiceImpl;
+import AlsongDalsong_backend.AlsongDalsong.service.photo.PhotoService;
+import AlsongDalsong_backend.AlsongDalsong.service.photo.StorageService;
 import AlsongDalsong_backend.AlsongDalsong.service.user.UserService;
-import AlsongDalsong_backend.AlsongDalsong.web.dto.photo.PhotoIdResponseDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.post.PostResponseDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.post.PostSaveRequestDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.post.PostUpdateRequestDto;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -37,11 +36,9 @@ public class PostServiceImpl implements PostService {
     private static final int POINTS_PER_DECISION = 5;
 
     private final PostRepository postRepository;
-    private final PhotoRepository photoRepository;
     private final UserService userService;
-    private final AwsS3ServiceImpl awsS3ServiceImpl;
-    private final PhotoServiceImpl photoServiceImpl;
-    private final VoteRepository voteRepository;
+    private final StorageService storageService;
+    private final PhotoService photoService;
 
     /**
      * 게시글을 작성한다.
@@ -122,7 +119,11 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<PostResponseDto> findUserPosts(String email) {
         User user = userService.findUserByEmail(email);
-        return convertToDtos(postRepository.findByUserId(user));
+        List<Post> postList = user.getPostList();
+        if (postList.isEmpty()) {
+            throw new NotFoundException();
+        }
+        return convertToDtos(postList);
     }
 
     /**
@@ -137,7 +138,7 @@ public class PostServiceImpl implements PostService {
         User user = userService.findUserByEmail(postUpdateRequestDto.getEmail());
         Post post = findPostByPostId(postUpdateRequestDto.getId());
         if (isSameUser(user, post)) {
-            deletePostPhotos(deletePhotoIds);
+            deletePostPhotos(post, deletePhotoIds);
             createPostPhotos(post, photos);
             updatePost(post, postUpdateRequestDto);
             return new PostResponseDto(post, findPhotoIdByPost(post.getId()), countVote(post));
@@ -188,10 +189,8 @@ public class PostServiceImpl implements PostService {
      * @return List<Long> 사진 아이디 리스트
      */
     private List<Long> findPhotoIdByPost(Long postId) {
-        return photoServiceImpl.findPhotoList(postId)
-                .stream()
-                .map(PhotoIdResponseDto::getPhotoId)
-                .collect(Collectors.toList());
+        Post post = findPostByPostId(postId);
+        return post.getPhotoList().stream().map(Photo::getId).collect(Collectors.toList());
     }
 
     /**
@@ -224,8 +223,8 @@ public class PostServiceImpl implements PostService {
      */
     private void createPostPhotos(Post post, List<MultipartFile> photos) {
         Optional.ofNullable(photos)
-                .map(awsS3ServiceImpl::addPhoto)
-                .ifPresent(photo -> photo.forEach(p -> post.addPhotoList(photoRepository.save(p))));
+                .map(storageService::addPhoto)
+                .ifPresent(photo -> photo.forEach(p -> post.addPhotoList(photoService.addPhoto(p))));
     }
 
     /**
@@ -243,11 +242,18 @@ public class PostServiceImpl implements PostService {
      *
      * @param deletePhotoIds (삭제할 사진 아이디)
      */
-    private void deletePostPhotos(List<Long> deletePhotoIds) {
+    private void deletePostPhotos(Post post, List<Long> deletePhotoIds) {
+        List<Photo> photoList = post.getPhotoList();
         if (!deletePhotoIds.isEmpty()) {
             for (Long deleteFileId : deletePhotoIds) {
-                awsS3ServiceImpl.removeFile(photoServiceImpl.findPhoto(deleteFileId).getPhotoName());
-                photoServiceImpl.removePhoto(deleteFileId);
+                Optional<Photo> matchingPhoto = photoList.stream()
+                        .filter(photo -> photo.getId().equals(deleteFileId))
+                        .findFirst();
+                matchingPhoto.ifPresent(photo -> {
+                    String photoName = photo.getPhotoName();
+                    storageService.removeFile(photoName);
+                    photoService.removePhoto(photo);
+                });
             }
         }
     }
@@ -276,8 +282,10 @@ public class PostServiceImpl implements PostService {
      * @return Pair<Long, Long> (게시글 동의, 비동의 투표 수)
      */
     private Pair<Long, Long> countVote(Post post) {
-        Long agree = voteRepository.countByPostIdAndVote(post, true);
-        Long disagree = voteRepository.countByPostIdAndVote(post, false);
+        Map<Boolean, Long> countVote = post.getVoteList()
+                .stream().collect(Collectors.groupingBy(Vote::getVote, Collectors.counting()));
+        Long agree = countVote.getOrDefault(true, 0L);
+        Long disagree = countVote.getOrDefault(false, 0L);
         return Pair.of(agree, disagree);
     }
 
@@ -288,7 +296,7 @@ public class PostServiceImpl implements PostService {
      * @return List<Photo> (게시글 별 사진 리스트)
      */
     private List<Photo> findPhotoByPost(Post post) {
-        return photoRepository.findAllByPostId(post);
+        return post.getPhotoList();
     }
 
     /**
@@ -298,7 +306,7 @@ public class PostServiceImpl implements PostService {
      */
     private void deleteAllPostPhotos(Post post) {
         for (Photo photo : findPhotoByPost(post)) {
-            awsS3ServiceImpl.removeFile(photo.getPhotoName());
+            storageService.removeFile(photo.getPhotoName());
         }
     }
 

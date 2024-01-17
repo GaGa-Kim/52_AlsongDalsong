@@ -28,7 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtRequestFilter jwtRequestFilter;
 
     @Override
-    public void configure(WebSecurity web){
+    public void configure(WebSecurity web) {
         web
                 .ignoring()
                 .antMatchers(

@@ -3,11 +3,8 @@ package AlsongDalsong_backend.AlsongDalsong.domain.user;
 import AlsongDalsong_backend.AlsongDalsong.constants.Message;
 import AlsongDalsong_backend.AlsongDalsong.constants.Rule;
 import AlsongDalsong_backend.AlsongDalsong.domain.BaseTimeEntity;
-import AlsongDalsong_backend.AlsongDalsong.domain.comment.Comment;
-import AlsongDalsong_backend.AlsongDalsong.domain.like.Like;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import AlsongDalsong_backend.AlsongDalsong.domain.scrap.Scrap;
-import AlsongDalsong_backend.AlsongDalsong.domain.vote.Vote;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -68,19 +65,10 @@ public class User extends BaseTimeEntity {
     private Boolean withdraw; // 탈퇴 여부
 
     @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<Scrap> scrapList = new ArrayList<>(); // 회원 게시글 스크랩 리스트
-
-    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Post> postList = new ArrayList<>(); // 회원 게시글 리스트
 
     @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<Comment> commentList = new ArrayList<>(); // 회원 댓글 리스트
-
-    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<Like> likeList = new ArrayList<>(); // 회원 댓글 좋아요 리스트
-
-    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<Vote> voteList = new ArrayList<>(); // 회원 게시글 투표 리스트
+    private final List<Scrap> scrapList = new ArrayList<>(); // 회원 게시글 스크랩 리스트
 
     @Builder
     public User(Long kakaoId, String name, String email, String nickname, String profile, String introduce) {
@@ -131,14 +119,6 @@ public class User extends BaseTimeEntity {
         this.nickname = Message.WITHDRAW.getMessage();
     }
 
-    // 스크랩 연관관계 메소드
-    public void addScrapList(Scrap scrap) {
-        this.scrapList.add(scrap);
-        if (scrap.getUserId() != this) {
-            scrap.setUser(this);
-        }
-    }
-
     // 게시글 연관관계 메소드
     public void addPostList(Post post) {
         this.postList.add(post);
@@ -147,27 +127,11 @@ public class User extends BaseTimeEntity {
         }
     }
 
-    // 댓글 연관관계 메소드
-    public void addCommentList(Comment comment) {
-        this.commentList.add(comment);
-        if (comment.getUserId() != this) {
-            comment.setUser(this);
-        }
-    }
-
-    // 댓글 좋아요 연관관계 메소드
-    public void addLikeList(Like like) {
-        this.likeList.add(like);
-        if (like.getUserId() != this) {
-            like.setUser(this);
-        }
-    }
-
-    // 투표 연관관계 메소드
-    public void addVoteList(Vote vote) {
-        this.voteList.add(vote);
-        if (vote.getUserId() != this) {
-            vote.setUser(this);
+    // 스크랩 연관관계 메소드
+    public void addScrapList(Scrap scrap) {
+        this.scrapList.add(scrap);
+        if (scrap.getUserId() != this) {
+            scrap.setUser(this);
         }
     }
 }

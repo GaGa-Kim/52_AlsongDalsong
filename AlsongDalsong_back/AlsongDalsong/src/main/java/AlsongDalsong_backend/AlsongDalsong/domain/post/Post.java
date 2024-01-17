@@ -74,9 +74,6 @@ public class Post extends BaseTimeEntity {
     private String reason; // 결정 이유
 
     @OneToMany(mappedBy = "postId", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Scrap> scrapList = new ArrayList<>(); // 게시글 스크랩 리스트
-
-    @OneToMany(mappedBy = "postId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Photo> photoList = new ArrayList<>(); // 게시글 사진 리스트
 
     @OneToMany(mappedBy = "postId", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -84,6 +81,9 @@ public class Post extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "postId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Vote> voteList = new ArrayList<>(); // 게시글 투표 리스트
+
+    @OneToMany(mappedBy = "postId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Scrap> scrapList = new ArrayList<>(); // 게시글 스크랩 리스트
 
     @Builder
     public Post(Todo todo, Category category, Who who, Old old, String date, String what, String content,
@@ -130,14 +130,6 @@ public class Post extends BaseTimeEntity {
         }
     }
 
-    // 스크랩 연관관계 메소드
-    public void addScrapList(Scrap scrap) {
-        this.scrapList.add(scrap);
-        if (scrap.getPostId() != this) {
-            scrap.setPost(this);
-        }
-    }
-
     // 사진 연관관계 메소드
     public void addPhotoList(Photo photo) {
         this.photoList.add(photo);
@@ -159,6 +151,14 @@ public class Post extends BaseTimeEntity {
         this.voteList.add(vote);
         if (vote.getPostId() != this) {
             vote.setPost(this);
+        }
+    }
+
+    // 스크랩 연관관계 메소드
+    public void addScrapList(Scrap scrap) {
+        this.scrapList.add(scrap);
+        if (scrap.getPostId() != this) {
+            scrap.setPost(this);
         }
     }
 }

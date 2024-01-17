@@ -1,9 +1,7 @@
 package AlsongDalsong_backend.AlsongDalsong.service.photo;
 
 import AlsongDalsong_backend.AlsongDalsong.domain.photo.Photo;
-import AlsongDalsong_backend.AlsongDalsong.web.dto.photo.PhotoIdResponseDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.photo.PhotoResponseDto;
-import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -11,6 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 public interface PhotoService {
+    // 사진을 추가한다.
+    Photo addPhoto(Photo photo);
+
     // 사진 아이디로 사진을 조회한다.
     @Transactional(readOnly = true)
     Photo findPhotoByPhotoId(Long photoId);
@@ -19,10 +20,6 @@ public interface PhotoService {
     @Transactional(readOnly = true)
     PhotoResponseDto findPhoto(Long photoId);
 
-    // 게시글 아이디로 사진 아이디 리스트를 조회한다.
-    @Transactional(readOnly = true)
-    List<PhotoIdResponseDto> findPhotoList(Long postId);
-
     // 사진 아이디로 사진을 삭제한다.
-    void removePhoto(Long photoId);
+    void removePhoto(Photo photo);
 }
