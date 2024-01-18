@@ -11,12 +11,11 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class LikeRequestDto {
-
     @ApiModelProperty(notes = "좋아요 누르는 회원 이메일", example = "1234@gmail.com", required = true)
-    private String email; // 회원
+    private String email;
 
     @ApiModelProperty(notes = "댓글 id", example = "1", required = true)
-    private Long commentId; // 댓글 id
+    private Long commentId;
 
     @Builder
     public LikeRequestDto(String email, Long commentId) {

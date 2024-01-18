@@ -31,7 +31,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @Table(name = "comments")
 public class Comment extends BaseTimeEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Comment_Id")
@@ -56,18 +55,15 @@ public class Comment extends BaseTimeEntity {
         this.content = content;
     }
 
-    // 댓글 수정
     public Comment update(String content) {
         this.content = content;
         return this;
     }
 
-    // 회원 연관관계 메소드
     public void setUser(User user) {
         this.userId = user;
     }
 
-    // 게시글 연관관계 메소드
     public void setPost(Post post) {
         this.postId = post;
         if (!postId.getCommentList().contains(this)) {
@@ -75,7 +71,6 @@ public class Comment extends BaseTimeEntity {
         }
     }
 
-    // 댓글 좋아요 연관관계 메소드
     public void addLikeList(Like like) {
         this.likeList.add(like);
         if (like.getCommentId() != this) {

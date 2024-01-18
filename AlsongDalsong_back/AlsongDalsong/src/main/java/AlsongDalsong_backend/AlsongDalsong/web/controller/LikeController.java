@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class LikeController {
     private final LikeService likeService;
 
-    // 댓글 좋아요
     @PostMapping("/api/like/save")
     @ApiOperation(value = "댓글 좋아요 작성/취소", notes = "댓글에 좋아요를 작성한 후, true를 리턴합니다. 댓글이 이미 좋아요일 경우 좋아요가 취소되고 false를 리턴합니다. ")
     @ApiImplicitParam(name = "likeSaveRequestDto", value = "좋아요 작성 정보", required = true)
@@ -32,7 +31,6 @@ public class LikeController {
         return ResponseEntity.ok().body(likeService.saveLike(likeSaveRequestDto));
     }
 
-    // 사용자별 댓글에 따른 좋아요 여부 조회
     @PostMapping("/api/like/check")
     @ApiOperation(value = "사용자별 댓글에 따른 좋아요 여부 조회", notes = "사용자별로 댓글에 좋아요를 눌렀는지 조회합니다. 좋아요 했다면 true, 그렇지 않다면 false를 리턴합니다.")
     @ApiImplicitParams({

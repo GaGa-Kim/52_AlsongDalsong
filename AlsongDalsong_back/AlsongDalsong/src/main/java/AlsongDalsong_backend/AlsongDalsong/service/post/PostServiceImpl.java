@@ -37,8 +37,8 @@ public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
     private final UserService userService;
-    private final StorageService storageService;
     private final PhotoService photoService;
+    private final StorageService storageService;
 
     /**
      * 게시글을 작성한다.

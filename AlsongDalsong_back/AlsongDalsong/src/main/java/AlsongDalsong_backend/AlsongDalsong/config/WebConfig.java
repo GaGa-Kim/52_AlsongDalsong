@@ -14,7 +14,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @RequiredArgsConstructor
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-
     @Bean
     public BaseHandlerInterceptor baseHandlerInterceptor() {
         return new BaseHandlerInterceptor();
@@ -39,5 +38,4 @@ public class WebConfig implements WebMvcConfigurer {
                 )
                 .allowCredentials(false);
     }
-
 }

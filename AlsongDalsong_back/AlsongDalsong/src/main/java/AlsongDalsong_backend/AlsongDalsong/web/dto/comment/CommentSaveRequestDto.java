@@ -12,15 +12,14 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class CommentSaveRequestDto {
-
     @ApiModelProperty(notes = "댓글 작성자 이메일", example = "1234@gmail.com", required = true)
-    private String email; // 회원 이메일
+    private String email;
 
     @ApiModelProperty(notes = "게시글 id", example = "1", required = true)
-    private Long postId; // 게시글 id
+    private Long postId;
 
     @ApiModelProperty(notes = "내용", example = "구매하세요", required = true)
-    private String content; // 내용
+    private String content;
 
     @Builder
     public CommentSaveRequestDto(String email, Long postId, String content) {

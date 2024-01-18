@@ -29,7 +29,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @Table(name = "users")
 public class User extends BaseTimeEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "User_Id")
@@ -113,13 +112,11 @@ public class User extends BaseTimeEntity {
         this.point %= Rule.STICKER_EARN_THRESHOLD.getRule();
     }
 
-    // 회원 탈퇴 수정
     public void withdrawUser() {
         this.withdraw = true;
         this.nickname = Message.WITHDRAW.getMessage();
     }
 
-    // 게시글 연관관계 메소드
     public void addPostList(Post post) {
         this.postList.add(post);
         if (post.getUserId() != this) {
@@ -127,7 +124,6 @@ public class User extends BaseTimeEntity {
         }
     }
 
-    // 스크랩 연관관계 메소드
     public void addScrapList(Scrap scrap) {
         this.scrapList.add(scrap);
         if (scrap.getUserId() != this) {

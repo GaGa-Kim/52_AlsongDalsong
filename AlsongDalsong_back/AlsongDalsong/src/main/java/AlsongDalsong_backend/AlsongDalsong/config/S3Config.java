@@ -15,7 +15,6 @@ import org.springframework.context.annotation.Primary;
  */
 @Configuration
 public class S3Config {
-
     @Value("${cloud.aws.credentials.access-key}")
     private String accessKey;
 
@@ -27,7 +26,7 @@ public class S3Config {
 
     @Bean
     @Primary
-    public BasicAWSCredentials awsCredentialsProvider(){
+    public BasicAWSCredentials awsCredentialsProvider() {
         BasicAWSCredentials basicAWSCredentials = new BasicAWSCredentials(accessKey, secretKey);
         return basicAWSCredentials;
     }

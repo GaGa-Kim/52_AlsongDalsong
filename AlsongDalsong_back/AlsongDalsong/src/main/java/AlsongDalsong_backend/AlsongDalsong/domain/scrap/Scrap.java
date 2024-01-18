@@ -23,7 +23,6 @@ import lombok.ToString;
 @Getter
 @NoArgsConstructor
 public class Scrap extends BaseTimeEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Scrap_Id")
@@ -37,7 +36,6 @@ public class Scrap extends BaseTimeEntity {
     @JoinColumn(name = "Post_Id")
     private Post postId; // 게시글 외래키
 
-    // 회원 연관관계 메소드
     public void setUser(User user) {
         this.userId = user;
         if (!userId.getScrapList().contains(this)) {
@@ -45,7 +43,6 @@ public class Scrap extends BaseTimeEntity {
         }
     }
 
-    // 게시글 연관관계 메소드
     public void setPost(Post post) {
         this.postId = post;
     }

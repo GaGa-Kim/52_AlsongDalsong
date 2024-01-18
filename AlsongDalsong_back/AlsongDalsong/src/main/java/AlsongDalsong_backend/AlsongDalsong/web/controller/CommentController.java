@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class CommentController {
     private final CommentService commentService;
 
-    // 게시글에 댓글 작성
     @PostMapping("/api/comment/save")
     @ApiOperation(value = "게시글에 댓글 작성", notes = "게시글에 댓글을 작성한 후, 게시글의 댓글 목록을 리턴합니다.")
     @ApiImplicitParam(name = "commentSaveRequestDto", value = "댓글 작성 정보", required = true)
@@ -39,7 +38,6 @@ public class CommentController {
         return ResponseEntity.ok().body(commentService.addComment(commentSaveRequestDto));
     }
 
-    // 게시글별 댓글 조회
     @GetMapping("/api/comment/inquire")
     @ApiOperation(value = "게시글별 댓글 조회", notes = "게시글 id에 따라 게시글별 댓글 목록을 리턴합니다.")
     @ApiImplicitParam(name = "postId", value = "게시글 id", example = "1")
@@ -47,7 +45,6 @@ public class CommentController {
         return ResponseEntity.ok().body(commentService.findPostCommentsByLikes(postId));
     }
 
-    // 게시글의 댓글 수정
     @PutMapping("/api/comment/update")
     @ApiOperation(value = "게시글의 댓글 수정", notes = "게시글의 댓글을 수정한 후, 게시글의 댓글 목록을 리턴합니다.")
     @ApiImplicitParam(name = "commentUpdateRequestDto", value = "댓글 수정 정보", required = true)
@@ -56,7 +53,6 @@ public class CommentController {
         return ResponseEntity.ok().body(commentService.modifyComment(commentUpdateRequestDto));
     }
 
-    // 게시글의 댓글 삭제
     @DeleteMapping("/api/comment/delete")
     @ApiOperation(value = "게시글의 댓글 삭제", notes = "게시글의 댓글을 삭제한 후, true를 리턴합니다.")
     @ApiImplicitParams({

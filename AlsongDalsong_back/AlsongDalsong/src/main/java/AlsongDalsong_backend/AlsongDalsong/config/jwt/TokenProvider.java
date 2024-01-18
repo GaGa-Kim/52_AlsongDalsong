@@ -22,6 +22,7 @@ import org.springframework.util.StringUtils;
 public class TokenProvider {
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";
+    private static final int PREFIX_INDEX = 7;
 
     @Value("${jwt.secret}")
     public String secret;
@@ -41,16 +42,16 @@ public class TokenProvider {
         return new UsernamePasswordAuthenticationToken(getUserEmail(token), token, getUserRole(token));
     }
 
-    public String resolveAccessToken(HttpServletRequest request) {
+    public String resolveToken(HttpServletRequest request) {
         String header = request.getHeader(AUTHORIZATION_HEADER);
 
         if (StringUtils.hasText(header) && header.startsWith(BEARER_PREFIX)) {
-            return header.substring(7);
+            return header.substring(PREFIX_INDEX);
         }
         return null;
     }
 
-    public boolean validateToken(String token, HttpServletRequest request) {
+    public boolean validateToken(String token) {
         try {
             JWT.require(Algorithm.HMAC512(secret)).build().verify(token);
             return true;

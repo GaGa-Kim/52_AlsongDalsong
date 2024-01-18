@@ -31,7 +31,6 @@ import lombok.ToString;
 @Getter
 @NoArgsConstructor
 public class Post extends BaseTimeEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Post_Id")
@@ -101,7 +100,6 @@ public class Post extends BaseTimeEntity {
         this.reason = reason;
     }
 
-    // 게시글 수정
     public Post update(String todo, String category, String who, String old, String date, String what, String content,
                        String link, Integer importance) {
         this.todo = Todo.ofTodo(todo);
@@ -116,13 +114,11 @@ public class Post extends BaseTimeEntity {
         return this;
     }
 
-    // 게시글 확정
     public void setDecision(String decision, String reason) {
         this.decision = Decision.ofDecision(decision);
         this.reason = reason;
     }
 
-    // 회원 연관관계 메소드
     public void setUser(User user) {
         this.userId = user;
         if (!userId.getPostList().contains(this)) {
@@ -130,7 +126,6 @@ public class Post extends BaseTimeEntity {
         }
     }
 
-    // 사진 연관관계 메소드
     public void addPhotoList(Photo photo) {
         this.photoList.add(photo);
         if (photo.getPostId() != this) {
@@ -138,7 +133,6 @@ public class Post extends BaseTimeEntity {
         }
     }
 
-    // 댓글 연관관계 메소드
     public void addCommentList(Comment comment) {
         this.commentList.add(comment);
         if (comment.getPostId() != this) {
@@ -146,7 +140,6 @@ public class Post extends BaseTimeEntity {
         }
     }
 
-    // 투표 연관관계 메소드
     public void addVoteList(Vote vote) {
         this.voteList.add(vote);
         if (vote.getPostId() != this) {
@@ -154,7 +147,6 @@ public class Post extends BaseTimeEntity {
         }
     }
 
-    // 스크랩 연관관계 메소드
     public void addScrapList(Scrap scrap) {
         this.scrapList.add(scrap);
         if (scrap.getPostId() != this) {

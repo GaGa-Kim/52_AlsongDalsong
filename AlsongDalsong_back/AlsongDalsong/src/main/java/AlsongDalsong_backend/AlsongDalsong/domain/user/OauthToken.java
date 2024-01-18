@@ -7,7 +7,6 @@ import lombok.Data;
  */
 @Data
 public class OauthToken {
-
     private String id_token;
     private String access_token; // 정보를 요청하기 위한 토큰
     private String token_type; // 반환된 토큰 유형

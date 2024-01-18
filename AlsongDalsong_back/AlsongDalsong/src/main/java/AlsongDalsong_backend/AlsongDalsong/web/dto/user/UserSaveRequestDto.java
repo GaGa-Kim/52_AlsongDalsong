@@ -11,21 +11,20 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class UserSaveRequestDto {
-
     @ApiModelProperty(notes = "이름", example = "김가경", required = true)
-    private String name; // 이름
+    private String name;
 
     @ApiModelProperty(notes = "이메일", example = "1234@gmail.com", required = true)
-    private String email; // 이메일
+    private String email;
 
     @ApiModelProperty(notes = "닉네임", example = "가경", required = true)
-    private String nickname; // 닉네임
+    private String nickname;
 
     @ApiModelProperty(notes = "프로필 사진", example = "http", required = true)
-    private String profile; // 프로필 사진
+    private String profile;
 
     @ApiModelProperty(notes = "소개", example = "안녕하세요.", required = true)
-    private String introduce; // 소개
+    private String introduce;
 
     public User toEntity() {
         return User.builder()

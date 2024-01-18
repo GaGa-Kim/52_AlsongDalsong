@@ -25,7 +25,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @Table(name = "likes")
 public class Like extends BaseTimeEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Like_Id")
@@ -39,12 +38,10 @@ public class Like extends BaseTimeEntity {
     @JoinColumn(name = "Comment_Id")
     private Comment commentId; // 댓글 외래키
 
-    // 회원 연관관계 메소드
     public void setUser(User user) {
         this.userId = user;
     }
 
-    // 댓글 연관관계 메소드
     public void setComment(Comment comment) {
         this.commentId = comment;
         if (!commentId.getLikeList().contains(this)) {

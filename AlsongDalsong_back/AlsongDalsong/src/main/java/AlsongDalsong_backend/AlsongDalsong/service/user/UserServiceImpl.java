@@ -5,7 +5,7 @@ import AlsongDalsong_backend.AlsongDalsong.domain.post.PostRepository;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Todo;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.UserRepository;
-import AlsongDalsong_backend.AlsongDalsong.service.photo.AwsS3ServiceImpl;
+import AlsongDalsong_backend.AlsongDalsong.service.photo.StorageService;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.user.UserUpdateRequestDto;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,7 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
-    private final AwsS3ServiceImpl awsS3ServiceImpl;
+    private final StorageService storageService;
 
     /**
      * 이메일로 회원 정보를 조회한다.
@@ -154,8 +154,8 @@ public class UserServiceImpl implements UserService {
      * @param user (프로필 이미지를 변경할 회원), profileImage (프로필 이미지)
      */
     private void deletePrevAndUpdateProfile(User user, MultipartFile profileImage) {
-        awsS3ServiceImpl.removeFile(user.getProfile());
-        String profile = awsS3ServiceImpl.addProfileImage(profileImage);
+        storageService.removeFile(user.getProfile());
+        String profile = storageService.addProfileImage(profileImage);
         user.updateProfile(profile);
     }
 

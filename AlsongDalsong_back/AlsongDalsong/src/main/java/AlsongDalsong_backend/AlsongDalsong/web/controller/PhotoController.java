@@ -27,7 +27,6 @@ public class PhotoController {
     private final PhotoService photoService;
     private final StorageService storageService;
 
-    // 사진 id로 이미지 정보 조회
     @GetMapping("/api/photo/photoInfo")
     @ApiOperation(value = "사진 id로 이미지 정보 조회", notes = "사진 id로 이미지 정보를 조회하여 리턴합니다.")
     @ApiImplicitParam(name = "id", value = "사진 id", example = "1")
@@ -35,7 +34,6 @@ public class PhotoController {
         return ResponseEntity.ok().body(photoService.findPhoto(id));
     }
 
-    // 사진 id로 이미지 URL 정보 조회
     @GetMapping("/api/photo/photoURL")
     @ApiOperation(value = "사진 id로 이미지 URL 정보 조회", notes = "사진 id로 이미지 URL 정보를 조회하여 리턴합니다.")
     @ApiImplicitParam(name = "id", value = "사진 id", example = "1")
@@ -43,7 +41,6 @@ public class PhotoController {
         return ResponseEntity.ok().body(storageService.findFileUrl(getPhotoName(id).getSecond()));
     }
 
-    // 사진 id로 이미지 bytearray 정보 조회
     @GetMapping("/api/photo/photoByte")
     @ApiOperation(value = "사진 id로 이미지 bytearray 정보 조회", notes = "사진 id로 이미지를 bytearray로 리턴합니다.")
     @ApiImplicitParam(name = "id", value = "사진 id", example = "1")
@@ -52,7 +49,6 @@ public class PhotoController {
         return storageService.findFileObject(photoName.getFirst(), photoName.getSecond());
     }
 
-    // 사진 id로 이미지 Base64 정보 조회
     @GetMapping("/api/photo/photoBase")
     @ApiOperation(value = "사진 id로 이미지 Base64 정보 조회", notes = "사진 id로 이미지를 Base64로 리턴합니다.")
     @ApiImplicitParam(name = "id", value = "사진 id", example = "1")

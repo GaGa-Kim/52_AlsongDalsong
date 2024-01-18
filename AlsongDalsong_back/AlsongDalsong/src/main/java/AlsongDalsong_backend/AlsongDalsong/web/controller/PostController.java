@@ -33,7 +33,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class PostController {
     private final PostService postService;
 
-    // 게시글 작성
     @PostMapping(value = "/api/post/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiOperation(value = "게시글 작성", notes = "게시글을 작성한 후, 작성한 게시글을 리턴합니다.")
     public ResponseEntity<PostResponseDto> postAdd(PostSaveRequestVO postSaveRequestVO) {
@@ -42,7 +41,6 @@ public class PostController {
                 .body(postService.addPostWithPhotos(postSaveRequestDto, postSaveRequestVO.getPhotos()));
     }
 
-    // 게시글 상세 조회
     @GetMapping("/api/post/inquire")
     @ApiOperation(value = "게시글 상세 조회", notes = "게시글 id에 따라 게시글을 상세 조회하여 리턴합니다.")
     @ApiImplicitParam(name = "id", value = "게시글 id", example = "1")
@@ -50,7 +48,6 @@ public class PostController {
         return ResponseEntity.ok().body(postService.findPostDetailByPostId(id));
     }
 
-    // 살까 말까 / 할까 말까 / 갈까 말까로 분류별 최신글 조회
     @GetMapping("/api/post/inquireLatest")
     @ApiOperation(value = "살까 말까 / 할까 말까 / 갈까 말까로 분류별 최신글 조회", notes = "살까 말까 / 할까 말까 / 갈까 말까로 분류별 최신글 목록을 조회하여 리턴합니다.")
     @ApiImplicitParam(name = "todo", value = "분류", example = "살까 말까")
@@ -58,7 +55,6 @@ public class PostController {
         return ResponseEntity.ok().body(postService.findLatestPosts(todo));
     }
 
-    // 살까 말까 / 할까 말까 / 갈까 말까로 분류별 인기글 조회
     @GetMapping("/api/post/inquirePopular")
     @ApiOperation(value = "살까 말까 / 할까 말까 / 갈까 말까로 분류별 인기글 조회", notes = "살까 말까 / 할까 말까 / 갈까 말까로 분류별 인기글 목록을 조회하여 리턴합니다.")
     @ApiImplicitParam(name = "todo", value = "분류", example = "살까 말까")
@@ -66,7 +62,6 @@ public class PostController {
         return ResponseEntity.ok().body(postService.findPopularPosts(todo));
     }
 
-    // 분류의 카테고리별 조회
     @GetMapping("/api/post/inquireCategory")
     @ApiOperation(value = "분류의 카테고리별 조회", notes = "분류의 카테고리별로 게시글 목록을 조회하여 리턴합니다.")
     @ApiImplicitParams({
@@ -77,7 +72,6 @@ public class PostController {
         return ResponseEntity.ok().body(postService.findPostsByCategory(todo, category));
     }
 
-    // 사용자별 쓴 글 조회
     @GetMapping("/api/post/my")
     @ApiOperation(value = "사용자별 쓴 글 조회", notes = "사용자별 쓴 글 목록을 조회하여 리턴합니다.")
     @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com")
@@ -85,7 +79,6 @@ public class PostController {
         return ResponseEntity.ok().body(postService.findUserPosts(email));
     }
 
-    // 게시글 수정
     @PutMapping(value = "/api/post/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiOperation(value = "게시글 수정", notes = "게시글을 수정한 후, 수정한 게시글을 리턴합니다.")
     public ResponseEntity<PostResponseDto> postModify(PostUpdateRequestVO postUpdateRequestVO) {
@@ -95,7 +88,6 @@ public class PostController {
                         postUpdateRequestVO.getDeleteId()));
     }
 
-    // 게시글 삭제
     @DeleteMapping("/api/post/delete")
     @ApiOperation(value = "게시글 삭제", notes = "게시글을 삭제한 후, true를 리턴합니다.")
     @ApiImplicitParams({
@@ -106,7 +98,6 @@ public class PostController {
         return ResponseEntity.ok().body(postService.removePost(id, email));
     }
 
-    // 게시글 확정
     @PutMapping(value = "/api/post/updateDecision")
     @ApiOperation(value = "게시글 확정", notes = "결정 미정이었던 게시글을 결정/취소에 따라 게시글을 확정한 후, 확정된 게시글을 리턴합니다.")
     @ApiImplicitParams({

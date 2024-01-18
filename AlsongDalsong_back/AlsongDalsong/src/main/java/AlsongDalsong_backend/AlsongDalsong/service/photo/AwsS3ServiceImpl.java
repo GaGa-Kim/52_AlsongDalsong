@@ -33,9 +33,10 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 @RequiredArgsConstructor
 public class AwsS3ServiceImpl implements StorageService {
-    private static String UPLOAD_FAIL = "업로드에 실패했습니다.";
-    private static String INVALID_FORMAT = "잘못된 형식의 파일 입니다.";
+    private static final String UPLOAD_FAIL = "업로드에 실패했습니다.";
+    private static final String INVALID_FORMAT = "잘못된 형식의 파일 입니다.";
     private static final String FILE_NAME_SEPARATOR = ".";
+
     private final AmazonS3Client amazonS3Client;
 
     @Value("${cloud.aws.s3.bucket}")
@@ -173,9 +174,7 @@ public class AwsS3ServiceImpl implements StorageService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, INVALID_FORMAT);
         }
     }
-
-    // S3 버킷에서 ByteArray 형식으로 사진 가져오기
-
+    
     /**
      * AWS S3 버킷에서 ByteArray 형식으로 파일을 조회한다.
      *

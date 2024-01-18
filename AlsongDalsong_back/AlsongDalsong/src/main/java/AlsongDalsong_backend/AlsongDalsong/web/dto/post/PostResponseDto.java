@@ -12,51 +12,50 @@ import org.springframework.data.util.Pair;
  */
 @Getter
 public class PostResponseDto {
-
     @ApiModelProperty(notes = "게시글 기본키", example = "1")
     private Long id;
 
     @ApiModelProperty(notes = "생성 날짜 및 시간", example = "3분 전")
-    private String createdDateTime; // 생성 날짜 및 시간
+    private String createdDateTime;
 
     @ApiModelProperty(notes = "작성자 이메일", example = "1234@gmail.com")
-    private String email; // 작성자 이메일
+    private String email;
 
     @ApiModelProperty(notes = "작성자 닉네임", example = "가경")
-    private String nickname; // 작성자 닉네임
+    private String nickname;
 
     @ApiModelProperty(notes = "분류", example = "살까 말까")
-    private String todo; // 분류
+    private String todo;
 
     @ApiModelProperty(notes = "카테고리", example = "패션")
-    private String category; // 카테고리
+    private String category;
 
     @ApiModelProperty(notes = "누가", example = "여성")
-    private String who; // 누가
+    private String who;
 
     @ApiModelProperty(notes = "연령", example = "20대")
-    private String old; // 연령
+    private String old;
 
     @ApiModelProperty(notes = "언제", example = "2022-01-02")
-    private String date; // 언제
+    private String date;
 
     @ApiModelProperty(notes = "무엇을", example = "신발")
-    private String what; // 무엇을
+    private String what;
 
     @ApiModelProperty(notes = "내용", example = "나이키 신발을~")
-    private String content; // 내용
+    private String content;
 
     @ApiModelProperty(notes = "링크", example = "www")
-    private String link; // 링크
+    private String link;
 
     @ApiModelProperty(notes = "중요도", example = "3")
-    private Integer importance; // 중요도
+    private Integer importance;
 
     @ApiModelProperty(notes = "결정 완료 여부", example = "미정")
-    private String decision; // 결정 완료 여부
+    private String decision;
 
     @ApiModelProperty(notes = "결정 이유", example = "필요없어서")
-    private String reason; // 결정 이유
+    private String reason;
 
     @ApiModelProperty(notes = "게시글 사진 id", example = "[1, 2]")
     private List<Long> photoId;

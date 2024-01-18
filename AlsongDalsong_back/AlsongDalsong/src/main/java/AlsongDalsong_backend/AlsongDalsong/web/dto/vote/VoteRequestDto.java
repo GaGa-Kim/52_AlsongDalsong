@@ -12,15 +12,15 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class VoteRequestDto {
-
     @ApiModelProperty(notes = "투표하는 사람 이메일", example = "1234@gmail.com", required = true)
-    private String email; // 이메일
+    private String email;
 
     @ApiModelProperty(notes = "게시글 id", example = "1", required = true)
-    private Long postId; // 게시글 id
+    private Long postId;
 
     @ApiModelProperty(notes = "투표 (찬성이면 true, 반대면 false)", example = "true", required = true)
-    private Boolean vote; // 투표
+    private Boolean vote;
+
     @Builder
     public VoteRequestDto(String email, Long postId, Boolean vote) {
         this.email = email;

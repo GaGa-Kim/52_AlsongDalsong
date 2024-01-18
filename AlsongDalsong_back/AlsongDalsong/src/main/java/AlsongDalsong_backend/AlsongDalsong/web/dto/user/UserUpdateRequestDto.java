@@ -11,15 +11,14 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class UserUpdateRequestDto {
-
     @ApiModelProperty(notes = "이메일", example = "1234@gmail.com", required = true)
-    private String email; // 이메일
+    private String email;
 
     @ApiModelProperty(notes = "닉네임", example = "가가경", required = true)
-    private String nickname; // 닉네임
+    private String nickname;
 
     @ApiModelProperty(notes = "소개", example = "안녕하세요.", required = true)
-    private String introduce; // 소개
+    private String introduce;
 
     @Builder
     public UserUpdateRequestDto(String email, String nickname, String introduce) {

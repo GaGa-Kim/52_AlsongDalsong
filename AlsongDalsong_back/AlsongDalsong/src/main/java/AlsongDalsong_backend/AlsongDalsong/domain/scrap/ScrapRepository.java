@@ -7,8 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ScrapRepository extends JpaRepository<Scrap, Long> {
     Scrap findByUserIdAndPostId(User user, Post post);
-
-    boolean existsByUserIdAndPostId(User user, Post post);
-
+    
     List<Scrap> findByUserId(User user);
 }

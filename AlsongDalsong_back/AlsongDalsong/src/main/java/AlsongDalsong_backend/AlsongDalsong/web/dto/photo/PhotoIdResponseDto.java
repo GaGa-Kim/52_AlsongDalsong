@@ -9,7 +9,6 @@ import lombok.Getter;
  */
 @Getter
 public class PhotoIdResponseDto {
-
     @ApiModelProperty(notes = "사진 아이디", example = "1")
     private Long photoId;
 

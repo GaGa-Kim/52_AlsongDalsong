@@ -17,36 +17,35 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class PostSaveRequestDto {
-
     @ApiModelProperty(notes = "회원 이메일", example = "1234@gmail.com", required = true)
-    private String email; // 회원
+    private String email;
 
     @ApiModelProperty(notes = "분류", example = "살까 말까", required = true)
-    private String todo; // 분류
+    private String todo;
 
     @ApiModelProperty(notes = "카테고리", example = "패션", required = true)
-    private String category; // 카테고리
+    private String category;
 
     @ApiModelProperty(notes = "누가", example = "여성", required = true)
-    private String who; // 누가
+    private String who;
 
     @ApiModelProperty(notes = "연령", example = "20대", required = true)
-    private String old; // 연령
+    private String old;
 
     @ApiModelProperty(notes = "언제", example = "2022년 11월", required = true)
-    private String date; // 언제
+    private String date;
 
     @ApiModelProperty(notes = "무엇을", example = "신발", required = true)
-    private String what; // 무엇을
+    private String what;
 
     @ApiModelProperty(notes = "내용", example = "나이키 신발을~", required = true)
-    private String content; // 내용
+    private String content;
 
     @ApiModelProperty(notes = "링크", example = "www")
-    private String link; // 링크
+    private String link;
 
     @ApiModelProperty(notes = "중요도", example = "3", required = true)
-    private Integer importance; // 중요도
+    private Integer importance;
 
     @Builder
     public PostSaveRequestDto(String email, String todo, String category, String who, String old, String date,

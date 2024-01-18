@@ -103,7 +103,7 @@ public class VoteServiceImpl implements VoteService {
         if (isCancelVote(user, post, voteRequestDto)) {
             increasePoint(user, POINTS_PER_CANCEL);
             voteRepository.delete(vote);
-            return "투표하지 않았습니다.";
+            return NOT_VOTE;
         }
         if (isSameUser(user, vote)) {
             vote.update(voteRequestDto.getVote());

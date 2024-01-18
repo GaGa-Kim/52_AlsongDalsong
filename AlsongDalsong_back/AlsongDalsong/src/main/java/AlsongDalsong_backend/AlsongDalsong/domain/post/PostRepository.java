@@ -8,9 +8,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByTodo(Todo todo);
 
     List<Post> findByTodoAndCategory(Todo todo, Category category);
-
-    List<Post> findByUserId(User user);
-
+    
     List<Post> findByTodoAndDecisionOrderByVoteListDesc(Todo todo, Decision decision);
 
     Long countByUserIdAndTodoAndDecision(User user, Todo todo, Decision decision);
