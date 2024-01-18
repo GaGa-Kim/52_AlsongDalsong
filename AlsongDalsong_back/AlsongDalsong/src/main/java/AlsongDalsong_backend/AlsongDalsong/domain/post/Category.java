@@ -4,6 +4,9 @@ import java.util.Arrays;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * 카테고리 열거형
+ */
 @Getter
 @RequiredArgsConstructor
 public enum Category {

@@ -48,18 +48,17 @@ public class PostSaveRequestDto {
     private Integer importance;
 
     @Builder
-    public PostSaveRequestDto(String email, String todo, String category, String who, String old, String date,
-                              String what, String content, String link, Integer importance) {
-        this.email = email;
-        this.todo = todo;
-        this.category = category;
-        this.who = who;
-        this.old = old;
-        this.date = date;
-        this.what = what;
-        this.content = content;
-        this.link = link;
-        this.importance = importance;
+    public PostSaveRequestDto(PostSaveRequestVO postSaveRequestVO) {
+        this.email = postSaveRequestVO.getEmail();
+        this.todo = postSaveRequestVO.getTodo();
+        this.category = postSaveRequestVO.getCategory();
+        this.who = postSaveRequestVO.getWho();
+        this.old = postSaveRequestVO.getOld();
+        this.date = postSaveRequestVO.getDate();
+        this.what = postSaveRequestVO.getWhat();
+        this.content = postSaveRequestVO.getContent();
+        this.link = postSaveRequestVO.getLink();
+        this.importance = postSaveRequestVO.getImportance();
     }
 
     public Post toEntity() {

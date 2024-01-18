@@ -18,6 +18,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+/**
+ * Token 생성 및 유효성 확인
+ */
 @Component
 public class TokenProvider {
     private static final String AUTHORIZATION_HEADER = "Authorization";

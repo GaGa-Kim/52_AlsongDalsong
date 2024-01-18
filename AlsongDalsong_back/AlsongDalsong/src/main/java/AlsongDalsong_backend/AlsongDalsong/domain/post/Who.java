@@ -4,6 +4,9 @@ import java.util.Arrays;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * 누가 열거형
+ */
 @Getter
 @RequiredArgsConstructor
 public enum Who {

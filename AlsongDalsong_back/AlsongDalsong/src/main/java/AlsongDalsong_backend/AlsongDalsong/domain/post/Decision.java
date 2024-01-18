@@ -4,6 +4,9 @@ import java.util.Arrays;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * 결정 완료 여부 열거형
+ */
 @Getter
 @RequiredArgsConstructor
 public enum Decision {

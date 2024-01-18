@@ -36,7 +36,7 @@ public class PostController {
     @PostMapping(value = "/api/post/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiOperation(value = "게시글 작성", notes = "게시글을 작성한 후, 작성한 게시글을 리턴합니다.")
     public ResponseEntity<PostResponseDto> postAdd(PostSaveRequestVO postSaveRequestVO) {
-        PostSaveRequestDto postSaveRequestDto = converToPostSaveRequestDto(postSaveRequestVO);
+        PostSaveRequestDto postSaveRequestDto = new PostSaveRequestDto(postSaveRequestVO);
         return ResponseEntity.ok()
                 .body(postService.addPostWithPhotos(postSaveRequestDto, postSaveRequestVO.getPhotos()));
     }
@@ -82,7 +82,7 @@ public class PostController {
     @PutMapping(value = "/api/post/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiOperation(value = "게시글 수정", notes = "게시글을 수정한 후, 수정한 게시글을 리턴합니다.")
     public ResponseEntity<PostResponseDto> postModify(PostUpdateRequestVO postUpdateRequestVO) {
-        PostUpdateRequestDto postUpdateRequestDto = convertToPostUpdateRequestDto(postUpdateRequestVO);
+        PostUpdateRequestDto postUpdateRequestDto = new PostUpdateRequestDto(postUpdateRequestVO);
         return ResponseEntity.ok()
                 .body(postService.modifyPost(postUpdateRequestDto, postUpdateRequestVO.getPhotos(),
                         postUpdateRequestVO.getDeleteId()));
@@ -109,38 +109,5 @@ public class PostController {
     public ResponseEntity<PostResponseDto> postModifyDecision(@RequestParam Long id, String email,
                                                               String decision, String reason) {
         return ResponseEntity.ok().body(postService.modifyPostDecision(id, email, decision, reason));
-    }
-
-    // 저장 정보 변환
-    private PostSaveRequestDto converToPostSaveRequestDto(PostSaveRequestVO postSaveRequestVO) {
-        return PostSaveRequestDto.builder()
-                .email(postSaveRequestVO.getEmail())
-                .todo(postSaveRequestVO.getTodo())
-                .category(postSaveRequestVO.getCategory())
-                .who(postSaveRequestVO.getWho())
-                .old(postSaveRequestVO.getOld())
-                .date(postSaveRequestVO.getDate())
-                .what(postSaveRequestVO.getWhat())
-                .content(postSaveRequestVO.getContent())
-                .link(postSaveRequestVO.getLink())
-                .importance(postSaveRequestVO.getImportance())
-                .build();
-    }
-
-    // 수정 정보 변환
-    private PostUpdateRequestDto convertToPostUpdateRequestDto(PostUpdateRequestVO postUpdateRequestVO) {
-        return PostUpdateRequestDto.builder()
-                .id(postUpdateRequestVO.getId())
-                .email(postUpdateRequestVO.getEmail())
-                .todo(postUpdateRequestVO.getTodo())
-                .category(postUpdateRequestVO.getCategory())
-                .who(postUpdateRequestVO.getWho())
-                .old(postUpdateRequestVO.getOld())
-                .date(postUpdateRequestVO.getDate())
-                .what(postUpdateRequestVO.getWhat())
-                .content(postUpdateRequestVO.getContent())
-                .link(postUpdateRequestVO.getLink())
-                .importance(postUpdateRequestVO.getImportance())
-                .build();
     }
 }

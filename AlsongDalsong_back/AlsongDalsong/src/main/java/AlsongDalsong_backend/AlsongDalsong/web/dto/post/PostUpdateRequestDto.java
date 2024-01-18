@@ -43,18 +43,17 @@ public class PostUpdateRequestDto {
     private Integer importance;
 
     @Builder
-    public PostUpdateRequestDto(Long id, String email, String todo, String category, String who, String old,
-                                String date, String what, String content, String link, Integer importance) {
-        this.id = id;
-        this.email = email;
-        this.todo = todo;
-        this.category = category;
-        this.who = who;
-        this.old = old;
-        this.date = date;
-        this.what = what;
-        this.content = content;
-        this.link = link;
-        this.importance = importance;
+    public PostUpdateRequestDto(PostUpdateRequestVO postUpdateRequestVO) {
+        this.id = postUpdateRequestVO.getId();
+        this.email = postUpdateRequestVO.getEmail();
+        this.todo = postUpdateRequestVO.getTodo();
+        this.category = postUpdateRequestVO.getCategory();
+        this.who = postUpdateRequestVO.getWho();
+        this.old = postUpdateRequestVO.getOld();
+        this.date = postUpdateRequestVO.getDate();
+        this.what = postUpdateRequestVO.getWhat();
+        this.content = postUpdateRequestVO.getContent();
+        this.link = postUpdateRequestVO.getLink();
+        this.importance = postUpdateRequestVO.getImportance();
     }
 }
