@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,13 +25,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("/auth")
 public class AuthController {
     private static final String HEADER_AUTHORIZATION = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";
 
     private final AuthService authService;
 
-    @GetMapping("/auth/kakao")
+    @GetMapping("/kakao")
     @ApiOperation(value = "카카오 회원가입과 로그인", notes = "카카오 회원가입 또는 로그인을 한 후, jwt 토큰과 회원 이메일을 리턴합니다.")
     @ApiImplicitParam(name = "code", value = "회원 카카오 인가코드", example = "12345", required = true)
     public ResponseEntity<String> socialSignup(@RequestParam("code") String code) {
@@ -38,14 +40,14 @@ public class AuthController {
         return ResponseEntity.ok().headers(createHeader(tokenDto)).body(tokenDto.getEmail());
     }
 
-    @PostMapping("/auth/signup")
+    @PostMapping("/signup")
     @ApiOperation(value = "일반 회원가입", notes = "일반 회원가입을 한 후, 가입된 회원 정보를 리턴합니다.")
     @ApiImplicitParam(name = "userSaveRequestDto", value = "회원 가입 정보", required = true)
     public ResponseEntity<UserResponseDto> signup(@RequestBody UserSaveRequestDto userSaveRequestDto) {
         return ResponseEntity.ok().body(authService.signupAndReturnUser(userSaveRequestDto));
     }
 
-    @GetMapping("/auth/login")
+    @GetMapping("/login")
     @ApiOperation(value = "일반 로그인", notes = "일반 로그인을 한 후, jwt 토큰과 회원 이메일을 리턴합니다.")
     @ApiImplicitParam(name = "email", value = "회원 이메일", example = "1234@gmail.com", required = true)
     public ResponseEntity<String> login(@RequestParam String email) {

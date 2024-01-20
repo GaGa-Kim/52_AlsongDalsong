@@ -4,7 +4,7 @@ import AlsongDalsong_backend.AlsongDalsong.domain.comment.Comment;
 import AlsongDalsong_backend.AlsongDalsong.domain.like.Like;
 import AlsongDalsong_backend.AlsongDalsong.domain.like.LikeRepository;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
-import AlsongDalsong_backend.AlsongDalsong.exception.NotExistException;
+import AlsongDalsong_backend.AlsongDalsong.exception.NotFoundException;
 import AlsongDalsong_backend.AlsongDalsong.exception.UnauthorizedEditException;
 import AlsongDalsong_backend.AlsongDalsong.service.comment.CommentService;
 import AlsongDalsong_backend.AlsongDalsong.service.user.UserService;
@@ -126,6 +126,6 @@ public class LikeServiceImpl implements LikeService {
         if (like.isPresent()) {
             return user.equals(like.get().getUserId());
         }
-        throw new NotExistException();
+        throw new NotFoundException();
     }
 }

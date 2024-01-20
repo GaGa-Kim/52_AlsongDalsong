@@ -1,6 +1,5 @@
 package AlsongDalsong_backend.AlsongDalsong.domain.user;
 
-import AlsongDalsong_backend.AlsongDalsong.constants.Message;
 import AlsongDalsong_backend.AlsongDalsong.constants.Rule;
 import AlsongDalsong_backend.AlsongDalsong.domain.BaseTimeEntity;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
@@ -114,7 +113,7 @@ public class User extends BaseTimeEntity {
 
     public void withdrawUser() {
         this.withdraw = true;
-        this.nickname = Message.WITHDRAW.getMessage();
+        this.nickname = "탈퇴한 회원";
     }
 
     public void addPostList(Post post) {

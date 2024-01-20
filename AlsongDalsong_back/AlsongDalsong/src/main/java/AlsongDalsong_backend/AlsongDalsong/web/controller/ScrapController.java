@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,17 +25,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("/api/scrap")
 public class ScrapController {
     private final ScrapService scrapService;
 
-    @PostMapping("/api/scrap/save")
+    @PostMapping("/save")
     @ApiOperation(value = "스크랩 작성/삭제", notes = "게시글을 스크랩한 후, true를 리턴합니다. 게시글이 이미 스크랩되어 있을 경우 스크랩이 취소되고 false를 리턴합니다.")
     @ApiImplicitParam(name = "scrapResponseDto", value = "스크랩 작성 정보", required = true)
     public ResponseEntity<Boolean> scrapSave(@RequestBody ScrapRequestDto scrapResponseDto) {
         return ResponseEntity.ok().body(scrapService.saveScrap(scrapResponseDto));
     }
 
-    @PostMapping("/api/scrap/check")
+    @PostMapping("/check")
     @ApiOperation(value = "사용자별 게시글에 따른 스크랩 여부 조회", notes = "사용자별로 게시글에 스크랩을 눌렀는지 조회합니다. 스크랩했다면 true, 그렇지 않다면 false를 리턴합니다.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "postId", value = "게시글 id", example = "1"),
@@ -44,7 +46,7 @@ public class ScrapController {
         return ResponseEntity.ok().body(scrapService.findScrap(postId, email));
     }
 
-    @GetMapping("/api/scrap/inquire")
+    @GetMapping("/inquire")
     @ApiOperation(value = "사용자별 스크랩 조회", notes = "사용자별 스크랩 목록을 조회하여 리턴합니다.")
     @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com")
     public ResponseEntity<List<ScrapResponseDto>> scrapUserList(String email) {

@@ -13,6 +13,7 @@ import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,25 +24,26 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("/api/photo")
 public class PhotoController {
     private final PhotoService photoService;
     private final StorageService storageService;
 
-    @GetMapping("/api/photo/photoInfo")
+    @GetMapping("/photoInfo")
     @ApiOperation(value = "사진 id로 이미지 정보 조회", notes = "사진 id로 이미지 정보를 조회하여 리턴합니다.")
     @ApiImplicitParam(name = "id", value = "사진 id", example = "1")
     public ResponseEntity<PhotoResponseDto> photoDetails(@RequestParam Long id) {
         return ResponseEntity.ok().body(photoService.findPhoto(id));
     }
 
-    @GetMapping("/api/photo/photoURL")
+    @GetMapping("/photoURL")
     @ApiOperation(value = "사진 id로 이미지 URL 정보 조회", notes = "사진 id로 이미지 URL 정보를 조회하여 리턴합니다.")
     @ApiImplicitParam(name = "id", value = "사진 id", example = "1")
     public ResponseEntity<String> photoUrlDetails(@RequestParam Long id) {
         return ResponseEntity.ok().body(storageService.findFileUrl(getPhotoName(id).getSecond()));
     }
 
-    @GetMapping("/api/photo/photoByte")
+    @GetMapping("/photoByte")
     @ApiOperation(value = "사진 id로 이미지 bytearray 정보 조회", notes = "사진 id로 이미지를 bytearray로 리턴합니다.")
     @ApiImplicitParam(name = "id", value = "사진 id", example = "1")
     public ResponseEntity<byte[]> photoByteArrayDetails(@RequestParam Long id) throws IOException {
@@ -49,7 +51,7 @@ public class PhotoController {
         return storageService.findFileObject(photoName.getFirst(), photoName.getSecond());
     }
 
-    @GetMapping("/api/photo/photoBase")
+    @GetMapping("/photoBase")
     @ApiOperation(value = "사진 id로 이미지 Base64 정보 조회", notes = "사진 id로 이미지를 Base64로 리턴합니다.")
     @ApiImplicitParam(name = "id", value = "사진 id", example = "1")
     public ResponseEntity<String> photoBase64Details(@RequestParam Long id) throws IOException {
