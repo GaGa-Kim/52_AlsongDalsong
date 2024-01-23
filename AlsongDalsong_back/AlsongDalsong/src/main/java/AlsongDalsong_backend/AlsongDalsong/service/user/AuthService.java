@@ -1,6 +1,6 @@
 package AlsongDalsong_backend.AlsongDalsong.service.user;
 
-import AlsongDalsong_backend.AlsongDalsong.domain.user.TokenDto;
+import AlsongDalsong_backend.AlsongDalsong.web.dto.auth.TokenDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.user.UserResponseDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.user.UserSaveRequestDto;
 import org.springframework.transaction.annotation.Transactional;

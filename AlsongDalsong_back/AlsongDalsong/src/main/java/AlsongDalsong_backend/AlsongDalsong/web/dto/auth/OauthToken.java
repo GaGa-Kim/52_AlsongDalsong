@@ -1,4 +1,4 @@
-package AlsongDalsong_backend.AlsongDalsong.domain.user;
+package AlsongDalsong_backend.AlsongDalsong.web.dto.auth;
 
 import lombok.Data;
 

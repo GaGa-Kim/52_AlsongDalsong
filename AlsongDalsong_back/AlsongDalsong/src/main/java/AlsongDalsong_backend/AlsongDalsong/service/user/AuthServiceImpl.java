@@ -1,14 +1,14 @@
 package AlsongDalsong_backend.AlsongDalsong.service.user;
 
 import AlsongDalsong_backend.AlsongDalsong.config.jwt.TokenProvider;
-import AlsongDalsong_backend.AlsongDalsong.domain.user.KakaoProfile;
-import AlsongDalsong_backend.AlsongDalsong.domain.user.KakaoProfile.KakaoAccount;
-import AlsongDalsong_backend.AlsongDalsong.domain.user.OauthToken;
-import AlsongDalsong_backend.AlsongDalsong.domain.user.TokenDto;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.UserRepository;
 import AlsongDalsong_backend.AlsongDalsong.exception.DuplicateEmailException;
 import AlsongDalsong_backend.AlsongDalsong.exception.WithdrawnException;
+import AlsongDalsong_backend.AlsongDalsong.web.dto.auth.KakaoProfile;
+import AlsongDalsong_backend.AlsongDalsong.web.dto.auth.KakaoProfile.KakaoAccount;
+import AlsongDalsong_backend.AlsongDalsong.web.dto.auth.OauthToken;
+import AlsongDalsong_backend.AlsongDalsong.web.dto.auth.TokenDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.user.UserResponseDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.user.UserSaveRequestDto;
 import lombok.RequiredArgsConstructor;

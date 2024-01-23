@@ -1,4 +1,4 @@
-package AlsongDalsong_backend.AlsongDalsong.domain.user;
+package AlsongDalsong_backend.AlsongDalsong.web.dto.auth;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;

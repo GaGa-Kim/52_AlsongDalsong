@@ -1,7 +1,7 @@
 package AlsongDalsong_backend.AlsongDalsong.web.controller;
 
-import AlsongDalsong_backend.AlsongDalsong.domain.user.TokenDto;
 import AlsongDalsong_backend.AlsongDalsong.service.user.AuthService;
+import AlsongDalsong_backend.AlsongDalsong.web.dto.auth.TokenDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.user.UserResponseDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.user.UserSaveRequestDto;
 import io.swagger.annotations.Api;
