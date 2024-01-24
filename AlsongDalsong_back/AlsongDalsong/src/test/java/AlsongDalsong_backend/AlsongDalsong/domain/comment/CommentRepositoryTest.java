@@ -15,6 +15,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
  */
 @DataJpaTest
 class CommentRepositoryTest {
+    private final Long postId = 1L;
+
     @Autowired
     private PostRepository postRepository;
 
@@ -23,7 +25,7 @@ class CommentRepositoryTest {
 
     @Test
     void findAllByPostIdOrderByLikeListDesc() {
-        Post post = postRepository.findById(1L).orElse(null);
+        Post post = postRepository.findById(postId).orElse(null);
         List<Comment> foundCommentList = commentRepository.findAllByPostIdOrderByLikeListDesc(post);
 
         assertNotNull(foundCommentList);
