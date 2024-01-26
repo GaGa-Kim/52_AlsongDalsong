@@ -1,47 +1,48 @@
-package AlsongDalsong_backend.AlsongDalsong.domain.scrap;
+package AlsongDalsong_backend.AlsongDalsong.domain.vote;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.PostRepository;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.UserRepository;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 /**
- * 스크랩 레포지토리 테스트
+ * 투표 레포지토리 테스트
  */
 @DataJpaTest
-class ScrapRepositoryTest {
-    private final String existEmail = "1234@gmail.com";
-    private final Long postId = 2L;
+class VoteRepositoryTest {
+    private final String existEmail = "123@gmail.com";
+    private final Long postId = 1L;
 
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private PostRepository postRepository;
     @Autowired
-    private ScrapRepository scrapRepository;
+    private VoteRepository voteRepository;
 
     @Test
     void findByUserIdAndPostId() {
         User user = userRepository.findByEmail(existEmail);
         Post post = postRepository.findById(postId).orElse(null);
-        Scrap foundScrap = scrapRepository.findByUserIdAndPostId(user, post);
 
-        assertNotNull(foundScrap);
+        Vote foundVote = voteRepository.findByUserIdAndPostId(user, post);
+
+        assertNotNull(foundVote);
     }
 
     @Test
-    void findByUserId() {
+    void existByUserIdAndPostId() {
         User user = userRepository.findByEmail(existEmail);
-        List<Scrap> foundScrapList = scrapRepository.findByUserId(user);
+        Post post = postRepository.findById(postId).orElse(null);
 
-        assertNotNull(foundScrapList);
-        assertEquals(1, foundScrapList.size());
+        boolean existVote = voteRepository.existsByUserIdAndPostId(user, post);
+
+        assertTrue(existVote);
     }
 }
