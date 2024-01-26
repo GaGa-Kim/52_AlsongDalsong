@@ -19,7 +19,7 @@ class CommentTest {
     private Comment comment;
 
     @BeforeEach
-    void setComment() {
+    void setUp() {
         comment = Comment.builder().content("구매하세요").build();
     }
 
