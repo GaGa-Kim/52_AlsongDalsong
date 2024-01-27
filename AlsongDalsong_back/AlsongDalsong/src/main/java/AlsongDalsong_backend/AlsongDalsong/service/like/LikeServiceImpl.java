@@ -45,13 +45,13 @@ public class LikeServiceImpl implements LikeService {
     /**
      * 댓글 아이디와 회원 이메일에 따른 좋아요 여부를 조회한다.
      *
-     * @param commendId (댓글 아이디), email (회원 이메일)
+     * @param commentId (댓글 아이디), email (회원 이메일)
      * @return Boolean (좋아요 여부)
      */
     @Override
-    public Boolean findLike(Long commendId, String email) {
+    public Boolean findLike(Long commentId, String email) {
         User user = userService.findUserByEmail(email);
-        Comment comment = commentService.findCommentByCommentId(commendId);
+        Comment comment = commentService.findCommentByCommentId(commentId);
         return existsCommentByUserId(user, comment);
     }
 

@@ -64,6 +64,7 @@ class CommentServiceImplTest {
         when(userService.findUserByEmail(any())).thenReturn(mockUser);
         when(postService.findPostByPostId(any())).thenReturn(mockPost);
         when(commentRepository.save(any())).thenReturn(comment);
+        when(postService.findPostByPostId(any())).thenReturn(mockPost);
         when(commentRepository.findAllByPostIdOrderByLikeListDesc(any()))
                 .thenReturn(Collections.singletonList(comment));
 
@@ -74,7 +75,10 @@ class CommentServiceImplTest {
         assertEquals(1, result.size());
         assertEquals(comment.getId(), result.get(0).getId());
 
+        verify(userService, times(1)).findUserByEmail(any());
+        verify(postService, times(2)).findPostByPostId(any());
         verify(commentRepository, times(1)).save(any());
+        verify(commentRepository, times(1)).findAllByPostIdOrderByLikeListDesc(any());
         verify(mockPost, times(1)).addCommentList(any());
         verify(mockUser, times(1)).updatePoint(any());
     }
@@ -103,6 +107,7 @@ class CommentServiceImplTest {
         assertEquals(1, result.size());
         assertEquals(comment.getId(), result.get(0).getId());
 
+        verify(postService, times(1)).findPostByPostId(any());
         verify(commentRepository, times(1)).findAllByPostIdOrderByLikeListDesc(any());
     }
 
@@ -119,6 +124,10 @@ class CommentServiceImplTest {
         assertNotNull(result);
         assertEquals(1, result.size());
         assertEquals(comment.getId(), result.get(0).getId());
+
+        verify(userService, times(1)).findUserByEmail(any());
+        verify(commentRepository, times(1)).findById(any());
+        verify(commentRepository, times(1)).findAllByPostIdOrderByLikeListDesc(any());
     }
 
     @Test
@@ -130,5 +139,9 @@ class CommentServiceImplTest {
         boolean result = commentService.removeComment(comment.getId(), mockUser.getEmail());
 
         assertTrue(result);
+
+        verify(userService, times(1)).findUserByEmail(any());
+        verify(commentRepository, times(1)).findById(any());
+        verify(commentRepository, times(1)).delete(any());
     }
 }
