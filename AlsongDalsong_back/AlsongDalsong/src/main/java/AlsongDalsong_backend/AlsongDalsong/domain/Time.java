@@ -1,6 +1,5 @@
 package AlsongDalsong_backend.AlsongDalsong.domain;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -16,19 +15,12 @@ public class Time {
     }
 
     public static String calculateTime(Date date) {
+        if (date == null) {
+            return "알 수 없음";
+        }
         long curTime = System.currentTimeMillis();
         long regTime = date.getTime();
         long diffTime = (curTime - regTime) / 1000;
-
-        Date curDate = new Date(curTime);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String formattedDate1 = dateFormat.format(curDate);
-        System.out.println("Current Time (formatted): " + formattedDate1);
-
-        Date regDate = new Date(regTime);
-        String formattedDate2 = dateFormat.format(regDate);
-        System.out.println("reg Time (formatted): " + formattedDate2);
-
         String msg = null;
         if (diffTime < TIME_MAXIMUM.SEC) {
             msg = diffTime + "초 전";

@@ -3,11 +3,13 @@ package AlsongDalsong_backend.AlsongDalsong.web.dto.comment;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * 댓글 수정 dto
  */
 @Getter
+@NoArgsConstructor
 public class CommentUpdateRequestDto {
     @ApiModelProperty(notes = "댓글 기본키", example = "1", required = true)
     private Long id;
