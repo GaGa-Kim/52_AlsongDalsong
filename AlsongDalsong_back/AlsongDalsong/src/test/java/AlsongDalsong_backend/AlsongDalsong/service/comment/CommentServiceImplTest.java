@@ -29,6 +29,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+/**
+ * 댓글을 위한 비즈니스 로직 구현 클래스 테스트
+ */
 @ExtendWith(MockitoExtension.class)
 class CommentServiceImplTest {
     private User mockUser;

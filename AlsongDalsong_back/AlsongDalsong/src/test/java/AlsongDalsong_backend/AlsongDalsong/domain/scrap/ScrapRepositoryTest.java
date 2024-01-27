@@ -2,6 +2,7 @@ package AlsongDalsong_backend.AlsongDalsong.domain.scrap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.PostRepository;
@@ -43,5 +44,15 @@ class ScrapRepositoryTest {
 
         assertNotNull(foundScrapList);
         assertEquals(1, foundScrapList.size());
+    }
+
+    @Test
+    void existByUserIdAndPostId() {
+        User user = userRepository.findByEmail(existEmail);
+        Post post = postRepository.findById(postId).orElse(null);
+
+        boolean existScrap = scrapRepository.existsByUserIdAndPostId(user, post);
+
+        assertTrue(existScrap);
     }
 }

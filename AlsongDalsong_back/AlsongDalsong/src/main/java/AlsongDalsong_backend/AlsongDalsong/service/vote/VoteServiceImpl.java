@@ -35,7 +35,7 @@ public class VoteServiceImpl implements VoteService {
     public String saveVote(VoteRequestDto voteRequestDto) {
         User user = userService.findUserByEmail(voteRequestDto.getEmail());
         Post post = postService.findPostByPostId(voteRequestDto.getPostId());
-        if (!exitsVoteByUserId(user, post)) {
+        if (!existsVoteByUserId(user, post)) {
             return createVote(user, post, voteRequestDto);
         }
         return deleteOrModifyVote(user, post, voteRequestDto);
@@ -51,7 +51,7 @@ public class VoteServiceImpl implements VoteService {
     public String findVote(Long postId, String email) {
         User user = userService.findUserByEmail(email);
         Post post = postService.findPostByPostId(postId);
-        if (exitsVoteByUserId(user, post)) {
+        if (existsVoteByUserId(user, post)) {
             return findUserVote(user, post).getVote().toString();
         }
         return NOT_VOTE;
@@ -63,7 +63,7 @@ public class VoteServiceImpl implements VoteService {
      * @param user (회원), post (게시글)
      * @return Boolean (투표 여부)
      */
-    private boolean exitsVoteByUserId(User user, Post post) {
+    private boolean existsVoteByUserId(User user, Post post) {
         return voteRepository.existsByUserIdAndPostId(user, post);
     }
 

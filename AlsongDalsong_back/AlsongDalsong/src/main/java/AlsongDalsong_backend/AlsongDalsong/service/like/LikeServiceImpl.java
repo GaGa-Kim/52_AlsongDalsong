@@ -4,14 +4,13 @@ import AlsongDalsong_backend.AlsongDalsong.domain.comment.Comment;
 import AlsongDalsong_backend.AlsongDalsong.domain.like.Like;
 import AlsongDalsong_backend.AlsongDalsong.domain.like.LikeRepository;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
-import AlsongDalsong_backend.AlsongDalsong.exception.NotFoundException;
 import AlsongDalsong_backend.AlsongDalsong.exception.UnauthorizedEditException;
 import AlsongDalsong_backend.AlsongDalsong.service.comment.CommentService;
 import AlsongDalsong_backend.AlsongDalsong.service.user.UserService;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.like.LikeRequestDto;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 댓글 좋아요를 위한 비즈니스 로직 구현 클래스
@@ -33,10 +32,11 @@ public class LikeServiceImpl implements LikeService {
      * @return Boolean (좋아요 또는 좋아요 취소 여부)
      */
     @Override
+    @Transactional
     public Boolean saveLike(LikeRequestDto likeSaveRequestDto) {
         User user = userService.findUserByEmail(likeSaveRequestDto.getEmail());
         Comment comment = commentService.findCommentByCommentId(likeSaveRequestDto.getCommentId());
-        if (!exitsCommentByUserId(user, comment)) {
+        if (!existsCommentByUserId(user, comment)) {
             return createLike(user, comment);
         }
         return deleteLike(user, comment);
@@ -52,7 +52,7 @@ public class LikeServiceImpl implements LikeService {
     public Boolean findLike(Long commendId, String email) {
         User user = userService.findUserByEmail(email);
         Comment comment = commentService.findCommentByCommentId(commendId);
-        return exitsCommentByUserId(user, comment);
+        return existsCommentByUserId(user, comment);
     }
 
     /**
@@ -61,18 +61,8 @@ public class LikeServiceImpl implements LikeService {
      * @param user (회원), comment (댓글)
      * @return boolean (좋아요 여부)
      */
-    private boolean exitsCommentByUserId(User user, Comment comment) {
-        return comment.getLikeList().stream().anyMatch(like -> like.getUserId().equals(user));
-    }
-
-    /**
-     * 회원과 댓글에 따른 좋아요를 조회한다.
-     *
-     * @param user (회원), comment (댓글)
-     * @return Like (좋아요)
-     */
-    private Optional<Like> findLikeByLikeId(User user, Comment comment) {
-        return comment.getLikeList().stream().filter(like -> like.getUserId().equals(user)).findFirst();
+    private boolean existsCommentByUserId(User user, Comment comment) {
+        return likeRepository.existsByUserIdAndCommentId(user, comment);
     }
 
     /**
@@ -98,9 +88,9 @@ public class LikeServiceImpl implements LikeService {
      * @return boolean (좋아요 삭제에 따른 false 반환)
      */
     private boolean deleteLike(User user, Comment comment) {
-        Optional<Like> like = findLikeByLikeId(user, comment);
+        Like like = likeRepository.findByUserIdAndCommentId(user, comment);
         if (isSameUser(user, like)) {
-            likeRepository.delete(like.get());
+            likeRepository.delete(like);
             increasePoint(user, POINTS_PER_CANCEL);
             return false;
         }
@@ -122,10 +112,7 @@ public class LikeServiceImpl implements LikeService {
      * @param user (회원), like (좋아요)
      * @return boolean (좋아요 작성자와 편집자 동일 여부)
      */
-    private boolean isSameUser(User user, Optional<Like> like) {
-        if (like.isPresent()) {
-            return user.equals(like.get().getUserId());
-        }
-        throw new NotFoundException();
+    private boolean isSameUser(User user, Like like) {
+        return user.equals(like.getUserId());
     }
 }

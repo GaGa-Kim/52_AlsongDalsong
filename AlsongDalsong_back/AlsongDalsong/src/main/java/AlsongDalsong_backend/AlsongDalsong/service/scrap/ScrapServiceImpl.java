@@ -34,7 +34,7 @@ public class ScrapServiceImpl implements ScrapService {
     public Boolean saveScrap(ScrapRequestDto scrapRequestDto) {
         User user = userService.findUserByEmail(scrapRequestDto.getEmail());
         Post post = postService.findPostByPostId(scrapRequestDto.getPostId());
-        if (!exitsScrapByUserId(user, post)) {
+        if (!existsScrapByUserId(user, post)) {
             return createLike(user, post);
         }
         return deleteLike(user, post);
@@ -50,7 +50,7 @@ public class ScrapServiceImpl implements ScrapService {
     public Boolean findScrap(Long postId, String email) {
         User user = userService.findUserByEmail(email);
         Post post = postService.findPostByPostId(postId);
-        return exitsScrapByUserId(user, post);
+        return existsScrapByUserId(user, post);
     }
 
     /**
@@ -74,8 +74,8 @@ public class ScrapServiceImpl implements ScrapService {
      * @param user (회원), post (게시글)
      * @return boolean (스크랩 여부)
      */
-    private boolean exitsScrapByUserId(User user, Post post) {
-        return user.getScrapList().stream().anyMatch(scrap -> scrap.getPostId().equals(post));
+    private boolean existsScrapByUserId(User user, Post post) {
+        return scrapRepository.existsByUserIdAndPostId(user, post);
     }
 
     /**

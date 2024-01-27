@@ -30,7 +30,6 @@ class VoteRepositoryTest {
     void findByUserIdAndPostId() {
         User user = userRepository.findByEmail(existEmail);
         Post post = postRepository.findById(postId).orElse(null);
-
         Vote foundVote = voteRepository.findByUserIdAndPostId(user, post);
 
         assertNotNull(foundVote);
@@ -40,7 +39,6 @@ class VoteRepositoryTest {
     void existByUserIdAndPostId() {
         User user = userRepository.findByEmail(existEmail);
         Post post = postRepository.findById(postId).orElse(null);
-
         boolean existVote = voteRepository.existsByUserIdAndPostId(user, post);
 
         assertTrue(existVote);
