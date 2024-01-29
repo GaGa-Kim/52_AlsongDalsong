@@ -99,8 +99,8 @@ public class VoteServiceImpl implements VoteService {
      * @return String (투표에 따른 결과 반환)
      */
     private String deleteOrModifyVote(User user, Post post, VoteRequestDto voteRequestDto) {
-        Vote vote = voteRepository.findByUserIdAndPostId(user, post);
-        if (isCancelVote(user, post, voteRequestDto)) {
+        Vote vote = findUserVote(user, post);
+        if (isCancelVote(vote, voteRequestDto)) {
             increasePoint(user, POINTS_PER_CANCEL);
             voteRepository.delete(vote);
             return NOT_VOTE;
@@ -115,11 +115,11 @@ public class VoteServiceImpl implements VoteService {
     /**
      * 투표를 삭제할 것인지 수정할 것인지 조회한다.
      *
-     * @param user (회원), post (게시글), voteRequestDto (투표 저장 정보 DTO)
+     * @param vote (투표), voteRequestDto (투표 저장 정보 DTO)
      * @return boolean (투표 삭제 또는 반대로 수정 여부)
      */
-    private boolean isCancelVote(User user, Post post, VoteRequestDto voteRequestDto) {
-        return voteRequestDto.getVote().equals(findUserVote(user, post).getVote());
+    private boolean isCancelVote(Vote vote, VoteRequestDto voteRequestDto) {
+        return voteRequestDto.getVote().equals(vote.getVote());
     }
 
     /**

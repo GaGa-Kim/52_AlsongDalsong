@@ -20,7 +20,6 @@ import AlsongDalsong_backend.AlsongDalsong.domain.post.PostRepository;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Todo;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Who;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
-import AlsongDalsong_backend.AlsongDalsong.domain.vote.Vote;
 import AlsongDalsong_backend.AlsongDalsong.service.photo.PhotoService;
 import AlsongDalsong_backend.AlsongDalsong.service.photo.StorageService;
 import AlsongDalsong_backend.AlsongDalsong.service.user.UserService;
@@ -46,7 +45,6 @@ import org.springframework.web.multipart.MultipartFile;
 class PostServiceImplTest {
     private User mockUser;
     private Photo mockPhoto;
-    private Vote mockVote;
     private Post post;
 
     @InjectMocks
@@ -68,7 +66,6 @@ class PostServiceImplTest {
     void setUp() {
         mockUser = mock(User.class);
         mockPhoto = mock(Photo.class);
-        mockVote = mock(Vote.class);
         mockPhoto.setPost(post);
 
         Todo todo = Todo.TO_BUY_OR_NOT_TO_BUY;
@@ -85,7 +82,6 @@ class PostServiceImplTest {
         post = new Post(todo, category, who, old, date, what, content, link, importance, decision, reason);
         post.setUser(mockUser);
         post.addPhotoList(mockPhoto);
-        post.addVoteList(mockVote);
     }
 
     @Test
