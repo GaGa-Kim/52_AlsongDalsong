@@ -54,7 +54,9 @@ class CommentServiceImplTest {
     void setUp() {
         mockUser = mock(User.class);
         mockPost = mock(Post.class);
-        comment = new Comment();
+
+        String content = "내용";
+        comment = new Comment(content);
         comment.setUser(mockUser);
         comment.setPost(mockPost);
     }

@@ -34,7 +34,10 @@ class PhotoServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        photo = new Photo();
+        String origPhotoName = "원본 이름";
+        String photoName = "변환된 사진 이름";
+        String photoUrl = "사진 Url";
+        photo = new Photo(origPhotoName, photoName, photoUrl);
     }
 
     @Test

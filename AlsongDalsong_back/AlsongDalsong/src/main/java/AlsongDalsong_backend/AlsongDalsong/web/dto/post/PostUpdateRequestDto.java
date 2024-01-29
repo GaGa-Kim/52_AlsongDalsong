@@ -3,11 +3,13 @@ package AlsongDalsong_backend.AlsongDalsong.web.dto.post;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * 게시글 수정 dto
  */
 @Getter
+@NoArgsConstructor
 public class PostUpdateRequestDto {
     @ApiModelProperty(notes = "게시글 기본키", example = "1")
     private Long id;

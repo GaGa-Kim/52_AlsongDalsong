@@ -51,7 +51,7 @@ public class PostServiceImpl implements PostService {
         User user = userService.findUserByEmail(postSaveRequestDto.getEmail());
         Post post = createPost(user, postSaveRequestDto);
         createPostPhotos(post, photos);
-        return new PostResponseDto(post, findPhotoIdByPost(post.getId()), Pair.of(VOTE_INIT, VOTE_INIT));
+        return new PostResponseDto(post, findPhotoIdByPost(post), Pair.of(VOTE_INIT, VOTE_INIT));
     }
 
     /**
@@ -74,7 +74,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostResponseDto findPostDetailByPostId(Long postId) {
         Post post = findPostByPostId(postId);
-        return new PostResponseDto(post, findPhotoIdByPost(postId), countVote(post));
+        return new PostResponseDto(post, findPhotoIdByPost(post), countVote(post));
     }
 
     /**
@@ -141,7 +141,7 @@ public class PostServiceImpl implements PostService {
             deletePostPhotos(post, deletePhotoIds);
             createPostPhotos(post, photos);
             updatePost(post, postUpdateRequestDto);
-            return new PostResponseDto(post, findPhotoIdByPost(post.getId()), countVote(post));
+            return new PostResponseDto(post, findPhotoIdByPost(post), countVote(post));
         }
         throw new UnauthorizedEditException();
     }
@@ -177,7 +177,7 @@ public class PostServiceImpl implements PostService {
         if (isSameUser(user, post) && isNotDecided(post)) {
             post.setDecision(decision, reason);
             increasePoint(user, POINTS_PER_DECISION);
-            return new PostResponseDto(post, findPhotoIdByPost(post.getId()), countVote(post));
+            return new PostResponseDto(post, findPhotoIdByPost(post), countVote(post));
         }
         throw new UnauthorizedEditException();
     }
@@ -185,11 +185,10 @@ public class PostServiceImpl implements PostService {
     /**
      * 게시글 별 사진 아이디 리스트를 조회한다.
      *
-     * @param postId (게시글 아이디)
+     * @param post (게시글)
      * @return List<Long> 사진 아이디 리스트
      */
-    private List<Long> findPhotoIdByPost(Long postId) {
-        Post post = findPostByPostId(postId);
+    private List<Long> findPhotoIdByPost(Post post) {
         return post.getPhotoList().stream().map(Photo::getId).collect(Collectors.toList());
     }
 
@@ -314,7 +313,7 @@ public class PostServiceImpl implements PostService {
      * 게시글 확정 여부를 확인한다.
      *
      * @param post (게시글)
-     * @return
+     * @return boolean (확정 유무)
      */
     private boolean isNotDecided(Post post) {
         return post.getDecision().equals(Decision.UNDECIDED);
@@ -328,7 +327,7 @@ public class PostServiceImpl implements PostService {
      */
     private List<PostResponseDto> convertToDtos(List<Post> posts) {
         return posts.stream()
-                .map(post -> new PostResponseDto(post, findPhotoIdByPost(post.getId()), countVote(post)))
+                .map(post -> new PostResponseDto(post, findPhotoIdByPost(post), countVote(post)))
                 .collect(Collectors.toList());
     }
 }
