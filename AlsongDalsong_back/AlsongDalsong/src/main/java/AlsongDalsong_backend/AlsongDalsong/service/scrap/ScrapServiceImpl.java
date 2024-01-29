@@ -35,9 +35,9 @@ public class ScrapServiceImpl implements ScrapService {
         User user = userService.findUserByEmail(scrapRequestDto.getEmail());
         Post post = postService.findPostByPostId(scrapRequestDto.getPostId());
         if (!existsScrapByUserId(user, post)) {
-            return createLike(user, post);
+            return createScrap(user, post);
         }
-        return deleteLike(user, post);
+        return deleteScrap(user, post);
     }
 
     /**
@@ -84,7 +84,7 @@ public class ScrapServiceImpl implements ScrapService {
      * @param user (회원), post (게시글)
      * @return boolean (스크랩 저장에 따른 true 반환)
      */
-    private boolean createLike(User user, Post post) {
+    private boolean createScrap(User user, Post post) {
         Scrap scrap = new Scrap();
         scrap.setUser(user);
         scrap.setPost(post);
@@ -100,7 +100,7 @@ public class ScrapServiceImpl implements ScrapService {
      * @param user (회원), post (게시글)
      * @return boolean (스크랩 삭제에 따른 false 반환)
      */
-    private boolean deleteLike(User user, Post post) {
+    private boolean deleteScrap(User user, Post post) {
         Scrap scrap = scrapRepository.findByUserIdAndPostId(user, post);
         if (isSameUser(user, scrap)) {
             scrapRepository.delete(scrap);

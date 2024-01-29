@@ -48,6 +48,7 @@ class LikeServiceImplTest {
     void setUp() {
         mockUser = mock(User.class);
         mockComment = mock(Comment.class);
+        
         like = new Like();
         like.setUser(mockUser);
         like.setComment(mockComment);

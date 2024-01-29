@@ -97,7 +97,6 @@ class PostServiceImplTest {
 
         PostSaveRequestDto postSaveRequestDto = new PostSaveRequestDto();
         List<MultipartFile> photos = new ArrayList<>();
-
         PostResponseDto result = postService.addPostWithPhotos(postSaveRequestDto, photos);
 
         assertNotNull(result);
@@ -201,7 +200,6 @@ class PostServiceImplTest {
         PostUpdateRequestDto postUpdateRequestDto = new PostUpdateRequestDto();
         List<MultipartFile> photos = new ArrayList<>();
         List<Long> deletePhotoIds = new ArrayList<>();
-
         PostResponseDto result = postService.modifyPost(postUpdateRequestDto, photos, deletePhotoIds);
 
         assertNotNull(result);
