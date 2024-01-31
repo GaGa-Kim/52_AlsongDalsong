@@ -1,7 +1,7 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '2.7.1'
-	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'java'
+    id 'org.springframework.boot' version '2.7.1'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 }
 
 group = 'AlsongDalsong_backend'
@@ -9,47 +9,48 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
 
-	// springboot + DB
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	compileOnly 'org.projectlombok:lombok'
-	implementation('org.springframework.boot:spring-boot-starter-data-jpa')
-	// runtimeOnly 'com.h2database:h2'
-	implementation 'mysql:mysql-connector-java'
-	annotationProcessor 'org.projectlombok:lombok'
+    // springboot + DB
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    compileOnly 'org.projectlombok:lombok'
+    implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+    // runtimeOnly 'com.h2database:h2'
+    implementation 'mysql:mysql-connector-java'
+    annotationProcessor 'org.projectlombok:lombok'
 
-	// test
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    // test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-	// swagger
-	implementation 'io.springfox:springfox-swagger2:3.0.0'
-	implementation 'io.springfox:springfox-swagger-ui:2.9.2'
+    // swagger
+    implementation 'io.springfox:springfox-swagger2:3.0.0'
+    implementation 'io.springfox:springfox-swagger-ui:2.9.2'
 
-	// jwt token
-	implementation 'com.auth0:java-jwt:4.2.1'
+    // jwt token
+    implementation 'com.auth0:java-jwt:4.2.1'
 
-	// auth
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    // auth
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
-	// s3 bucket
-	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
-	implementation 'com.amazonaws:aws-java-sdk:1.11.404'
+    // s3 bucket
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+    implementation 'com.amazonaws:aws-java-sdk:1.11.404'
+    testImplementation 'io.findify:s3mock_2.12:0.2.4'
 
-	// multipartfile upload
-	implementation 'commons-io:commons-io:2.6'
+    // multipartfile upload
+    implementation 'commons-io:commons-io:2.6'
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
