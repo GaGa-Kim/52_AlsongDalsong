@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import AlsongDalsong_backend.AlsongDalsong.config.jwt.TokenProvider;
@@ -24,7 +26,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
  */
 @ExtendWith(MockitoExtension.class)
 class AuthServiceImplTest {
-    private final String mockJwtToken = "jwtToken";
+    private static final String authorizationCode = "authorization code";
+    private static final String mockJwtToken = "jwtToken";
     private User user;
 
     @InjectMocks
@@ -42,7 +45,7 @@ class AuthServiceImplTest {
         String name = "이름";
         String email = "이메일";
         String nickname = "닉네임";
-        String profile = "프로필 사진";
+        String profile = "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png";
         String introduce = "소개";
         user = new User(kakaoId, name, email, nickname, profile, introduce);
     }
@@ -65,6 +68,9 @@ class AuthServiceImplTest {
 
         assertNotNull(result);
         assertEquals(user.getEmail(), result.getEmail());
+
+        verify(userRepository, times(1)).existsByEmail(any());
+        verify(userRepository, times(1)).save(any());
     }
 
     @Test
@@ -77,5 +83,8 @@ class AuthServiceImplTest {
         assertNotNull(result);
         assertEquals(user.getEmail(), result.getEmail());
         assertEquals(mockJwtToken, result.getToken());
+
+        verify(userRepository, times(1)).findByEmail(any());
+        verify(tokenProvider, times(1)).createToken(any());
     }
 }

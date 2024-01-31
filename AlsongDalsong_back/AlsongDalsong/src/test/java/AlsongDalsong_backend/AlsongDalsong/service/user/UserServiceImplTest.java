@@ -10,17 +10,15 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import AlsongDalsong_backend.AlsongDalsong.domain.post.Category;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Decision;
-import AlsongDalsong_backend.AlsongDalsong.domain.post.Old;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.PostRepository;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Todo;
-import AlsongDalsong_backend.AlsongDalsong.domain.post.Who;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.UserRepository;
 import AlsongDalsong_backend.AlsongDalsong.service.photo.StorageService;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.user.UserUpdateRequestDto;
+import java.io.IOException;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,6 +26,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -35,8 +34,9 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
+    private final String profile = "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png";
     private User mockUser;
-    private Post post;
+    private Post mockPost;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -53,20 +53,8 @@ class UserServiceImplTest {
     @BeforeEach
     void setUp() {
         mockUser = mock(User.class);
-
-        Todo todo = Todo.TO_BUY_OR_NOT_TO_BUY;
-        Category category = Category.FASHION;
-        Who who = Who.WOMAN;
-        Old old = Old.TEENS;
-        String date = "언제";
-        String what = "무엇을";
-        String content = "내용";
-        String link = "링크";
-        Integer importance = 3;
-        Decision decision = Decision.UNDECIDED;
-        String reason = "결정 이유";
-        post = new Post(todo, category, who, old, date, what, content, link, importance, decision, reason);
-        post.setUser(mockUser);
+        mockPost = mock(Post.class);
+        mockPost.setUser(mockUser);
     }
 
     @Test
@@ -82,11 +70,23 @@ class UserServiceImplTest {
     }
 
     @Test
-    void testFindUserProfileImageAsBytes() {
+    void testFindUserProfileImageAsBytes() throws IOException {
+        when(userRepository.findByEmail(any())).thenReturn(mockUser);
+        when(mockUser.getProfile()).thenReturn(profile);
+
+        ResponseEntity<byte[]> result = userService.findUserProfileImageAsBytes(mockUser.getEmail());
+
+        assertNotNull(result);
     }
 
     @Test
-    void testFindUserProfileImageAsBase64() {
+    void testFindUserProfileImageAsBase64() throws IOException {
+        when(userRepository.findByEmail(any())).thenReturn(mockUser);
+        when(mockUser.getProfile()).thenReturn(profile);
+
+        ResponseEntity<String> result = userService.findUserProfileImageAsBase64(mockUser.getEmail());
+
+        assertNotNull(result);
     }
 
     @Test
@@ -124,7 +124,9 @@ class UserServiceImplTest {
     @Test
     void testFindUserDecisionPropensity() {
         when(userRepository.findByEmail(any())).thenReturn(mockUser);
-        when(postRepository.countByUserIdAndTodoAndDecision(mockUser, post.getTodo(), post.getDecision()))
+        when(mockPost.getTodo()).thenReturn(Todo.TO_BUY_OR_NOT_TO_BUY);
+        when(mockPost.getDecision()).thenReturn(Decision.UNDECIDED);
+        when(postRepository.countByUserIdAndTodoAndDecision(mockUser, mockPost.getTodo(), mockPost.getDecision()))
                 .thenReturn(1L);
 
         Map<String, Object> result = userService.findUserDecisionPropensity(mockUser.getEmail());
