@@ -26,7 +26,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
  */
 @ExtendWith(MockitoExtension.class)
 class AuthServiceImplTest {
-    private static final String authorizationCode = "authorization code";
     private static final String mockJwtToken = "jwtToken";
     private User user;
 
@@ -48,14 +47,6 @@ class AuthServiceImplTest {
         String profile = "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png";
         String introduce = "소개";
         user = new User(kakaoId, name, email, nickname, profile, introduce);
-    }
-
-    @Test
-    void testSocialSignupAndGenerateToken() {
-    }
-
-    @Test
-    void testSocialLoginAndGenerateToken() {
     }
 
     @Test
