@@ -26,7 +26,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
  */
 @ExtendWith(MockitoExtension.class)
 class AuthServiceImplTest {
-    private static final String mockJwtToken = "jwtToken";
+    private static final String jwtToken = "jwtToken";
     private User user;
 
     @InjectMocks
@@ -67,13 +67,13 @@ class AuthServiceImplTest {
     @Test
     void testLoginAndGenerateToken() {
         when(userRepository.findByEmail(anyString())).thenReturn(user);
-        when(tokenProvider.createToken(any())).thenReturn(mockJwtToken);
+        when(tokenProvider.createToken(any())).thenReturn(jwtToken);
 
         TokenDto result = authService.loginAndGenerateToken(user.getEmail());
 
         assertNotNull(result);
         assertEquals(user.getEmail(), result.getEmail());
-        assertEquals(mockJwtToken, result.getToken());
+        assertEquals(jwtToken, result.getToken());
 
         verify(userRepository, times(1)).findByEmail(any());
         verify(tokenProvider, times(1)).createToken(any());
