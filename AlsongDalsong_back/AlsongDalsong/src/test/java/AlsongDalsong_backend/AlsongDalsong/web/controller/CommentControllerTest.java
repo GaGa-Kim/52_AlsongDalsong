@@ -4,6 +4,8 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -35,11 +37,15 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+/**
+ * 댓글 컨트롤러 테스트
+ */
 @WebMvcTest(controllers = CommentController.class,
         excludeFilters = {
                 @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class),
                 @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = JwtRequestFilter.class)
         })
+@WithMockUser(username = "테스트_최고관리자", roles = {"USER"})
 class CommentControllerTest {
     private Comment comment;
 
@@ -54,13 +60,12 @@ class CommentControllerTest {
         User user = new User();
         Post post = new Post();
 
-        comment = new Comment();
+        comment = new Comment("내용");
         comment.setUser(user);
         comment.setPost(post);
     }
 
     @Test
-    @WithMockUser(username = "테스트_최고관리자", roles = {"USER"})
     void testCommentAdd() throws Exception {
         when(commentService.addComment(any()))
                 .thenReturn(Collections.singletonList(new CommentResponseDto(comment)));
@@ -72,11 +77,12 @@ class CommentControllerTest {
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
+
+        verify(commentService, times(1)).addComment(any());
     }
 
 
     @Test
-    @WithMockUser(username = "테스트_최고관리자", roles = {"USER"})
     void testCommentList() throws Exception {
         when(commentService.findPostCommentsByLikes(any()))
                 .thenReturn(Collections.singletonList(new CommentResponseDto(comment)));
@@ -86,11 +92,12 @@ class CommentControllerTest {
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
+
+        verify(commentService, times(1)).findPostCommentsByLikes(any());
     }
 
 
     @Test
-    @WithMockUser(username = "테스트_최고관리자", roles = {"USER"})
     void testCommentModify() throws Exception {
         when(commentService.modifyComment(any()))
                 .thenReturn(Collections.singletonList(new CommentResponseDto(comment)));
@@ -102,10 +109,11 @@ class CommentControllerTest {
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
+
+        verify(commentService, times(1)).modifyComment(any());
     }
 
     @Test
-    @WithMockUser(username = "테스트_최고관리자", roles = {"USER"})
     void testCommentRemove() throws Exception {
         when(commentService.removeComment(any(), any())).thenReturn(true);
 
@@ -115,5 +123,7 @@ class CommentControllerTest {
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").value(true));
+
+        verify(commentService, times(1)).removeComment(any(), any());
     }
 }
