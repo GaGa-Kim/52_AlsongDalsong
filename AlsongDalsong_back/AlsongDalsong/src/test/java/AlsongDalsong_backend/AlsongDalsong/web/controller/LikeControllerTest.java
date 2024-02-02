@@ -13,13 +13,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import AlsongDalsong_backend.AlsongDalsong.config.SecurityConfig;
 import AlsongDalsong_backend.AlsongDalsong.config.jwt.JwtRequestFilter;
-import AlsongDalsong_backend.AlsongDalsong.domain.comment.Comment;
-import AlsongDalsong_backend.AlsongDalsong.domain.like.Like;
-import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import AlsongDalsong_backend.AlsongDalsong.service.like.LikeService;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.like.LikeRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -40,23 +36,11 @@ import org.springframework.test.web.servlet.MockMvc;
         })
 @WithMockUser(username = "테스트_최고관리자", roles = {"USER"})
 class LikeControllerTest {
-    private Like like;
-
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
     private LikeService likeService;
-
-    @BeforeEach
-    void setUp() {
-        User user = new User();
-        Comment comment = new Comment();
-
-        like = new Like();
-        like.setUser(user);
-        like.setComment(comment);
-    }
 
     @Test
     void testLikeSaveAdd() throws Exception {
