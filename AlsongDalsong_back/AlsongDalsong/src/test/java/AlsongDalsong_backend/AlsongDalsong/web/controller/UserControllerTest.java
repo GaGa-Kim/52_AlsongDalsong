@@ -1,0 +1,200 @@
+package AlsongDalsong_backend.AlsongDalsong.web.controller;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import AlsongDalsong_backend.AlsongDalsong.config.SecurityConfig;
+import AlsongDalsong_backend.AlsongDalsong.config.jwt.JwtRequestFilter;
+import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
+import AlsongDalsong_backend.AlsongDalsong.service.photo.StorageService;
+import AlsongDalsong_backend.AlsongDalsong.service.user.UserService;
+import AlsongDalsong_backend.AlsongDalsong.web.dto.user.UserUpdateRequestDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
+import org.apache.commons.io.IOUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+
+/**
+ * 회원 컨트롤러 테스트
+ */
+@WebMvcTest(controllers = UserController.class,
+        excludeFilters = {
+                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class),
+                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = JwtRequestFilter.class)
+        })
+@WithMockUser(username = "테스트_최고관리자", roles = {"USER"})
+class UserControllerTest {
+    private User user;
+    private byte[] profileByteArray;
+    private String profileByBase;
+    private HttpHeaders httpHeaders;
+    private Map<String, Object> propensityMap;
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private UserService userService;
+
+    @MockBean
+    private StorageService storageService;
+
+    @BeforeEach
+    void setUp() throws IOException {
+        Long kakaoId = 123L;
+        String name = "이름";
+        String email = "이메일";
+        String nickname = "닉네임";
+        String profile = "http://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png";
+        String introduce = "소개";
+        user = new User(kakaoId, name, email, nickname, profile, introduce);
+        profileByteArray = IOUtils.toByteArray(user.getProfile());
+        profileByBase = Base64.getEncoder().encodeToString(profileByteArray);
+        httpHeaders = new HttpHeaders();
+        propensityMap = new HashMap<>();
+    }
+
+    @Test
+    void testUserDetails() throws Exception {
+        when(userService.findUserByEmail(any())).thenReturn(user);
+
+        mockMvc.perform(get("/api/user/me")
+                        .param("email", anyString())
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(user.getId()));
+
+        verify(userService, times(1)).findUserByEmail(any());
+    }
+
+    @Test
+    void testUserProfileModify() throws Exception {
+        when(userService.modifyUserProfile(any())).thenReturn(user);
+
+        UserUpdateRequestDto userUpdateRequestDto = new UserUpdateRequestDto();
+        mockMvc.perform(put("/api/user/updateInfo")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(userUpdateRequestDto))
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value(user.getId()));
+
+        verify(userService, times(1)).modifyUserProfile(any());
+    }
+
+    @Test
+    void testUserProfileImageAsUrl() throws Exception {
+        when(userService.findUserByEmail(any())).thenReturn(user);
+
+        mockMvc.perform(get("/api/user/profileUrl")
+                        .param("email", anyString())
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(user.getProfile()));
+
+        verify(userService, times(1)).findUserByEmail(any());
+    }
+
+    @Test
+    void testUserProfileImageAsBytes() throws Exception {
+        when(userService.findUserByEmail(any())).thenReturn(user);
+        when(userService.findUserProfileImageAsBytes(any()))
+                .thenReturn(new ResponseEntity<>(profileByteArray, httpHeaders, HttpStatus.OK));
+
+        mockMvc.perform(get("/api/user/profileByte")
+                        .param("email", anyString())
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(user.getProfile()));
+
+        verify(userService, times(1)).findUserByEmail(any());
+        verify(userService, times(1)).findUserProfileImageAsBytes(any());
+    }
+
+    @Test
+    void testUserProfileImageAsBase64() throws Exception {
+        when(userService.findUserByEmail(any())).thenReturn(user);
+        when(userService.findUserProfileImageAsBase64(any()))
+                .thenReturn(new ResponseEntity<>(profileByBase, httpHeaders, HttpStatus.OK));
+
+        mockMvc.perform(get("/api/user/profileBase")
+                        .param("email", anyString())
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(profileByBase));
+
+        verify(userService, times(1)).findUserByEmail(any());
+        verify(userService, times(1)).findUserProfileImageAsBase64(any());
+    }
+
+    @Test
+    void testUserProfileImageModify() throws Exception {
+        when(userService.modifyUserProfileImage(any(), any())).thenReturn(user);
+
+        MockMultipartFile profile = new MockMultipartFile("file", "newProfile.jpg", "image/jpeg", profileByteArray);
+        mockMvc.perform(multipart("/api/user/updateProfile")
+                        .file("multipartFile", profile.getBytes())
+                        .param("email", user.getEmail())
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value(user.getId()));
+
+        verify(userService, times(1)).modifyUserProfileImage(any(), any());
+    }
+
+    @Test
+    void testUserPropensityDetails() throws Exception {
+        when(userService.findUserDecisionPropensity(any())).thenReturn(propensityMap);
+
+        mockMvc.perform(get("/api/user/propensity")
+                        .param("email", anyString())
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(propensityMap));
+
+        verify(userService, times(1)).findUserDecisionPropensity(any());
+    }
+
+    @Test
+    void testUserWithdraw() throws Exception {
+        when(userService.withdrawUserAccount(any())).thenReturn(true);
+
+        mockMvc.perform(post("/api/user/withdraw")
+                        .param("email", anyString())
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(true));
+
+        verify(userService, times(1)).withdrawUserAccount(any());
+    }
+}

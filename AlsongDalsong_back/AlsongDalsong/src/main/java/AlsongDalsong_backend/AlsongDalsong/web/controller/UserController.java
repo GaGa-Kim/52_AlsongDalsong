@@ -89,7 +89,7 @@ public class UserController {
         return storageService.findFileBase64(PROFILE_NAME, user.getProfile());
     }
 
-    @PutMapping(value = "/updateProfile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/updateProfile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiOperation(value = "회원 프로필 사진 수정", notes = "회원 프로필 사진을 수정한 후 수정된 회원 정보를 리턴합니다.")
     @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com", required = true)
     public ResponseEntity<UserResponseDto> userProfileImageModify(@RequestParam String email,
