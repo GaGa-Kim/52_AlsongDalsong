@@ -1,5 +1,11 @@
 package AlsongDalsong_backend.AlsongDalsong.web.controller;
 
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_INTRODUCE;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_KAKAO_ID;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NAME;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NICKNAME;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PROFILE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
@@ -37,9 +43,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 /**
  * 회원 컨트롤러 테스트
@@ -68,13 +77,14 @@ class UserControllerTest {
 
     @BeforeEach
     void setUp() throws IOException {
-        Long kakaoId = 123L;
-        String name = "이름";
-        String email = "이메일";
-        String nickname = "닉네임";
-        String profile = "http://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png";
-        String introduce = "소개";
-        user = new User(kakaoId, name, email, nickname, profile, introduce);
+        user = User.builder()
+                .kakaoId(VALID_KAKAO_ID)
+                .name(VALID_NAME)
+                .email(VALID_EMAIL)
+                .nickname(VALID_NICKNAME)
+                .profile(VALID_PROFILE)
+                .introduce(VALID_INTRODUCE)
+                .build();
         profileByteArray = IOUtils.toByteArray(user.getProfile());
         profileByBase = Base64.getEncoder().encodeToString(profileByteArray);
         httpHeaders = new HttpHeaders();
@@ -98,7 +108,11 @@ class UserControllerTest {
     void testUserProfileModify() throws Exception {
         when(userService.modifyUserProfile(any())).thenReturn(user);
 
-        UserUpdateRequestDto userUpdateRequestDto = new UserUpdateRequestDto();
+        UserUpdateRequestDto userUpdateRequestDto = UserUpdateRequestDto.builder()
+                .email(VALID_EMAIL)
+                .nickname(VALID_NICKNAME)
+                .introduce(VALID_INTRODUCE)
+                .build();
         mockMvc.perform(put("/api/user/updateInfo")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(userUpdateRequestDto))
@@ -160,7 +174,15 @@ class UserControllerTest {
         when(userService.modifyUserProfileImage(any(), any())).thenReturn(user);
 
         MockMultipartFile profile = new MockMultipartFile("file", "newProfile.jpg", "image/jpeg", profileByteArray);
-        mockMvc.perform(multipart("/api/user/updateProfile")
+        MockMultipartHttpServletRequestBuilder builder = multipart("/api/user/updateProfile");
+        builder.with(new RequestPostProcessor() {
+            @Override
+            public MockHttpServletRequest postProcessRequest(MockHttpServletRequest request) {
+                request.setMethod("PUT");
+                return request;
+            }
+        });
+        mockMvc.perform(builder
                         .file("multipartFile", profile.getBytes())
                         .param("email", user.getEmail())
                         .contentType(MediaType.MULTIPART_FORM_DATA)

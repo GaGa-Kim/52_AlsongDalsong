@@ -1,5 +1,8 @@
 package AlsongDalsong_backend.AlsongDalsong.service.user;
 
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_INTRODUCE;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NICKNAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -93,7 +96,7 @@ class UserServiceImplTest {
     void testModifyUserProfile() {
         when(userRepository.findByEmail(any())).thenReturn(mockUser);
 
-        UserUpdateRequestDto userUpdateRequestDto = new UserUpdateRequestDto();
+        UserUpdateRequestDto userUpdateRequestDto = new UserUpdateRequestDto(VALID_EMAIL, VALID_NICKNAME, VALID_INTRODUCE);
         User result = userService.modifyUserProfile(userUpdateRequestDto);
 
         assertNotNull(result);

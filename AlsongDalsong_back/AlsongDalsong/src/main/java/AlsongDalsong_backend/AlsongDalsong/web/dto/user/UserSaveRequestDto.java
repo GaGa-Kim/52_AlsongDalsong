@@ -1,7 +1,13 @@
 package AlsongDalsong_backend.AlsongDalsong.web.dto.user;
 
+import AlsongDalsong_backend.AlsongDalsong.constants.Message;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import io.swagger.annotations.ApiModelProperty;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,14 +15,19 @@ import lombok.NoArgsConstructor;
  * 회원 가입 dto
  */
 @Getter
-@NoArgsConstructor
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class UserSaveRequestDto {
+    @NotBlank(message = Message.INPUT_NAME)
     @ApiModelProperty(notes = "이름", example = "김가경", required = true)
     private String name;
 
+    @Email(message = Message.INPUT_EMAIL)
     @ApiModelProperty(notes = "이메일", example = "1234@gmail.com", required = true)
     private String email;
 
+    @NotBlank(message = Message.INPUT_NICKNAME)
     @ApiModelProperty(notes = "닉네임", example = "가경", required = true)
     private String nickname;
 

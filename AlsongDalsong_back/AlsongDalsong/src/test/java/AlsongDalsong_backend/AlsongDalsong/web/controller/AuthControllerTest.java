@@ -1,5 +1,12 @@
 package AlsongDalsong_backend.AlsongDalsong.web.controller;
 
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_INTRODUCE;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_KAKAO_ID;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NAME;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NICKNAME;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PROFILE;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_TOKEN;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
@@ -53,14 +60,18 @@ class AuthControllerTest {
 
     @BeforeEach
     void setUp() {
-        Long kakaoId = 123L;
-        String name = "이름";
-        String email = "이메일";
-        String nickname = "닉네임";
-        String profile = "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png";
-        String introduce = "소개";
-        user = new User(kakaoId, name, email, nickname, profile, introduce);
-        tokenDto = new TokenDto("code", "이메일");
+        user = User.builder()
+                .kakaoId(VALID_KAKAO_ID)
+                .name(VALID_NAME)
+                .email(VALID_EMAIL)
+                .nickname(VALID_NICKNAME)
+                .profile(VALID_PROFILE)
+                .introduce(VALID_INTRODUCE)
+                .build();
+        tokenDto = TokenDto.builder()
+                .token(VALID_TOKEN)
+                .email(user.getEmail())
+                .build();
     }
 
     @Test
@@ -80,7 +91,13 @@ class AuthControllerTest {
     void testSignup() throws Exception {
         when(authService.signupAndReturnUser(any())).thenReturn(new UserResponseDto(user));
 
-        UserSaveRequestDto userSaveRequestDto = new UserSaveRequestDto();
+        UserSaveRequestDto userSaveRequestDto = UserSaveRequestDto.builder()
+                .name(VALID_NAME)
+                .email(VALID_EMAIL)
+                .nickname(VALID_NICKNAME)
+                .profile(VALID_PROFILE)
+                .introduce(VALID_INTRODUCE)
+                .build();
         mockMvc.perform(post("/auth/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(userSaveRequestDto))

@@ -26,6 +26,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
  */
 @ExtendWith(MockitoExtension.class)
 class AuthServiceImplTest {
+    private final Long kakaoId = 123L;
+    private final String name = "이름";
+    private final String email = "이메일";
+    private final String nickname = "닉네임";
+    private final String profile = "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png";
+    private final String introduce = "소개";
     private static final String jwtToken = "jwtToken";
     private User user;
 
@@ -40,12 +46,6 @@ class AuthServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        Long kakaoId = 123L;
-        String name = "이름";
-        String email = "이메일";
-        String nickname = "닉네임";
-        String profile = "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png";
-        String introduce = "소개";
         user = new User(kakaoId, name, email, nickname, profile, introduce);
     }
 
@@ -54,7 +54,7 @@ class AuthServiceImplTest {
         when(userRepository.existsByEmail(any())).thenReturn(false);
         when(userRepository.save(any())).thenReturn(user);
 
-        UserSaveRequestDto userSaveRequestDto = new UserSaveRequestDto();
+        UserSaveRequestDto userSaveRequestDto = new UserSaveRequestDto(name, email, nickname, profile, introduce);
         UserResponseDto result = authService.signupAndReturnUser(userSaveRequestDto);
 
         assertNotNull(result);
