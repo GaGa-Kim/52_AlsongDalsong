@@ -1,7 +1,7 @@
 package AlsongDalsong_backend.AlsongDalsong.web.dto.user;
 
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.INVALID_BLANK;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.INVALID_EMAIL;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.INVALID_NICKNAME;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_INTRODUCE;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NICKNAME;
@@ -42,21 +42,10 @@ class UserUpdateRequestDtoTest {
     }
 
     @Test
-    void name_validation() {
-        UserUpdateRequestDto userUpdateRequestDto = UserUpdateRequestDto.builder()
-                .email(VALID_EMAIL)
-                .nickname(VALID_NICKNAME)
-                .introduce(VALID_INTRODUCE)
-                .build();
-
-        validate(userUpdateRequestDto);
-    }
-
-    @Test
     void email_validation() {
         UserUpdateRequestDto userUpdateRequestDto = UserUpdateRequestDto.builder()
-                .email(INVALID_EMAIL)
-                .nickname(VALID_NICKNAME)
+                .email(VALID_EMAIL)
+                .nickname(INVALID_EMAIL)
                 .introduce(VALID_INTRODUCE)
                 .build();
 
@@ -67,8 +56,19 @@ class UserUpdateRequestDtoTest {
     void nickname_validation() {
         UserUpdateRequestDto userUpdateRequestDto = UserUpdateRequestDto.builder()
                 .email(VALID_EMAIL)
-                .nickname(INVALID_NICKNAME)
+                .nickname(INVALID_BLANK)
                 .introduce(VALID_INTRODUCE)
+                .build();
+
+        validate(userUpdateRequestDto);
+    }
+
+    @Test
+    void introduce_validation() {
+        UserUpdateRequestDto userUpdateRequestDto = UserUpdateRequestDto.builder()
+                .email(VALID_EMAIL)
+                .nickname(VALID_NICKNAME)
+                .introduce(INVALID_BLANK)
                 .build();
 
         validate(userUpdateRequestDto);

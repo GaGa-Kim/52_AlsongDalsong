@@ -1,7 +1,7 @@
 package AlsongDalsong_backend.AlsongDalsong.web.dto.auth;
 
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.INVALID_BLANK;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.INVALID_EMAIL;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.INVALID_TOKEN;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_TOKEN;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,7 +41,7 @@ class TokenDtoTest {
     @Test
     void token_validation() {
         TokenDto tokenDto = TokenDto.builder()
-                .token(INVALID_TOKEN)
+                .token(INVALID_BLANK)
                 .email(VALID_EMAIL)
                 .build();
 

@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class TokenDto {
-    @NotBlank(message = Message.INPUT_NAME)
+    @NotBlank(message = Message.INPUT_TOKEN)
     @ApiModelProperty(example = "토큰")
     private String token;
 

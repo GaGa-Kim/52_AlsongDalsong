@@ -1,5 +1,13 @@
 package AlsongDalsong_backend.AlsongDalsong.web.controller;
 
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_CONTENT;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_INTRODUCE;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_KAKAO_ID;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NAME;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NICKNAME;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_ID;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PROFILE;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -47,6 +55,8 @@ import org.springframework.test.web.servlet.MockMvc;
         })
 @WithMockUser(username = "테스트_최고관리자", roles = {"USER"})
 class CommentControllerTest {
+    private User user;
+    private Post post;
     private Comment comment;
 
     @Autowired
@@ -57,10 +67,17 @@ class CommentControllerTest {
 
     @BeforeEach
     void setUp() {
-        User user = new User();
-        Post post = new Post();
+        user = User.builder()
+                .kakaoId(VALID_KAKAO_ID)
+                .name(VALID_NAME)
+                .email(VALID_EMAIL)
+                .nickname(VALID_NICKNAME)
+                .profile(VALID_PROFILE)
+                .introduce(VALID_INTRODUCE)
+                .build();
+        post = new Post();
 
-        comment = new Comment("내용");
+        comment = Comment.builder().content(VALID_CONTENT).build();
         comment.setUser(user);
         comment.setPost(post);
     }
@@ -70,7 +87,11 @@ class CommentControllerTest {
         when(commentService.addComment(any()))
                 .thenReturn(Collections.singletonList(new CommentResponseDto(comment)));
 
-        CommentSaveRequestDto commentSaveRequestDto = new CommentSaveRequestDto();
+        CommentSaveRequestDto commentSaveRequestDto = CommentSaveRequestDto.builder()
+                .email(comment.getUserId().getEmail())
+                .postId(VALID_POST_ID)
+                .content(comment.getContent())
+                .build();
         mockMvc.perform(post("/api/comment/save")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(commentSaveRequestDto))
@@ -102,7 +123,12 @@ class CommentControllerTest {
         when(commentService.modifyComment(any()))
                 .thenReturn(Collections.singletonList(new CommentResponseDto(comment)));
 
-        CommentUpdateRequestDto commentUpdateRequestDto = new CommentUpdateRequestDto();
+        CommentUpdateRequestDto commentUpdateRequestDto = CommentUpdateRequestDto.builder()
+                .id(comment.getId())
+                .email(comment.getUserId().getEmail())
+                .postId(VALID_POST_ID)
+                .content(comment.getContent())
+                .build();
         mockMvc.perform(put("/api/comment/update")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(commentUpdateRequestDto))

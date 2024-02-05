@@ -23,6 +23,7 @@ public class UserUpdateRequestDto {
     @ApiModelProperty(notes = "닉네임", example = "가가경", required = true)
     private String nickname;
 
+    @NotBlank(message = Message.INPUT_INTRODUCE)
     @ApiModelProperty(notes = "소개", example = "안녕하세요.", required = true)
     private String introduce;
 

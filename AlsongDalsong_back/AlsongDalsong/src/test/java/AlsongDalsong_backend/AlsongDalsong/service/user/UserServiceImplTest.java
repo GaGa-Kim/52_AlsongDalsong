@@ -2,7 +2,10 @@ package AlsongDalsong_backend.AlsongDalsong.service.user;
 
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_INTRODUCE;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_KAKAO_ID;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NAME;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NICKNAME;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PROFILE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -37,8 +40,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
-    private final String profile = "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png";
-    private User mockUser;
+    private User user;
     private Post mockPost;
 
     @InjectMocks
@@ -55,84 +57,91 @@ class UserServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        mockUser = mock(User.class);
+        user = User.builder()
+                .kakaoId(VALID_KAKAO_ID)
+                .name(VALID_NAME)
+                .email(VALID_EMAIL)
+                .nickname(VALID_NICKNAME)
+                .profile(VALID_PROFILE)
+                .introduce(VALID_INTRODUCE)
+                .build();
         mockPost = mock(Post.class);
-        mockPost.setUser(mockUser);
+        mockPost.setUser(user);
     }
 
     @Test
     void testFindUserByEmail() {
-        when(userRepository.findByEmail(any())).thenReturn(mockUser);
+        when(userRepository.findByEmail(any())).thenReturn(user);
 
-        User result = userService.findUserByEmail(mockUser.getEmail());
+        User result = userService.findUserByEmail(user.getEmail());
 
         assertNotNull(result);
-        assertEquals(mockUser.getEmail(), result.getEmail());
+        assertEquals(user.getEmail(), result.getEmail());
 
         verify(userRepository, times(1)).findByEmail(any());
     }
 
     @Test
     void testFindUserProfileImageAsBytes() throws IOException {
-        when(userRepository.findByEmail(any())).thenReturn(mockUser);
-        when(mockUser.getProfile()).thenReturn(profile);
+        when(userRepository.findByEmail(any())).thenReturn(user);
 
-        ResponseEntity<byte[]> result = userService.findUserProfileImageAsBytes(mockUser.getEmail());
+        ResponseEntity<byte[]> result = userService.findUserProfileImageAsBytes(user.getEmail());
 
         assertNotNull(result);
     }
 
     @Test
     void testFindUserProfileImageAsBase64() throws IOException {
-        when(userRepository.findByEmail(any())).thenReturn(mockUser);
-        when(mockUser.getProfile()).thenReturn(profile);
+        when(userRepository.findByEmail(any())).thenReturn(user);
 
-        ResponseEntity<String> result = userService.findUserProfileImageAsBase64(mockUser.getEmail());
+        ResponseEntity<String> result = userService.findUserProfileImageAsBase64(user.getEmail());
 
         assertNotNull(result);
     }
 
     @Test
     void testModifyUserProfile() {
-        when(userRepository.findByEmail(any())).thenReturn(mockUser);
+        when(userRepository.findByEmail(any())).thenReturn(user);
 
-        UserUpdateRequestDto userUpdateRequestDto = new UserUpdateRequestDto(VALID_EMAIL, VALID_NICKNAME, VALID_INTRODUCE);
+        UserUpdateRequestDto userUpdateRequestDto = UserUpdateRequestDto.builder()
+                .email(user.getEmail())
+                .nickname(user.getNickname())
+                .introduce(user.getIntroduce())
+                .build();
         User result = userService.modifyUserProfile(userUpdateRequestDto);
 
         assertNotNull(result);
-        assertEquals(mockUser.getEmail(), result.getEmail());
+        assertEquals(user.getEmail(), result.getEmail());
 
         verify(userRepository, times(1)).findByEmail(any());
-        verify(mockUser, times(1)).updateInfo(any(), any());
     }
 
     @Test
     void testModifyUserProfileImage() {
-        when(userRepository.findByEmail(any())).thenReturn(mockUser);
+        when(userRepository.findByEmail(any())).thenReturn(user);
         doNothing().when(storageService).removeFile(any());
         when(storageService.addProfileImage(any())).thenReturn("새 프로필");
 
         MultipartFile profileImage = null;
-        User result = userService.modifyUserProfileImage(mockUser.getEmail(), profileImage);
+        User result = userService.modifyUserProfileImage(user.getEmail(), profileImage);
 
         assertNotNull(result);
-        assertEquals(mockUser.getEmail(), result.getEmail());
+        assertEquals(user.getEmail(), result.getEmail());
 
         verify(userRepository, times(1)).findByEmail(any());
         verify(storageService, times(1)).removeFile(any());
         verify(storageService, times(1)).addProfileImage(any());
-        verify(mockUser, times(1)).updateProfile(any());
     }
 
     @Test
     void testFindUserDecisionPropensity() {
-        when(userRepository.findByEmail(any())).thenReturn(mockUser);
+        when(userRepository.findByEmail(any())).thenReturn(user);
         when(mockPost.getTodo()).thenReturn(Todo.TO_BUY_OR_NOT_TO_BUY);
         when(mockPost.getDecision()).thenReturn(Decision.UNDECIDED);
-        when(postRepository.countByUserIdAndTodoAndDecision(mockUser, mockPost.getTodo(), mockPost.getDecision()))
-                .thenReturn(1L);
+        when(postRepository.countByUserIdAndTodoAndDecision(user, mockPost.getTodo(), mockPost.getDecision())).thenReturn(1L);
 
-        Map<String, Object> result = userService.findUserDecisionPropensity(mockUser.getEmail());
+        Map<String, Object> result = userService.findUserDecisionPropensity(user.getEmail());
+
         assertNotNull(result);
         assertEquals(12, result.size());
 
@@ -142,12 +151,12 @@ class UserServiceImplTest {
 
     @Test
     void testWithdrawUserAccount() {
-        when(userRepository.findByEmail(any())).thenReturn(mockUser);
+        when(userRepository.findByEmail(any())).thenReturn(user);
 
-        boolean result = userService.withdrawUserAccount(mockUser.getEmail());
+        boolean result = userService.withdrawUserAccount(user.getEmail());
+
         assertTrue(result);
 
         verify(userRepository, times(1)).findByEmail(any());
-        verify(mockUser, times(1)).withdrawUser();
     }
 }

@@ -109,9 +109,9 @@ class UserControllerTest {
         when(userService.modifyUserProfile(any())).thenReturn(user);
 
         UserUpdateRequestDto userUpdateRequestDto = UserUpdateRequestDto.builder()
-                .email(VALID_EMAIL)
-                .nickname(VALID_NICKNAME)
-                .introduce(VALID_INTRODUCE)
+                .email(user.getEmail())
+                .nickname(user.getNickname())
+                .introduce(user.getIntroduce())
                 .build();
         mockMvc.perform(put("/api/user/updateInfo")
                         .contentType(MediaType.APPLICATION_JSON)

@@ -92,11 +92,11 @@ class AuthControllerTest {
         when(authService.signupAndReturnUser(any())).thenReturn(new UserResponseDto(user));
 
         UserSaveRequestDto userSaveRequestDto = UserSaveRequestDto.builder()
-                .name(VALID_NAME)
-                .email(VALID_EMAIL)
-                .nickname(VALID_NICKNAME)
-                .profile(VALID_PROFILE)
-                .introduce(VALID_INTRODUCE)
+                .name(user.getName())
+                .email(user.getEmail())
+                .nickname(user.getNickname())
+                .profile(user.getProfile())
+                .introduce(user.getIntroduce())
                 .build();
         mockMvc.perform(post("/auth/signup")
                         .contentType(MediaType.APPLICATION_JSON)

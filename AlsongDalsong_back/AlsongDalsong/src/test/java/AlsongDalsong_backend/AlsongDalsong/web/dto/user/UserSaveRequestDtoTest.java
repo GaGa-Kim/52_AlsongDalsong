@@ -1,8 +1,7 @@
 package AlsongDalsong_backend.AlsongDalsong.web.dto.user;
 
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.INVALID_BLANK;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.INVALID_EMAIL;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.INVALID_NAME;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.INVALID_NICKNAME;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_INTRODUCE;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NAME;
@@ -51,7 +50,7 @@ class UserSaveRequestDtoTest {
     @Test
     void name_validation() {
         UserSaveRequestDto userSaveRequestDto = UserSaveRequestDto.builder()
-                .name(INVALID_NAME)
+                .name(INVALID_BLANK)
                 .email(VALID_EMAIL)
                 .nickname(VALID_NICKNAME)
                 .profile(VALID_PROFILE)
@@ -79,7 +78,7 @@ class UserSaveRequestDtoTest {
         UserSaveRequestDto userSaveRequestDto = UserSaveRequestDto.builder()
                 .name(VALID_NAME)
                 .email(VALID_EMAIL)
-                .nickname(INVALID_NICKNAME)
+                .nickname(INVALID_BLANK)
                 .profile(VALID_PROFILE)
                 .introduce(VALID_INTRODUCE)
                 .build();

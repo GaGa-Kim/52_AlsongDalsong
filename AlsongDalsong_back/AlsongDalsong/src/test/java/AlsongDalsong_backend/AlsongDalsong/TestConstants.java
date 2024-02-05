@@ -13,9 +13,14 @@ public class TestConstants {
     public static final String VALID_INTRODUCE = "소개";
     public static final String VALID_TOKEN = "code";
 
-    // User Invalid Test Constants
-    public static final String INVALID_NAME = "";
+    // Comment Valid Test Constants
+    public static final Long VALID_COMMENT_ID = 1L;
+    public static final String VALID_CONTENT = "댓글 내용";
+
+    // Post Valid Test Constants
+    public static final Long VALID_POST_ID = 1L;
+
+    // Invalid Test Constants
+    public static final String INVALID_BLANK = "";
     public static final String INVALID_EMAIL = "1234.gmail.com";
-    public static final String INVALID_NICKNAME = "";
-    public static final String INVALID_TOKEN = "";
 }

@@ -1,5 +1,6 @@
 package AlsongDalsong_backend.AlsongDalsong.service.comment;
 
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -70,7 +71,11 @@ class CommentServiceImplTest {
         when(commentRepository.findAllByPostIdOrderByLikeListDesc(any()))
                 .thenReturn(Collections.singletonList(comment));
 
-        CommentSaveRequestDto commentSaveRequestDto = new CommentSaveRequestDto();
+        CommentSaveRequestDto commentSaveRequestDto = CommentSaveRequestDto.builder()
+                .email(comment.getUserId().getEmail())
+                .postId(VALID_POST_ID)
+                .content(comment.getContent())
+                .build();
         List<CommentResponseDto> result = commentService.addComment(commentSaveRequestDto);
 
         assertNotNull(result);
@@ -120,7 +125,12 @@ class CommentServiceImplTest {
         when(commentRepository.findAllByPostIdOrderByLikeListDesc(any()))
                 .thenReturn(Collections.singletonList(comment));
 
-        CommentUpdateRequestDto commentUpdateRequestDto = new CommentUpdateRequestDto();
+        CommentUpdateRequestDto commentUpdateRequestDto = CommentUpdateRequestDto.builder()
+                .id(comment.getId())
+                .email(comment.getUserId().getEmail())
+                .postId(VALID_POST_ID)
+                .content(comment.getContent())
+                .build();
         List<CommentResponseDto> result = commentService.modifyComment(commentUpdateRequestDto);
 
         assertNotNull(result);

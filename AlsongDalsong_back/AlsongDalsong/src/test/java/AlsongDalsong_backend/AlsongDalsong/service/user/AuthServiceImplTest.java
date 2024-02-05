@@ -1,5 +1,12 @@
 package AlsongDalsong_backend.AlsongDalsong.service.user;
 
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_INTRODUCE;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_KAKAO_ID;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NAME;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NICKNAME;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PROFILE;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_TOKEN;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -26,13 +33,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
  */
 @ExtendWith(MockitoExtension.class)
 class AuthServiceImplTest {
-    private final Long kakaoId = 123L;
-    private final String name = "이름";
-    private final String email = "이메일";
-    private final String nickname = "닉네임";
-    private final String profile = "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png";
-    private final String introduce = "소개";
-    private static final String jwtToken = "jwtToken";
     private User user;
 
     @InjectMocks
@@ -46,7 +46,14 @@ class AuthServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        user = new User(kakaoId, name, email, nickname, profile, introduce);
+        user = User.builder()
+                .kakaoId(VALID_KAKAO_ID)
+                .name(VALID_NAME)
+                .email(VALID_EMAIL)
+                .nickname(VALID_NICKNAME)
+                .profile(VALID_PROFILE)
+                .introduce(VALID_INTRODUCE)
+                .build();
     }
 
     @Test
@@ -54,7 +61,13 @@ class AuthServiceImplTest {
         when(userRepository.existsByEmail(any())).thenReturn(false);
         when(userRepository.save(any())).thenReturn(user);
 
-        UserSaveRequestDto userSaveRequestDto = new UserSaveRequestDto(name, email, nickname, profile, introduce);
+        UserSaveRequestDto userSaveRequestDto = UserSaveRequestDto.builder()
+                .name(user.getName())
+                .email(user.getEmail())
+                .nickname(user.getNickname())
+                .profile(user.getProfile())
+                .introduce(user.getIntroduce())
+                .build();
         UserResponseDto result = authService.signupAndReturnUser(userSaveRequestDto);
 
         assertNotNull(result);
@@ -67,13 +80,13 @@ class AuthServiceImplTest {
     @Test
     void testLoginAndGenerateToken() {
         when(userRepository.findByEmail(anyString())).thenReturn(user);
-        when(tokenProvider.createToken(any())).thenReturn(jwtToken);
+        when(tokenProvider.createToken(any())).thenReturn(VALID_TOKEN);
 
         TokenDto result = authService.loginAndGenerateToken(user.getEmail());
 
         assertNotNull(result);
         assertEquals(user.getEmail(), result.getEmail());
-        assertEquals(jwtToken, result.getToken());
+        assertEquals(VALID_TOKEN, result.getToken());
 
         verify(userRepository, times(1)).findByEmail(any());
         verify(tokenProvider, times(1)).createToken(any());
