@@ -13,4 +13,5 @@ public class Message {
     public static final String INPUT_COMMENT_ID = "댓글 아이디를 입력해주세요.";
     public static final String INPUT_CONTENT = "댓글 내용을 입력해주세요.";
     public static final String INPUT_INTRODUCE = "소개를 입력해주세요.";
+    public static final String INPUT_PHOTO_ID = "사진 아이디를 입력해주세요.";
 }

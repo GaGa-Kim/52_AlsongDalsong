@@ -1,5 +1,8 @@
 package AlsongDalsong_backend.AlsongDalsong.service.photo;
 
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_ORIG_PHOTO_NANE;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PHOTO_NAME;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PHOTO_URL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -34,10 +37,11 @@ class PhotoServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        String origPhotoName = "원본 이름";
-        String photoName = "변환된 사진 이름";
-        String photoUrl = "사진 Url";
-        photo = new Photo(origPhotoName, photoName, photoUrl);
+        photo = Photo.builder()
+                .origPhotoName(VALID_ORIG_PHOTO_NANE)
+                .photoName(VALID_PHOTO_NAME)
+                .photoUrl(VALID_PHOTO_URL)
+                .build();
     }
 
     @Test

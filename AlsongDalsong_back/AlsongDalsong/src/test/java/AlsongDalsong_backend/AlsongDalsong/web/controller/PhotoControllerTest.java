@@ -1,5 +1,8 @@
 package AlsongDalsong_backend.AlsongDalsong.web.controller;
 
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_ORIG_PHOTO_NANE;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PHOTO_NAME;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PHOTO_URL;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
@@ -60,10 +63,11 @@ class PhotoControllerTest {
 
     @BeforeEach
     void setUp() throws IOException {
-        String origPhotoName = "원본 이름";
-        String photoName = "변환된 사진 이름";
-        String photoUrl = "사진 Url";
-        photo = new Photo(origPhotoName, photoName, photoUrl);
+        photo = Photo.builder()
+                .origPhotoName(VALID_ORIG_PHOTO_NANE)
+                .photoName(VALID_PHOTO_NAME)
+                .photoUrl(VALID_PHOTO_URL)
+                .build();
         photoByteArray = IOUtils.toByteArray(photo.getPhotoUrl());
         photoByBase = Base64.getEncoder().encodeToString(photoByteArray);
         httpHeaders = new HttpHeaders();

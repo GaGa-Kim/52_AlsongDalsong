@@ -20,6 +20,12 @@ public class TestConstants {
     // Post Valid Test Constants
     public static final Long VALID_POST_ID = 1L;
 
+    // Photo Valid Test Constants
+    public static final Long VALID_PHOTO_ID = 1L;
+    public static final String VALID_ORIG_PHOTO_NANE = "원본 이름";
+    public static final String VALID_PHOTO_NAME = "변환된 사진 이름";
+    public static final String VALID_PHOTO_URL = "사진 URL";
+
     // Invalid Test Constants
     public static final String INVALID_BLANK = "";
     public static final String INVALID_EMAIL = "1234.gmail.com";
