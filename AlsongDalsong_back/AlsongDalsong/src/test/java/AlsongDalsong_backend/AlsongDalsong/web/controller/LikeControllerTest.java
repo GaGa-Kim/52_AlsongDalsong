@@ -1,5 +1,7 @@
 package AlsongDalsong_backend.AlsongDalsong.web.controller;
 
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_COMMENT_ID;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -46,7 +48,10 @@ class LikeControllerTest {
     void testLikeSaveAdd() throws Exception {
         when(likeService.saveLike(any())).thenReturn(true);
 
-        LikeRequestDto likeRequestDto = new LikeRequestDto();
+        LikeRequestDto likeRequestDto = LikeRequestDto.builder()
+                .email(VALID_EMAIL)
+                .commentId(VALID_COMMENT_ID)
+                .build();
         mockMvc.perform(post("/api/like/save")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(likeRequestDto))
@@ -61,7 +66,10 @@ class LikeControllerTest {
     void testLikeSaveDelete() throws Exception {
         when(likeService.saveLike(any())).thenReturn(false);
 
-        LikeRequestDto likeRequestDto = new LikeRequestDto();
+        LikeRequestDto likeRequestDto = LikeRequestDto.builder()
+                .email(VALID_EMAIL)
+                .commentId(VALID_COMMENT_ID)
+                .build();
         mockMvc.perform(post("/api/like/save")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(likeRequestDto))

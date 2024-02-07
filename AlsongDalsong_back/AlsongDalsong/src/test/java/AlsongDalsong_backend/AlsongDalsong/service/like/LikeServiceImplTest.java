@@ -48,7 +48,7 @@ class LikeServiceImplTest {
     void setUp() {
         mockUser = mock(User.class);
         mockComment = mock(Comment.class);
-        
+
         like = new Like();
         like.setUser(mockUser);
         like.setComment(mockComment);
@@ -61,7 +61,10 @@ class LikeServiceImplTest {
         when(likeRepository.existsByUserIdAndCommentId(any(), any())).thenReturn(false);
         when(likeRepository.save(any())).thenReturn(like);
 
-        LikeRequestDto likeRequestDto = new LikeRequestDto();
+        LikeRequestDto likeRequestDto = LikeRequestDto.builder()
+                .email(like.getUserId().getEmail())
+                .commentId(like.getCommentId().getId())
+                .build();
         boolean result = likeService.saveLike(likeRequestDto);
 
         assertTrue(result);
@@ -82,7 +85,10 @@ class LikeServiceImplTest {
         when(likeRepository.findByUserIdAndCommentId(any(), any())).thenReturn(like);
         doNothing().when(likeRepository).delete(any());
 
-        LikeRequestDto likeRequestDto = new LikeRequestDto();
+        LikeRequestDto likeRequestDto = LikeRequestDto.builder()
+                .email(like.getUserId().getEmail())
+                .commentId(like.getCommentId().getId())
+                .build();
         boolean result = likeService.saveLike(likeRequestDto);
 
         assertFalse(result);
