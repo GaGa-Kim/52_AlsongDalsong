@@ -37,7 +37,7 @@ class CommentResponseDtoTest {
     }
 
     @Test
-    void testCommentResponseDtoTest() {
+    void testCommentResponseDto() {
         Comment comment = Comment.builder().content(VALID_COMMENT_CONTENT).build();
         comment.setUser(user);
         comment.setPost(post);

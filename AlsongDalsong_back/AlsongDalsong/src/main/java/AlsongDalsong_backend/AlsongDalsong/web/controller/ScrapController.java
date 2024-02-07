@@ -1,5 +1,8 @@
 package AlsongDalsong_backend.AlsongDalsong.web.controller;
 
+import static AlsongDalsong_backend.AlsongDalsong.constants.Message.INPUT_EMAIL;
+
+import AlsongDalsong_backend.AlsongDalsong.constants.Message;
 import AlsongDalsong_backend.AlsongDalsong.service.scrap.ScrapService;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.scrap.ScrapRequestDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.scrap.ScrapResponseDto;
@@ -8,6 +11,9 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -32,7 +38,7 @@ public class ScrapController {
     @PostMapping("/save")
     @ApiOperation(value = "스크랩 작성/삭제", notes = "게시글을 스크랩한 후, true를 리턴합니다. 게시글이 이미 스크랩되어 있을 경우 스크랩이 취소되고 false를 리턴합니다.")
     @ApiImplicitParam(name = "scrapResponseDto", value = "스크랩 작성 정보", required = true)
-    public ResponseEntity<Boolean> scrapSave(@RequestBody ScrapRequestDto scrapResponseDto) {
+    public ResponseEntity<Boolean> scrapSave(@RequestBody @Valid ScrapRequestDto scrapResponseDto) {
         return ResponseEntity.ok().body(scrapService.saveScrap(scrapResponseDto));
     }
 
@@ -42,14 +48,15 @@ public class ScrapController {
             @ApiImplicitParam(name = "postId", value = "게시글 id", example = "1"),
             @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com")
     })
-    public ResponseEntity<Boolean> scrapDetails(@RequestParam Long postId, String email) {
+    public ResponseEntity<Boolean> scrapDetails(@RequestParam @NotNull(message = Message.INPUT_POST_ID) Long postId,
+                                                @RequestParam @NotBlank(message = INPUT_EMAIL) String email) {
         return ResponseEntity.ok().body(scrapService.findScrap(postId, email));
     }
 
     @GetMapping("/inquire")
     @ApiOperation(value = "사용자별 스크랩 조회", notes = "사용자별 스크랩 목록을 조회하여 리턴합니다.")
     @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com")
-    public ResponseEntity<List<ScrapResponseDto>> scrapUserList(String email) {
+    public ResponseEntity<List<ScrapResponseDto>> scrapUserList(@RequestParam @NotBlank(message = INPUT_EMAIL) String email) {
         return ResponseEntity.ok().body(scrapService.findUserScraps(email));
     }
 }

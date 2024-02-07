@@ -1,5 +1,7 @@
 package AlsongDalsong_backend.AlsongDalsong.web.controller;
 
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_ID;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -86,7 +88,10 @@ class ScrapControllerTest {
     void testScrapSaveAdd() throws Exception {
         when(scrapService.saveScrap(any())).thenReturn(true);
 
-        ScrapRequestDto scrapRequestDto = new ScrapRequestDto();
+        ScrapRequestDto scrapRequestDto = ScrapRequestDto.builder()
+                .email(VALID_EMAIL)
+                .postId(VALID_POST_ID)
+                .build();
         mockMvc.perform(post("/api/scrap/save")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(scrapRequestDto))
@@ -101,7 +106,10 @@ class ScrapControllerTest {
     void testScrapSaveDelete() throws Exception {
         when(scrapService.saveScrap(any())).thenReturn(false);
 
-        ScrapRequestDto scrapRequestDto = new ScrapRequestDto();
+        ScrapRequestDto scrapRequestDto = ScrapRequestDto.builder()
+                .email(VALID_EMAIL)
+                .postId(VALID_POST_ID)
+                .build();
         mockMvc.perform(post("/api/scrap/save")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(scrapRequestDto))

@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
  */
 class UserResponseDtoTest {
     @Test
-    void testUserResponseDtoTest() {
+    void testUserResponseDto() {
         User user = User.builder()
                 .kakaoId(VALID_KAKAO_ID)
                 .name(VALID_NAME)
