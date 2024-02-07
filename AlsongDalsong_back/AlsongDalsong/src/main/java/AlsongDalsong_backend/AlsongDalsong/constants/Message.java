@@ -24,5 +24,6 @@ public class Message {
     public static final String INPUT_IMPORTANCE = "중요도를 입력해주세요.";
     public static final String INPUT_DECISION = "결정을 입력해주세요.";
     public static final String INPUT_REASON = "결정 이유를 입력해주세요.";
+    public static final String INPUT_VOTE = "투표를 입력해주세요.";
 
 }

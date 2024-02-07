@@ -1,5 +1,6 @@
 package AlsongDalsong_backend.AlsongDalsong.service.vote;
 
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_VOTE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -50,8 +51,9 @@ class VoteServiceImplTest {
         mockUser = mock(User.class);
         mockPost = mock(Post.class);
 
-        boolean voteContent = true;
-        vote = new Vote(voteContent);
+        vote = Vote.builder()
+                .vote(VALID_VOTE)
+                .build();
         vote.setUser(mockUser);
         vote.setPost(mockPost);
     }
@@ -63,7 +65,11 @@ class VoteServiceImplTest {
         when(voteRepository.existsByUserIdAndPostId(any(), any())).thenReturn(false);
         when(voteRepository.save(any())).thenReturn(vote);
 
-        VoteRequestDto voteRequestDto = new VoteRequestDto(mockUser.getEmail(), mockPost.getId(), true);
+        VoteRequestDto voteRequestDto = VoteRequestDto.builder()
+                .email(vote.getUserId().getEmail())
+                .postId(vote.getPostId().getId())
+                .vote(true)
+                .build();
         String result = voteService.saveVote(voteRequestDto);
 
         assertEquals("true", result);
@@ -84,7 +90,11 @@ class VoteServiceImplTest {
         when(voteRepository.findByUserIdAndPostId(any(), any())).thenReturn(vote);
         doNothing().when(voteRepository).delete(vote);
 
-        VoteRequestDto voteRequestDto = new VoteRequestDto(mockUser.getEmail(), mockPost.getId(), true);
+        VoteRequestDto voteRequestDto = VoteRequestDto.builder()
+                .email(vote.getUserId().getEmail())
+                .postId(vote.getPostId().getId())
+                .vote(true)
+                .build();
         String result = voteService.saveVote(voteRequestDto);
 
         assertEquals("투표하지 않았습니다.", result);
@@ -104,7 +114,11 @@ class VoteServiceImplTest {
         when(voteRepository.existsByUserIdAndPostId(any(), any())).thenReturn(true);
         when(voteRepository.findByUserIdAndPostId(any(), any())).thenReturn(vote);
 
-        VoteRequestDto voteRequestDto = new VoteRequestDto(mockUser.getEmail(), mockPost.getId(), false);
+        VoteRequestDto voteRequestDto = VoteRequestDto.builder()
+                .email(vote.getUserId().getEmail())
+                .postId(vote.getPostId().getId())
+                .vote(false)
+                .build();
         String result = voteService.saveVote(voteRequestDto);
 
         assertEquals("false", result);

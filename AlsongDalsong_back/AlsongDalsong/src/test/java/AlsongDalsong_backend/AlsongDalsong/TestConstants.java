@@ -43,6 +43,9 @@ public class TestConstants {
     public static final String VALID_PHOTO_NAME = "변환된 사진 이름";
     public static final String VALID_PHOTO_URL = "사진 URL";
 
+    // Vote Valid Test Constants
+    public static final Boolean VALID_VOTE = true;
+
     // Invalid Test Constants
     public static final String INVALID_BLANK = "";
     public static final String INVALID_EMAIL = "1234.gmail.com";

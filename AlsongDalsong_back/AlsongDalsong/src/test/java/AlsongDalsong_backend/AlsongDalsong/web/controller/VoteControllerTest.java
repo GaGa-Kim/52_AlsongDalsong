@@ -1,5 +1,8 @@
 package AlsongDalsong_backend.AlsongDalsong.web.controller;
 
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_ID;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_VOTE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -46,7 +49,11 @@ class VoteControllerTest {
     void testVoteSaveAdd() throws Exception {
         when(voteService.saveVote(any())).thenReturn("true");
 
-        VoteRequestDto voteRequestDto = new VoteRequestDto();
+        VoteRequestDto voteRequestDto = VoteRequestDto.builder()
+                .email(VALID_EMAIL)
+                .postId(VALID_POST_ID)
+                .vote(VALID_VOTE)
+                .build();
         mockMvc.perform(post("/api/vote/save")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(voteRequestDto))
@@ -61,7 +68,11 @@ class VoteControllerTest {
     void testVoteSaveDelete() throws Exception {
         when(voteService.saveVote(any())).thenReturn("투표하지 않았습니다.");
 
-        VoteRequestDto voteRequestDto = new VoteRequestDto();
+        VoteRequestDto voteRequestDto = VoteRequestDto.builder()
+                .email(VALID_EMAIL)
+                .postId(VALID_POST_ID)
+                .vote(VALID_VOTE)
+                .build();
         mockMvc.perform(post("/api/vote/save")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(voteRequestDto))
@@ -76,7 +87,11 @@ class VoteControllerTest {
     void testVoteSaveModify() throws Exception {
         when(voteService.saveVote(any())).thenReturn("false");
 
-        VoteRequestDto voteRequestDto = new VoteRequestDto();
+        VoteRequestDto voteRequestDto = VoteRequestDto.builder()
+                .email(VALID_EMAIL)
+                .postId(VALID_POST_ID)
+                .vote(VALID_VOTE)
+                .build();
         mockMvc.perform(post("/api/vote/save")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(voteRequestDto))
