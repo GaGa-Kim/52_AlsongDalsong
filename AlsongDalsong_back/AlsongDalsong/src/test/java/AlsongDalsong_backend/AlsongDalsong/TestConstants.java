@@ -1,5 +1,11 @@
 package AlsongDalsong_backend.AlsongDalsong;
 
+import AlsongDalsong_backend.AlsongDalsong.domain.post.Category;
+import AlsongDalsong_backend.AlsongDalsong.domain.post.Decision;
+import AlsongDalsong_backend.AlsongDalsong.domain.post.Old;
+import AlsongDalsong_backend.AlsongDalsong.domain.post.Todo;
+import AlsongDalsong_backend.AlsongDalsong.domain.post.Who;
+
 /**
  * 테스트 상수
  */
@@ -15,10 +21,21 @@ public class TestConstants {
 
     // Comment Valid Test Constants
     public static final Long VALID_COMMENT_ID = 1L;
-    public static final String VALID_CONTENT = "댓글 내용";
+    public static final String VALID_COMMENT_CONTENT = "댓글 내용";
 
     // Post Valid Test Constants
     public static final Long VALID_POST_ID = 1L;
+    public static final Todo VALID_TODO = Todo.TO_BUY_OR_NOT_TO_BUY;
+    public static final Category VALID_CATEGORY = Category.FASHION;
+    public static final Who VALID_WHO = Who.WOMAN;
+    public static final Old VALID_OLD = Old.TWENTIES;
+    public static final String VALID_DATE = "언제";
+    public static final String VALID_WHAT = "무엇을";
+    public static final String VALID_POST_CONTENT = "내용";
+    public static final String VALID_LINK = "링크";
+    public static final Integer VALID_IMPORTANCE = 3;
+    public static final Decision VALID_DECISION = Decision.UNDECIDED;
+    public static final String VALID_REASON = "결정 이유";
 
     // Photo Valid Test Constants
     public static final Long VALID_PHOTO_ID = 1L;

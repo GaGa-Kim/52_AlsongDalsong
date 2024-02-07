@@ -2,7 +2,7 @@ package AlsongDalsong_backend.AlsongDalsong.web.dto.comment;
 
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.INVALID_BLANK;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.INVALID_EMAIL;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_CONTENT;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_COMMENT_CONTENT;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,12 +33,12 @@ class CommentSaveRequestDtoTest {
         CommentSaveRequestDto commentSaveRequestDto = CommentSaveRequestDto.builder()
                 .email(VALID_EMAIL)
                 .postId(VALID_POST_ID)
-                .content(VALID_CONTENT)
+                .content(VALID_COMMENT_CONTENT)
                 .build();
 
         assertEquals(VALID_EMAIL, commentSaveRequestDto.getEmail());
         assertEquals(VALID_POST_ID, commentSaveRequestDto.getPostId());
-        assertEquals(VALID_CONTENT, commentSaveRequestDto.getContent());
+        assertEquals(VALID_COMMENT_CONTENT, commentSaveRequestDto.getContent());
     }
 
     @Test
@@ -46,7 +46,7 @@ class CommentSaveRequestDtoTest {
         CommentSaveRequestDto commentSaveRequestDto = CommentSaveRequestDto.builder()
                 .email(INVALID_EMAIL)
                 .postId(VALID_POST_ID)
-                .content(VALID_CONTENT)
+                .content(VALID_COMMENT_CONTENT)
                 .build();
 
         validate(commentSaveRequestDto);
@@ -57,7 +57,7 @@ class CommentSaveRequestDtoTest {
         CommentSaveRequestDto commentSaveRequestDto = CommentSaveRequestDto.builder()
                 .email(VALID_EMAIL)
                 .postId(null)
-                .content(VALID_CONTENT)
+                .content(VALID_COMMENT_CONTENT)
                 .build();
 
         validate(commentSaveRequestDto);

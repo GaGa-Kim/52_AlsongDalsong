@@ -1,5 +1,6 @@
 package AlsongDalsong_backend.AlsongDalsong.service.comment;
 
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_COMMENT_CONTENT;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -56,8 +57,7 @@ class CommentServiceImplTest {
         mockUser = mock(User.class);
         mockPost = mock(Post.class);
 
-        String content = "내용";
-        comment = new Comment(content);
+        comment = Comment.builder().content(VALID_COMMENT_CONTENT).build();
         comment.setUser(mockUser);
         comment.setPost(mockPost);
     }

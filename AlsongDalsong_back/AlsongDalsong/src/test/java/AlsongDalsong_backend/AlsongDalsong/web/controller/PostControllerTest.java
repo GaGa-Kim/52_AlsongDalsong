@@ -1,5 +1,16 @@
 package AlsongDalsong_backend.AlsongDalsong.web.controller;
 
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_CATEGORY;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_DATE;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_DECISION;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_IMPORTANCE;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_LINK;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_OLD;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_CONTENT;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_REASON;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_TODO;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHAT;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHO;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -18,12 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import AlsongDalsong_backend.AlsongDalsong.config.SecurityConfig;
 import AlsongDalsong_backend.AlsongDalsong.config.jwt.JwtRequestFilter;
-import AlsongDalsong_backend.AlsongDalsong.domain.post.Category;
-import AlsongDalsong_backend.AlsongDalsong.domain.post.Decision;
-import AlsongDalsong_backend.AlsongDalsong.domain.post.Old;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
-import AlsongDalsong_backend.AlsongDalsong.domain.post.Todo;
-import AlsongDalsong_backend.AlsongDalsong.domain.post.Who;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import AlsongDalsong_backend.AlsongDalsong.service.post.PostService;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.post.PostResponseDto;
@@ -68,19 +74,19 @@ class PostControllerTest {
     @BeforeEach
     void setUp() {
         User user = new User();
-
-        Todo todo = Todo.TO_BUY_OR_NOT_TO_BUY;
-        Category category = Category.FASHION;
-        Who who = Who.WOMAN;
-        Old old = Old.TEENS;
-        String date = "언제";
-        String what = "무엇을";
-        String content = "내용";
-        String link = "링크";
-        Integer importance = 3;
-        Decision decision = Decision.UNDECIDED;
-        String reason = "결정 이유";
-        post = new Post(todo, category, who, old, date, what, content, link, importance, decision, reason);
+        post = Post.builder()
+                .todo(VALID_TODO)
+                .category(VALID_CATEGORY)
+                .who(VALID_WHO)
+                .old(VALID_OLD)
+                .date(VALID_DATE)
+                .what(VALID_WHAT)
+                .content(VALID_POST_CONTENT)
+                .link(VALID_LINK)
+                .importance(VALID_IMPORTANCE)
+                .decision(VALID_DECISION)
+                .reason(VALID_REASON)
+                .build();
         post.setUser(user);
         photoId = new ArrayList<>();
         vote = Pair.of(0L, 0L);
@@ -90,7 +96,19 @@ class PostControllerTest {
     void testPostAdd() throws Exception {
         when(postService.addPostWithPhotos(any(), any())).thenReturn(new PostResponseDto(post, photoId, vote));
 
-        PostSaveRequestVO postSaveRequestVO = new PostSaveRequestVO();
+        PostSaveRequestVO postSaveRequestVO = PostSaveRequestVO.builder()
+                .email(post.getUserId().getEmail())
+                .todo(post.getTodo().getTodo())
+                .category(post.getCategory().getCategory())
+                .what(post.getWhat())
+                .old(post.getOld().getOld())
+                .date(post.getDate())
+                .who(post.getWho().getWho())
+                .content(post.getContent())
+                .link(post.getLink())
+                .importance(post.getImportance())
+                .photos(null)
+                .build();
         mockMvc.perform(post("/api/post/save")
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .content(new ObjectMapper().writeValueAsString(postSaveRequestVO))
@@ -176,7 +194,21 @@ class PostControllerTest {
     void testPostModify() throws Exception {
         when(postService.modifyPost(any(), any(), any())).thenReturn(new PostResponseDto(post, photoId, vote));
 
-        PostUpdateRequestVO postUpdateRequestVO = new PostUpdateRequestVO();
+        PostUpdateRequestVO postUpdateRequestVO = PostUpdateRequestVO.builder()
+                .id(post.getId())
+                .email(post.getUserId().getEmail())
+                .todo(post.getTodo().getTodo())
+                .category(post.getCategory().getCategory())
+                .what(post.getWhat())
+                .old(post.getOld().getOld())
+                .date(post.getDate())
+                .who(post.getWho().getWho())
+                .content(post.getContent())
+                .link(post.getLink())
+                .importance(post.getImportance())
+                .photos(null)
+                .deleteId(null)
+                .build();
         mockMvc.perform(put("/api/post/update")
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .content(new ObjectMapper().writeValueAsString(postUpdateRequestVO))

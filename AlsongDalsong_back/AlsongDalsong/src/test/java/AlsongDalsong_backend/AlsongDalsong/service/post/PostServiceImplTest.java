@@ -1,5 +1,16 @@
 package AlsongDalsong_backend.AlsongDalsong.service.post;
 
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_CATEGORY;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_DATE;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_DECISION;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_IMPORTANCE;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_LINK;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_OLD;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_CONTENT;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_REASON;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_TODO;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHAT;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -14,18 +25,18 @@ import static org.mockito.Mockito.when;
 import AlsongDalsong_backend.AlsongDalsong.domain.photo.Photo;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Category;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Decision;
-import AlsongDalsong_backend.AlsongDalsong.domain.post.Old;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.PostRepository;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Todo;
-import AlsongDalsong_backend.AlsongDalsong.domain.post.Who;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import AlsongDalsong_backend.AlsongDalsong.service.photo.PhotoService;
 import AlsongDalsong_backend.AlsongDalsong.service.photo.StorageService;
 import AlsongDalsong_backend.AlsongDalsong.service.user.UserService;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.post.PostResponseDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.post.PostSaveRequestDto;
+import AlsongDalsong_backend.AlsongDalsong.web.dto.post.PostSaveRequestVO;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.post.PostUpdateRequestDto;
+import AlsongDalsong_backend.AlsongDalsong.web.dto.post.PostUpdateRequestVO;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -46,6 +57,8 @@ class PostServiceImplTest {
     private User mockUser;
     private Photo mockPhoto;
     private Post post;
+    private PostSaveRequestVO postSaveRequestVO;
+    private PostUpdateRequestVO postUpdateRequestVO;
 
     @InjectMocks
     private PostServiceImpl postService;
@@ -68,20 +81,51 @@ class PostServiceImplTest {
         mockPhoto = mock(Photo.class);
         mockPhoto.setPost(post);
 
-        Todo todo = Todo.TO_BUY_OR_NOT_TO_BUY;
-        Category category = Category.FASHION;
-        Who who = Who.WOMAN;
-        Old old = Old.TEENS;
-        String date = "언제";
-        String what = "무엇을";
-        String content = "내용";
-        String link = "링크";
-        Integer importance = 3;
-        Decision decision = Decision.UNDECIDED;
-        String reason = "결정 이유";
-        post = new Post(todo, category, who, old, date, what, content, link, importance, decision, reason);
+        post = Post.builder()
+                .todo(VALID_TODO)
+                .category(VALID_CATEGORY)
+                .who(VALID_WHO)
+                .old(VALID_OLD)
+                .date(VALID_DATE)
+                .what(VALID_WHAT)
+                .content(VALID_POST_CONTENT)
+                .link(VALID_LINK)
+                .importance(VALID_IMPORTANCE)
+                .decision(VALID_DECISION)
+                .reason(VALID_REASON)
+                .build();
         post.setUser(mockUser);
         post.addPhotoList(mockPhoto);
+
+        postSaveRequestVO = PostSaveRequestVO.builder()
+                .email(post.getUserId().getEmail())
+                .todo(post.getTodo().getTodo())
+                .category(post.getCategory().getCategory())
+                .what(post.getWhat())
+                .old(post.getOld().getOld())
+                .date(post.getDate())
+                .who(post.getWho().getWho())
+                .content(post.getContent())
+                .link(post.getLink())
+                .importance(post.getImportance())
+                .photos(null)
+                .build();
+
+        postUpdateRequestVO = PostUpdateRequestVO.builder()
+                .id(post.getId())
+                .email(post.getUserId().getEmail())
+                .todo(post.getTodo().getTodo())
+                .category(post.getCategory().getCategory())
+                .what(post.getWhat())
+                .old(post.getOld().getOld())
+                .date(post.getDate())
+                .who(post.getWho().getWho())
+                .content(post.getContent())
+                .link(post.getLink())
+                .importance(post.getImportance())
+                .photos(null)
+                .deleteId(null)
+                .build();
     }
 
     @Test
@@ -91,7 +135,7 @@ class PostServiceImplTest {
         when(storageService.addPhoto(any())).thenReturn(Collections.singletonList(mockPhoto));
         when(photoService.addPhoto(any())).thenReturn(mockPhoto);
 
-        PostSaveRequestDto postSaveRequestDto = new PostSaveRequestDto();
+        PostSaveRequestDto postSaveRequestDto = PostSaveRequestDto.builder().postSaveRequestVO(postSaveRequestVO).build();
         List<MultipartFile> photos = new ArrayList<>();
         PostResponseDto result = postService.addPostWithPhotos(postSaveRequestDto, photos);
 
@@ -193,7 +237,7 @@ class PostServiceImplTest {
         when(storageService.addPhoto(any())).thenReturn(Collections.singletonList(mockPhoto));
         when(photoService.addPhoto(any())).thenReturn(mockPhoto);
 
-        PostUpdateRequestDto postUpdateRequestDto = new PostUpdateRequestDto();
+        PostUpdateRequestDto postUpdateRequestDto = PostUpdateRequestDto.builder().postUpdateRequestVO(postUpdateRequestVO).build();
         List<MultipartFile> photos = new ArrayList<>();
         List<Long> deletePhotoIds = new ArrayList<>();
         PostResponseDto result = postService.modifyPost(postUpdateRequestDto, photos, deletePhotoIds);

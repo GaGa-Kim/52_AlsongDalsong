@@ -1,6 +1,6 @@
 package AlsongDalsong_backend.AlsongDalsong.web.controller;
 
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_CONTENT;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_COMMENT_CONTENT;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_INTRODUCE;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_KAKAO_ID;
@@ -77,7 +77,7 @@ class CommentControllerTest {
                 .build();
         post = new Post();
 
-        comment = Comment.builder().content(VALID_CONTENT).build();
+        comment = Comment.builder().content(VALID_COMMENT_CONTENT).build();
         comment.setUser(user);
         comment.setPost(post);
     }

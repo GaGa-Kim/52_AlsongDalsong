@@ -28,7 +28,7 @@ public class CommentUpdateRequestDto {
     @ApiModelProperty(notes = "게시글 id", example = "1", required = true)
     private Long postId;
 
-    @NotBlank(message = Message.INPUT_CONTENT)
+    @NotBlank(message = Message.INPUT_COMMENT_CONTENT)
     @ApiModelProperty(notes = "내용", example = "꼭 구매하세요!", required = true)
     private String content;
 

@@ -1,5 +1,8 @@
 package AlsongDalsong_backend.AlsongDalsong.web.controller;
 
+import static AlsongDalsong_backend.AlsongDalsong.constants.Message.INPUT_EMAIL;
+
+import AlsongDalsong_backend.AlsongDalsong.constants.Message;
 import AlsongDalsong_backend.AlsongDalsong.service.post.PostService;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.post.PostResponseDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.post.PostSaveRequestDto;
@@ -11,6 +14,9 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +43,7 @@ public class PostController {
 
     @PostMapping(value = "/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiOperation(value = "게시글 작성", notes = "게시글을 작성한 후, 작성한 게시글을 리턴합니다.")
-    public ResponseEntity<PostResponseDto> postAdd(PostSaveRequestVO postSaveRequestVO) {
+    public ResponseEntity<PostResponseDto> postAdd(@Valid PostSaveRequestVO postSaveRequestVO) {
         PostSaveRequestDto postSaveRequestDto = new PostSaveRequestDto(postSaveRequestVO);
         return ResponseEntity.ok()
                 .body(postService.addPostWithPhotos(postSaveRequestDto, postSaveRequestVO.getPhotos()));
@@ -46,21 +52,21 @@ public class PostController {
     @GetMapping("/inquire")
     @ApiOperation(value = "게시글 상세 조회", notes = "게시글 id에 따라 게시글을 상세 조회하여 리턴합니다.")
     @ApiImplicitParam(name = "id", value = "게시글 id", example = "1")
-    public ResponseEntity<PostResponseDto> postDetails(Long id) {
+    public ResponseEntity<PostResponseDto> postDetails(@RequestParam @NotNull(message = Message.INPUT_POST_ID) Long id) {
         return ResponseEntity.ok().body(postService.findPostDetailByPostId(id));
     }
 
     @GetMapping("/inquireLatest")
     @ApiOperation(value = "살까 말까 / 할까 말까 / 갈까 말까로 분류별 최신글 조회", notes = "살까 말까 / 할까 말까 / 갈까 말까로 분류별 최신글 목록을 조회하여 리턴합니다.")
     @ApiImplicitParam(name = "todo", value = "분류", example = "살까 말까")
-    public ResponseEntity<List<PostResponseDto>> postLatestList(String todo) {
+    public ResponseEntity<List<PostResponseDto>> postLatestList(@RequestParam @NotBlank(message = Message.INPUT_TODO) String todo) {
         return ResponseEntity.ok().body(postService.findLatestPosts(todo));
     }
 
     @GetMapping("/inquirePopular")
     @ApiOperation(value = "살까 말까 / 할까 말까 / 갈까 말까로 분류별 인기글 조회", notes = "살까 말까 / 할까 말까 / 갈까 말까로 분류별 인기글 목록을 조회하여 리턴합니다.")
     @ApiImplicitParam(name = "todo", value = "분류", example = "살까 말까")
-    public ResponseEntity<List<PostResponseDto>> postPopularList(String todo) {
+    public ResponseEntity<List<PostResponseDto>> postPopularList(@RequestParam @NotBlank(message = Message.INPUT_TODO) String todo) {
         return ResponseEntity.ok().body(postService.findPopularPosts(todo));
     }
 
@@ -70,20 +76,21 @@ public class PostController {
             @ApiImplicitParam(name = "todo", value = "분류", example = "살까 말까"),
             @ApiImplicitParam(name = "category", value = "카테고리", example = "패션")
     })
-    public ResponseEntity<List<PostResponseDto>> postCategoryList(String todo, String category) {
+    public ResponseEntity<List<PostResponseDto>> postCategoryList(@RequestParam @NotBlank(message = Message.INPUT_TODO) String todo,
+                                                                  @RequestParam @NotBlank(message = Message.INPUT_CATEGORY) String category) {
         return ResponseEntity.ok().body(postService.findPostsByCategory(todo, category));
     }
 
     @GetMapping("/my")
     @ApiOperation(value = "사용자별 쓴 글 조회", notes = "사용자별 쓴 글 목록을 조회하여 리턴합니다.")
     @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com")
-    public ResponseEntity<List<PostResponseDto>> postUserList(String email) {
+    public ResponseEntity<List<PostResponseDto>> postUserList(@RequestParam @NotBlank(message = INPUT_EMAIL) String email) {
         return ResponseEntity.ok().body(postService.findUserPosts(email));
     }
 
     @PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiOperation(value = "게시글 수정", notes = "게시글을 수정한 후, 수정한 게시글을 리턴합니다.")
-    public ResponseEntity<PostResponseDto> postModify(PostUpdateRequestVO postUpdateRequestVO) {
+    public ResponseEntity<PostResponseDto> postModify(@Valid PostUpdateRequestVO postUpdateRequestVO) {
         PostUpdateRequestDto postUpdateRequestDto = new PostUpdateRequestDto(postUpdateRequestVO);
         return ResponseEntity.ok()
                 .body(postService.modifyPost(postUpdateRequestDto, postUpdateRequestVO.getPhotos(),
@@ -96,7 +103,8 @@ public class PostController {
             @ApiImplicitParam(name = "id", value = "게시글 id", example = "1"),
             @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com"),
     })
-    public ResponseEntity<Boolean> postRemove(@RequestParam Long id, String email) {
+    public ResponseEntity<Boolean> postRemove(@RequestParam @NotNull(message = Message.INPUT_POST_ID) Long id,
+                                              @RequestParam @NotBlank(message = INPUT_EMAIL) String email) {
         return ResponseEntity.ok().body(postService.removePost(id, email));
     }
 
@@ -108,8 +116,10 @@ public class PostController {
             @ApiImplicitParam(name = "decision", value = "결정 완료 (미정/결정/취소)", example = "취소"),
             @ApiImplicitParam(name = "reason", value = "결정 이유", example = "비싸서")
     })
-    public ResponseEntity<PostResponseDto> postModifyDecision(@RequestParam Long id, String email,
-                                                              String decision, String reason) {
+    public ResponseEntity<PostResponseDto> postModifyDecision(@RequestParam @NotNull(message = Message.INPUT_POST_ID) Long id,
+                                                              @RequestParam @NotBlank(message = INPUT_EMAIL) String email,
+                                                              @RequestParam @NotBlank(message = Message.INPUT_DECISION) String decision,
+                                                              @RequestParam @NotBlank(message = Message.INPUT_REASON) String reason) {
         return ResponseEntity.ok().body(postService.modifyPostDecision(id, email, decision, reason));
     }
 }

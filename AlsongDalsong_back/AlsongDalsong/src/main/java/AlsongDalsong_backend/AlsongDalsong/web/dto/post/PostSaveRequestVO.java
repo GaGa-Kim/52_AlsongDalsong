@@ -2,6 +2,7 @@ package AlsongDalsong_backend.AlsongDalsong.web.dto.post;
 
 import io.swagger.annotations.ApiParam;
 import java.util.List;
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -9,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
  * 게시글 작성 vo
  */
 @Data
+@Builder
 public class PostSaveRequestVO {
     @ApiParam(name = "회원 이메일", example = "1234@gmail.com")
     private String email;
