@@ -6,6 +6,7 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_KAKAO_ID;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NAME;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NICKNAME;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PROFILE;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_USER_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
@@ -18,6 +19,7 @@ class UserResponseDtoTest {
     @Test
     void testUserResponseDto() {
         User user = User.builder()
+                .id(VALID_USER_ID)
                 .kakaoId(VALID_KAKAO_ID)
                 .name(VALID_NAME)
                 .email(VALID_EMAIL)

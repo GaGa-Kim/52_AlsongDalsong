@@ -85,8 +85,9 @@ public class Post extends BaseTimeEntity {
     private List<Scrap> scrapList = new ArrayList<>(); // 게시글 스크랩 리스트
 
     @Builder
-    public Post(Todo todo, Category category, Who who, Old old, String date, String what, String content,
+    public Post(Long id, Todo todo, Category category, Who who, Old old, String date, String what, String content,
                 String link, Integer importance, Decision decision, String reason) {
+        this.id = id;
         this.todo = todo;
         this.category = category;
         this.who = who;

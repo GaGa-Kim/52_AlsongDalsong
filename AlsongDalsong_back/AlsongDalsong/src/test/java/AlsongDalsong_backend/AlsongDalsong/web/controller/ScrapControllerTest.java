@@ -1,7 +1,25 @@
 package AlsongDalsong_backend.AlsongDalsong.web.controller;
 
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_CATEGORY;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_DATE;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_DECISION;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_IMPORTANCE;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_INTRODUCE;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_KAKAO_ID;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_LINK;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NAME;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NICKNAME;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_OLD;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_CONTENT;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_ID;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PROFILE;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_REASON;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_SCRAP_ID;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_TODO;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_USER_ID;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHAT;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHO;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -18,12 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import AlsongDalsong_backend.AlsongDalsong.config.SecurityConfig;
 import AlsongDalsong_backend.AlsongDalsong.config.jwt.JwtRequestFilter;
-import AlsongDalsong_backend.AlsongDalsong.domain.post.Category;
-import AlsongDalsong_backend.AlsongDalsong.domain.post.Decision;
-import AlsongDalsong_backend.AlsongDalsong.domain.post.Old;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
-import AlsongDalsong_backend.AlsongDalsong.domain.post.Todo;
-import AlsongDalsong_backend.AlsongDalsong.domain.post.Who;
 import AlsongDalsong_backend.AlsongDalsong.domain.scrap.Scrap;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import AlsongDalsong_backend.AlsongDalsong.service.scrap.ScrapService;
@@ -52,8 +65,8 @@ import org.springframework.test.web.servlet.MockMvc;
         })
 @WithMockUser(username = "테스트_최고관리자", roles = {"USER"})
 class ScrapControllerTest {
-    private Scrap scrap;
-    private Post post;
+    private ScrapRequestDto scrapRequestDto;
+    private ScrapResponseDto scrapResponseDto;
 
     @Autowired
     private MockMvc mockMvc;
@@ -63,35 +76,46 @@ class ScrapControllerTest {
 
     @BeforeEach
     void setUp() {
-        User user = new User();
-
-        Todo todo = Todo.TO_BUY_OR_NOT_TO_BUY;
-        Category category = Category.FASHION;
-        Who who = Who.WOMAN;
-        Old old = Old.TEENS;
-        String date = "언제";
-        String what = "무엇을";
-        String content = "내용";
-        String link = "링크";
-        Integer importance = 3;
-        Decision decision = Decision.UNDECIDED;
-        String reason = "결정 이유";
-        post = new Post(todo, category, who, old, date, what, content, link, importance, decision, reason);
-        post.setUser(user);
-
-        scrap = new Scrap();
+        User user = User.builder()
+                .id(VALID_USER_ID)
+                .kakaoId(VALID_KAKAO_ID)
+                .name(VALID_NAME)
+                .email(VALID_EMAIL)
+                .nickname(VALID_NICKNAME)
+                .profile(VALID_PROFILE)
+                .introduce(VALID_INTRODUCE)
+                .build();
+        Post post = Post.builder()
+                .id(VALID_POST_ID)
+                .todo(VALID_TODO)
+                .category(VALID_CATEGORY)
+                .who(VALID_WHO)
+                .old(VALID_OLD)
+                .date(VALID_DATE)
+                .what(VALID_WHAT)
+                .content(VALID_POST_CONTENT)
+                .link(VALID_LINK)
+                .importance(VALID_IMPORTANCE)
+                .decision(VALID_DECISION)
+                .reason(VALID_REASON)
+                .build();
+        Scrap scrap = Scrap.builder()
+                .id(VALID_SCRAP_ID)
+                .build();
         scrap.setUser(user);
         scrap.setPost(post);
+
+        scrapRequestDto = ScrapRequestDto.builder()
+                .email(scrap.getUserId().getEmail())
+                .postId(scrap.getPostId().getId())
+                .build();
+        scrapResponseDto = new ScrapResponseDto(scrap.getPostId());
     }
 
     @Test
     void testScrapSaveAdd() throws Exception {
         when(scrapService.saveScrap(any())).thenReturn(true);
 
-        ScrapRequestDto scrapRequestDto = ScrapRequestDto.builder()
-                .email(VALID_EMAIL)
-                .postId(VALID_POST_ID)
-                .build();
         mockMvc.perform(post("/api/scrap/save")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(scrapRequestDto))
@@ -106,10 +130,6 @@ class ScrapControllerTest {
     void testScrapSaveDelete() throws Exception {
         when(scrapService.saveScrap(any())).thenReturn(false);
 
-        ScrapRequestDto scrapRequestDto = ScrapRequestDto.builder()
-                .email(VALID_EMAIL)
-                .postId(VALID_POST_ID)
-                .build();
         mockMvc.perform(post("/api/scrap/save")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(scrapRequestDto))
@@ -136,8 +156,7 @@ class ScrapControllerTest {
 
     @Test
     void testScrapUserList() throws Exception {
-        when(scrapService.findUserScraps(any()))
-                .thenReturn(Collections.singletonList(new ScrapResponseDto(scrap.getPostId())));
+        when(scrapService.findUserScraps(any())).thenReturn(Collections.singletonList(scrapResponseDto));
 
         mockMvc.perform(get("/api/scrap/inquire")
                         .param("email", anyString())

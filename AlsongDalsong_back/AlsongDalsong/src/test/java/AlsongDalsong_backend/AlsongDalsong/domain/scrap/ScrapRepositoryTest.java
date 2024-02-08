@@ -1,5 +1,7 @@
 package AlsongDalsong_backend.AlsongDalsong.domain.scrap;
 
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -18,9 +20,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
  */
 @DataJpaTest
 class ScrapRepositoryTest {
-    private final String existEmail = "1234@gmail.com";
-    private final Long postId = 2L;
-
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -30,8 +29,8 @@ class ScrapRepositoryTest {
 
     @Test
     void findByUserIdAndPostId() {
-        User user = userRepository.findByEmail(existEmail);
-        Post post = postRepository.findById(postId).orElse(null);
+        User user = userRepository.findByEmail(VALID_EMAIL);
+        Post post = postRepository.findById(VALID_POST_ID).orElse(null);
         Scrap foundScrap = scrapRepository.findByUserIdAndPostId(user, post);
 
         assertNotNull(foundScrap);
@@ -39,7 +38,7 @@ class ScrapRepositoryTest {
 
     @Test
     void findByUserId() {
-        User user = userRepository.findByEmail(existEmail);
+        User user = userRepository.findByEmail(VALID_EMAIL);
         List<Scrap> foundScrapList = scrapRepository.findByUserId(user);
 
         assertNotNull(foundScrapList);
@@ -48,8 +47,8 @@ class ScrapRepositoryTest {
 
     @Test
     void existByUserIdAndPostId() {
-        User user = userRepository.findByEmail(existEmail);
-        Post post = postRepository.findById(postId).orElse(null);
+        User user = userRepository.findByEmail(VALID_EMAIL);
+        Post post = postRepository.findById(VALID_POST_ID).orElse(null);
 
         boolean existScrap = scrapRepository.existsByUserIdAndPostId(user, post);
 

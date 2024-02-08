@@ -7,6 +7,7 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NAME;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NICKNAME;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PROFILE;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_TOKEN;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_USER_ID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
@@ -49,7 +50,9 @@ import org.springframework.test.web.servlet.MockMvc;
         })
 @WithMockUser(username = "테스트_최고관리자", roles = {"USER"})
 class AuthControllerTest {
-    private User user;
+    private static final String AUTHORIZATION = "Authorization";
+    private UserSaveRequestDto userSaveRequestDto;
+    private UserResponseDto userResponseDto;
     private TokenDto tokenDto;
 
     @Autowired
@@ -60,7 +63,8 @@ class AuthControllerTest {
 
     @BeforeEach
     void setUp() {
-        user = User.builder()
+        User user = User.builder()
+                .id(VALID_USER_ID)
                 .kakaoId(VALID_KAKAO_ID)
                 .name(VALID_NAME)
                 .email(VALID_EMAIL)
@@ -68,6 +72,15 @@ class AuthControllerTest {
                 .profile(VALID_PROFILE)
                 .introduce(VALID_INTRODUCE)
                 .build();
+
+        userSaveRequestDto = UserSaveRequestDto.builder()
+                .name(user.getName())
+                .email(user.getEmail())
+                .nickname(user.getNickname())
+                .profile(user.getProfile())
+                .introduce(user.getIntroduce())
+                .build();
+        userResponseDto = new UserResponseDto(user);
         tokenDto = TokenDto.builder()
                 .token(VALID_TOKEN)
                 .email(user.getEmail())
@@ -81,7 +94,7 @@ class AuthControllerTest {
         mockMvc.perform(get("/auth/kakao")
                         .param("code", anyString()))
                 .andExpect(status().isOk())
-                .andExpect(header().exists("Authorization"))
+                .andExpect(header().exists(AUTHORIZATION))
                 .andExpect(content().string(tokenDto.getEmail()));
 
         verify(authService, times(1)).socialSignupAndGenerateToken(any());
@@ -89,22 +102,15 @@ class AuthControllerTest {
 
     @Test
     void testSignup() throws Exception {
-        when(authService.signupAndReturnUser(any())).thenReturn(new UserResponseDto(user));
+        when(authService.signupAndReturnUser(any())).thenReturn(userResponseDto);
 
-        UserSaveRequestDto userSaveRequestDto = UserSaveRequestDto.builder()
-                .name(user.getName())
-                .email(user.getEmail())
-                .nickname(user.getNickname())
-                .profile(user.getProfile())
-                .introduce(user.getIntroduce())
-                .build();
         mockMvc.perform(post("/auth/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(userSaveRequestDto))
                         .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.email").value(user.getEmail()))
-                .andExpect(jsonPath("$.nickname").value(user.getNickname()));
+                .andExpect(jsonPath("$.email").value(userSaveRequestDto.getEmail()))
+                .andExpect(jsonPath("$.nickname").value(userSaveRequestDto.getNickname()));
 
         verify(authService, times(1)).signupAndReturnUser(any());
     }
@@ -116,7 +122,7 @@ class AuthControllerTest {
         mockMvc.perform(get("/auth/login")
                         .param("email", anyString()))
                 .andExpect(status().isOk())
-                .andExpect(header().exists("Authorization"))
+                .andExpect(header().exists(AUTHORIZATION))
                 .andExpect(content().string(tokenDto.getEmail()));
 
         verify(authService, times(1)).loginAndGenerateToken(any());

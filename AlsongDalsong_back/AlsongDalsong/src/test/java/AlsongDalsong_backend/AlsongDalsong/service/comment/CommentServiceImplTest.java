@@ -1,6 +1,7 @@
 package AlsongDalsong_backend.AlsongDalsong.service.comment;
 
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_COMMENT_CONTENT;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_COMMENT_ID;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -39,6 +40,8 @@ class CommentServiceImplTest {
     private User mockUser;
     private Post mockPost;
     private Comment comment;
+    private CommentSaveRequestDto commentSaveRequestDto;
+    private CommentUpdateRequestDto commentUpdateRequestDto;
 
     @InjectMocks
     private CommentServiceImpl commentService;
@@ -57,9 +60,24 @@ class CommentServiceImplTest {
         mockUser = mock(User.class);
         mockPost = mock(Post.class);
 
-        comment = Comment.builder().content(VALID_COMMENT_CONTENT).build();
+        comment = Comment.builder()
+                .id(VALID_COMMENT_ID)
+                .content(VALID_COMMENT_CONTENT)
+                .build();
         comment.setUser(mockUser);
         comment.setPost(mockPost);
+
+        commentSaveRequestDto = CommentSaveRequestDto.builder()
+                .email(comment.getUserId().getEmail())
+                .postId(comment.getPostId().getId())
+                .content(comment.getContent())
+                .build();
+        commentUpdateRequestDto = CommentUpdateRequestDto.builder()
+                .id(comment.getId())
+                .email(comment.getUserId().getEmail())
+                .postId(VALID_POST_ID)
+                .content(comment.getContent())
+                .build();
     }
 
     @Test
@@ -68,14 +86,8 @@ class CommentServiceImplTest {
         when(postService.findPostByPostId(any())).thenReturn(mockPost);
         when(commentRepository.save(any())).thenReturn(comment);
         when(postService.findPostByPostId(any())).thenReturn(mockPost);
-        when(commentRepository.findAllByPostIdOrderByLikeListDesc(any()))
-                .thenReturn(Collections.singletonList(comment));
+        when(commentRepository.findAllByPostIdOrderByLikeListDesc(any())).thenReturn(Collections.singletonList(comment));
 
-        CommentSaveRequestDto commentSaveRequestDto = CommentSaveRequestDto.builder()
-                .email(comment.getUserId().getEmail())
-                .postId(VALID_POST_ID)
-                .content(comment.getContent())
-                .build();
         List<CommentResponseDto> result = commentService.addComment(commentSaveRequestDto);
 
         assertNotNull(result);
@@ -105,8 +117,7 @@ class CommentServiceImplTest {
     @Test
     void testFindPostCommentsByLikes() {
         when(postService.findPostByPostId(any())).thenReturn(mockPost);
-        when(commentRepository.findAllByPostIdOrderByLikeListDesc(any()))
-                .thenReturn(Collections.singletonList(comment));
+        when(commentRepository.findAllByPostIdOrderByLikeListDesc(any())).thenReturn(Collections.singletonList(comment));
 
         List<CommentResponseDto> result = commentService.findPostCommentsByLikes(mockPost.getId());
 
@@ -122,15 +133,8 @@ class CommentServiceImplTest {
     void testModifyComment() {
         when(userService.findUserByEmail(any())).thenReturn(mockUser);
         when(commentRepository.findById(any())).thenReturn(Optional.ofNullable(comment));
-        when(commentRepository.findAllByPostIdOrderByLikeListDesc(any()))
-                .thenReturn(Collections.singletonList(comment));
+        when(commentRepository.findAllByPostIdOrderByLikeListDesc(any())).thenReturn(Collections.singletonList(comment));
 
-        CommentUpdateRequestDto commentUpdateRequestDto = CommentUpdateRequestDto.builder()
-                .id(comment.getId())
-                .email(comment.getUserId().getEmail())
-                .postId(VALID_POST_ID)
-                .content(comment.getContent())
-                .build();
         List<CommentResponseDto> result = commentService.modifyComment(commentUpdateRequestDto);
 
         assertNotNull(result);

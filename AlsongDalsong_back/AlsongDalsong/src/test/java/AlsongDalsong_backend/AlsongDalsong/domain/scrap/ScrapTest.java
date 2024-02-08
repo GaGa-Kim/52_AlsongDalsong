@@ -1,5 +1,6 @@
 package AlsongDalsong_backend.AlsongDalsong.domain.scrap;
 
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_SCRAP_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
@@ -16,7 +17,9 @@ class ScrapTest {
 
     @BeforeEach
     void setUp() {
-        scrap = new Scrap();
+        scrap = Scrap.builder()
+                .id(VALID_SCRAP_ID)
+                .build();
     }
 
     @Test

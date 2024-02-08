@@ -15,12 +15,7 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHAT;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.Set;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-import org.junit.jupiter.api.BeforeAll;
+import AlsongDalsong_backend.AlsongDalsong.ValidatorUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -28,15 +23,8 @@ import org.junit.jupiter.api.Test;
  * PostSaveUpdate 검증 테스트
  */
 class PostUpdateRequestTest {
-    private static ValidatorFactory factory;
-    private static Validator validator;
+    private final ValidatorUtil<PostUpdateRequestDto> validatorUtil = new ValidatorUtil<>();
     private PostUpdateRequestVO postUpdateRequestVO;
-
-    @BeforeAll
-    static void init() {
-        factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
-    }
 
     @BeforeEach
     void setUp() {
@@ -139,13 +127,6 @@ class PostUpdateRequestTest {
                 .postUpdateRequestVO(postUpdateRequestVO)
                 .build();
 
-        validate(postUpdateRequestDto);
-    }
-
-    void validate(PostUpdateRequestDto postUpdateRequestDto) {
-        Set<ConstraintViolation<PostUpdateRequestDto>> violations = validator.validate(postUpdateRequestDto);
-        for (ConstraintViolation<PostUpdateRequestDto> violation : violations) {
-            System.err.println(violation.getMessage());
-        }
+        validatorUtil.validate(postUpdateRequestDto);
     }
 }

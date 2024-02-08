@@ -1,5 +1,9 @@
 package AlsongDalsong_backend.AlsongDalsong.domain.post;
 
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_CATEGORY;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_DECISION;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_TODO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -15,11 +19,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
  */
 @DataJpaTest
 class PostRepositoryTest {
-    private final String existEmail = "1234@gmail.com";
-    private final Todo todo = Todo.TO_BUY_OR_NOT_TO_BUY;
-    private final Category category = Category.FASHION;
-    private final Decision decision = Decision.UNDECIDED;
-    
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -27,7 +26,7 @@ class PostRepositoryTest {
 
     @Test
     void findByTodo() {
-        List<Post> foundPostList = postRepository.findByTodo(todo);
+        List<Post> foundPostList = postRepository.findByTodo(VALID_TODO);
 
         assertNotNull(foundPostList);
         assertEquals(4, foundPostList.size());
@@ -35,7 +34,7 @@ class PostRepositoryTest {
 
     @Test
     void findByTodoAndCategory() {
-        List<Post> foundPostList = postRepository.findByTodoAndCategory(todo, category);
+        List<Post> foundPostList = postRepository.findByTodoAndCategory(VALID_TODO, VALID_CATEGORY);
 
         assertNotNull(foundPostList);
         assertEquals(4, foundPostList.size());
@@ -44,7 +43,7 @@ class PostRepositoryTest {
 
     @Test
     void findByTodoAndDecisionOrderByVoteListDesc() {
-        List<Post> foundPostList = postRepository.findByTodoAndDecisionOrderByVoteListDesc(todo, decision);
+        List<Post> foundPostList = postRepository.findByTodoAndDecisionOrderByVoteListDesc(VALID_TODO, VALID_DECISION);
 
         assertNotNull(foundPostList);
         assertEquals(4, foundPostList.size());
@@ -52,8 +51,8 @@ class PostRepositoryTest {
 
     @Test
     void countByUserIdAndTodoAndDecision() {
-        User user = userRepository.findByEmail(existEmail);
-        Long foundPostCount = postRepository.countByUserIdAndTodoAndDecision(user, todo, decision);
+        User user = userRepository.findByEmail(VALID_EMAIL);
+        Long foundPostCount = postRepository.countByUserIdAndTodoAndDecision(user, VALID_TODO, VALID_DECISION);
 
         assertEquals(Long.valueOf(4), foundPostCount);
     }

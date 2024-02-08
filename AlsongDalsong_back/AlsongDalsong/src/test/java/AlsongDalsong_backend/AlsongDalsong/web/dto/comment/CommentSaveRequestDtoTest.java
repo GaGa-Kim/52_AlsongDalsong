@@ -7,26 +7,14 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.Set;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-import org.junit.jupiter.api.BeforeAll;
+import AlsongDalsong_backend.AlsongDalsong.ValidatorUtil;
 import org.junit.jupiter.api.Test;
 
 /**
  * CommentSaveRequestDto 검증 테스트
  */
 class CommentSaveRequestDtoTest {
-    private static ValidatorFactory factory;
-    private static Validator validator;
-
-    @BeforeAll
-    static void init() {
-        factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
-    }
+    private final ValidatorUtil<CommentSaveRequestDto> validatorUtil = new ValidatorUtil<>();
 
     @Test
     void testCommentSaveRequestDto() {
@@ -49,7 +37,7 @@ class CommentSaveRequestDtoTest {
                 .content(VALID_COMMENT_CONTENT)
                 .build();
 
-        validate(commentSaveRequestDto);
+        validatorUtil.validate(commentSaveRequestDto);
     }
 
     @Test
@@ -60,7 +48,7 @@ class CommentSaveRequestDtoTest {
                 .content(VALID_COMMENT_CONTENT)
                 .build();
 
-        validate(commentSaveRequestDto);
+        validatorUtil.validate(commentSaveRequestDto);
     }
 
     @Test
@@ -71,13 +59,6 @@ class CommentSaveRequestDtoTest {
                 .content(INVALID_BLANK)
                 .build();
 
-        validate(commentSaveRequestDto);
-    }
-
-    void validate(CommentSaveRequestDto commentSaveRequestDto) {
-        Set<ConstraintViolation<CommentSaveRequestDto>> violations = validator.validate(commentSaveRequestDto);
-        for (ConstraintViolation<CommentSaveRequestDto> violation : violations) {
-            System.err.println(violation.getMessage());
-        }
+        validatorUtil.validate(commentSaveRequestDto);
     }
 }

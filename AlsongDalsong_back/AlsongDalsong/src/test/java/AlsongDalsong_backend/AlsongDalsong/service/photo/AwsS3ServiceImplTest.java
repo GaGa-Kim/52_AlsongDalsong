@@ -1,5 +1,7 @@
 package AlsongDalsong_backend.AlsongDalsong.service.photo;
 
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_ORIG_PHOTO_NANE;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PHOTO_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -26,10 +28,9 @@ import org.springframework.web.multipart.MultipartFile;
 @SpringBootTest
 @Import(AwsS3MockConfig.class)
 class AwsS3ServiceImplTest {
-    private final String name = "test.png";
-    private final String originalFilename = "testOriginal.png";
     private final String contentType = "image/png";
-    private final byte[] content = name.getBytes();
+    private final byte[] content = VALID_PHOTO_NAME.getBytes();
+    private final MockMultipartFile file = new MockMultipartFile(VALID_PHOTO_NAME, VALID_ORIG_PHOTO_NANE, contentType, content);
 
     @Autowired
     private AwsS3ServiceImpl awsS3Service;
@@ -49,7 +50,6 @@ class AwsS3ServiceImplTest {
 
     @Test
     void testAddProfileImage() {
-        MockMultipartFile file = new MockMultipartFile(name, originalFilename, contentType, content);
         String result = awsS3Service.addProfileImage(file);
 
         assertNotNull(result);
@@ -57,18 +57,16 @@ class AwsS3ServiceImplTest {
 
     @Test
     void testAddPhoto() {
-        MockMultipartFile file = new MockMultipartFile(name, originalFilename, contentType, content);
         List<MultipartFile> files = Collections.singletonList(file);
         List<Photo> result = awsS3Service.addPhoto(files);
 
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals(originalFilename, result.get(0).getOrigPhotoName());
+        assertEquals(VALID_ORIG_PHOTO_NANE, result.get(0).getOrigPhotoName());
     }
 
     @Test
     void testFindFileUrl() {
-        MockMultipartFile file = new MockMultipartFile(name, originalFilename, contentType, content);
         String newFileName = awsS3Service.addProfileImage(file);
 
         String result = awsS3Service.findFileUrl(newFileName);
@@ -78,27 +76,24 @@ class AwsS3ServiceImplTest {
 
     @Test
     void testFindFileObject() throws IOException {
-        MockMultipartFile file = new MockMultipartFile(name, originalFilename, contentType, content);
         String newFileName = awsS3Service.addProfileImage(file);
 
-        ResponseEntity<byte[]> result = awsS3Service.findFileObject(originalFilename, newFileName);
+        ResponseEntity<byte[]> result = awsS3Service.findFileObject(VALID_ORIG_PHOTO_NANE, newFileName);
 
         assertNotNull(result);
     }
 
     @Test
     void testFindFileBase64() throws IOException {
-        MockMultipartFile file = new MockMultipartFile(name, originalFilename, contentType, content);
         String newFileName = awsS3Service.addProfileImage(file);
 
-        ResponseEntity<String> result = awsS3Service.findFileBase64(originalFilename, newFileName);
+        ResponseEntity<String> result = awsS3Service.findFileBase64(VALID_ORIG_PHOTO_NANE, newFileName);
 
         assertNotNull(result);
     }
 
     @Test
     void testRemoveFile() {
-        MockMultipartFile file = new MockMultipartFile(name, originalFilename, contentType, content);
         String newFileName = awsS3Service.addProfileImage(file);
 
         awsS3Service.removeFile(newFileName);

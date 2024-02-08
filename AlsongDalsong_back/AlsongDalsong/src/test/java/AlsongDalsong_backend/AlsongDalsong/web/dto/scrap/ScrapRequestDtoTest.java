@@ -4,26 +4,14 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.Set;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-import org.junit.jupiter.api.BeforeAll;
+import AlsongDalsong_backend.AlsongDalsong.ValidatorUtil;
 import org.junit.jupiter.api.Test;
 
 /**
  * ScrapRequestDto 검증 테스트
  */
 class ScrapRequestDtoTest {
-    private static ValidatorFactory factory;
-    private static Validator validator;
-
-    @BeforeAll
-    static void init() {
-        factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
-    }
+    private final ValidatorUtil<ScrapRequestDto> validatorUtil = new ValidatorUtil<>();
 
     @Test
     void testVoteRequestDto() {
@@ -43,7 +31,7 @@ class ScrapRequestDtoTest {
                 .postId(VALID_POST_ID)
                 .build();
 
-        validate(scrapRequestDto);
+        validatorUtil.validate(scrapRequestDto);
     }
 
     @Test
@@ -53,13 +41,6 @@ class ScrapRequestDtoTest {
                 .postId(VALID_POST_ID)
                 .build();
 
-        validate(scrapRequestDto);
-    }
-
-    void validate(ScrapRequestDto scrapRequestDto) {
-        Set<ConstraintViolation<ScrapRequestDto>> violations = validator.validate(scrapRequestDto);
-        for (ConstraintViolation<ScrapRequestDto> violation : violations) {
-            System.err.println(violation.getMessage());
-        }
+        validatorUtil.validate(scrapRequestDto);
     }
 }

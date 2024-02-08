@@ -5,26 +5,14 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_COMMENT_ID
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.Set;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-import org.junit.jupiter.api.BeforeAll;
+import AlsongDalsong_backend.AlsongDalsong.ValidatorUtil;
 import org.junit.jupiter.api.Test;
 
 /**
  * LikeRequestDto 검증 테스트
  */
 class LikeRequestDtoTest {
-    private static ValidatorFactory factory;
-    private static Validator validator;
-
-    @BeforeAll
-    static void init() {
-        factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
-    }
+    private final ValidatorUtil<LikeRequestDto> validatorUtil = new ValidatorUtil<>();
 
     @Test
     void testLikeRequestDto() {
@@ -44,7 +32,7 @@ class LikeRequestDtoTest {
                 .commentId(VALID_COMMENT_ID)
                 .build();
 
-        validate(likeRequestDto);
+        validatorUtil.validate(likeRequestDto);
     }
 
     @Test
@@ -54,13 +42,6 @@ class LikeRequestDtoTest {
                 .commentId(null)
                 .build();
 
-        validate(likeRequestDto);
-    }
-
-    void validate(LikeRequestDto likeRequestDto) {
-        Set<ConstraintViolation<LikeRequestDto>> violations = validator.validate(likeRequestDto);
-        for (ConstraintViolation<LikeRequestDto> violation : violations) {
-            System.err.println(violation.getMessage());
-        }
+        validatorUtil.validate(likeRequestDto);
     }
 }

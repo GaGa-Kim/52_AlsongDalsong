@@ -7,26 +7,14 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_INTRODUCE;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NICKNAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.Set;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-import org.junit.jupiter.api.BeforeAll;
+import AlsongDalsong_backend.AlsongDalsong.ValidatorUtil;
 import org.junit.jupiter.api.Test;
 
 /**
  * UserUpdateRequestDto 검증 테스트
  */
 class UserUpdateRequestDtoTest {
-    private static ValidatorFactory factory;
-    private static Validator validator;
-
-    @BeforeAll
-    static void init() {
-        factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
-    }
+    private final ValidatorUtil<UserUpdateRequestDto> validatorUtil = new ValidatorUtil<>();
 
     @Test
     void testUserUpdateRequestDto() {
@@ -49,7 +37,7 @@ class UserUpdateRequestDtoTest {
                 .introduce(VALID_INTRODUCE)
                 .build();
 
-        validate(userUpdateRequestDto);
+        validatorUtil.validate(userUpdateRequestDto);
     }
 
     @Test
@@ -60,7 +48,7 @@ class UserUpdateRequestDtoTest {
                 .introduce(VALID_INTRODUCE)
                 .build();
 
-        validate(userUpdateRequestDto);
+        validatorUtil.validate(userUpdateRequestDto);
     }
 
     @Test
@@ -71,13 +59,6 @@ class UserUpdateRequestDtoTest {
                 .introduce(INVALID_BLANK)
                 .build();
 
-        validate(userUpdateRequestDto);
-    }
-
-    void validate(UserUpdateRequestDto userUpdateRequestDto) {
-        Set<ConstraintViolation<UserUpdateRequestDto>> violations = validator.validate(userUpdateRequestDto);
-        for (ConstraintViolation<UserUpdateRequestDto> violation : violations) {
-            System.err.println(violation.getMessage());
-        }
+        validatorUtil.validate(userUpdateRequestDto);
     }
 }

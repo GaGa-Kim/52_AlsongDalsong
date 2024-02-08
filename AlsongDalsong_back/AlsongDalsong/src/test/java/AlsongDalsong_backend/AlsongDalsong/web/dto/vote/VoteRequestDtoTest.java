@@ -6,26 +6,14 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_ID;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_VOTE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.Set;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-import org.junit.jupiter.api.BeforeAll;
+import AlsongDalsong_backend.AlsongDalsong.ValidatorUtil;
 import org.junit.jupiter.api.Test;
 
 /**
  * VoteRequestDto 검증 테스트
  */
 class VoteRequestDtoTest {
-    private static ValidatorFactory factory;
-    private static Validator validator;
-
-    @BeforeAll
-    static void init() {
-        factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
-    }
+    private final ValidatorUtil<VoteRequestDto> validatorUtil = new ValidatorUtil<>();
 
     @Test
     void testVoteRequestDto() {
@@ -48,7 +36,7 @@ class VoteRequestDtoTest {
                 .vote(VALID_VOTE)
                 .build();
 
-        validate(voteRequestDto);
+        validatorUtil.validate(voteRequestDto);
     }
 
     @Test
@@ -59,7 +47,7 @@ class VoteRequestDtoTest {
                 .vote(VALID_VOTE)
                 .build();
 
-        validate(voteRequestDto);
+        validatorUtil.validate(voteRequestDto);
     }
 
     @Test
@@ -70,13 +58,6 @@ class VoteRequestDtoTest {
                 .vote(null)
                 .build();
 
-        validate(voteRequestDto);
-    }
-
-    void validate(VoteRequestDto voteRequestDto) {
-        Set<ConstraintViolation<VoteRequestDto>> violations = validator.validate(voteRequestDto);
-        for (ConstraintViolation<VoteRequestDto> violation : violations) {
-            System.err.println(violation.getMessage());
-        }
+        validatorUtil.validate(voteRequestDto);
     }
 }

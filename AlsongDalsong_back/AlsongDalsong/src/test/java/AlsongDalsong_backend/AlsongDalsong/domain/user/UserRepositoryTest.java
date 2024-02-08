@@ -1,5 +1,6 @@
 package AlsongDalsong_backend.AlsongDalsong.domain.user;
 
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -15,18 +16,17 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
  */
 @DataJpaTest
 class UserRepositoryTest {
-    private final String existEmail = "1234@gmail.com";
     private final String notExistEmail = "not@gmail.com";
-    
+
     @Autowired
     private UserRepository userRepository;
 
     @Test
     void findByEmail_ExistingEmail() {
-        User foundUser = userRepository.findByEmail(existEmail);
+        User foundUser = userRepository.findByEmail(VALID_EMAIL);
 
         assertNotNull(foundUser);
-        assertEquals(existEmail, foundUser.getEmail());
+        assertEquals(VALID_EMAIL, foundUser.getEmail());
     }
 
     @Test
@@ -38,7 +38,7 @@ class UserRepositoryTest {
 
     @Test
     void existsByEmail_ExistingEmail() {
-        boolean existUser = userRepository.existsByEmail(existEmail);
+        boolean existUser = userRepository.existsByEmail(VALID_EMAIL);
 
         assertTrue(existUser);
     }

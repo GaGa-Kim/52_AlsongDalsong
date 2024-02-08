@@ -7,6 +7,7 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NAME;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NICKNAME;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PROFILE;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_TOKEN;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_USER_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -34,6 +35,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class AuthServiceImplTest {
     private User user;
+    private UserSaveRequestDto userSaveRequestDto;
 
     @InjectMocks
     private AuthServiceImpl authService;
@@ -47,6 +49,7 @@ class AuthServiceImplTest {
     @BeforeEach
     void setUp() {
         user = User.builder()
+                .id(VALID_USER_ID)
                 .kakaoId(VALID_KAKAO_ID)
                 .name(VALID_NAME)
                 .email(VALID_EMAIL)
@@ -54,20 +57,21 @@ class AuthServiceImplTest {
                 .profile(VALID_PROFILE)
                 .introduce(VALID_INTRODUCE)
                 .build();
-    }
 
-    @Test
-    void testSignupAndReturnUser() {
-        when(userRepository.existsByEmail(any())).thenReturn(false);
-        when(userRepository.save(any())).thenReturn(user);
-
-        UserSaveRequestDto userSaveRequestDto = UserSaveRequestDto.builder()
+        userSaveRequestDto = UserSaveRequestDto.builder()
                 .name(user.getName())
                 .email(user.getEmail())
                 .nickname(user.getNickname())
                 .profile(user.getProfile())
                 .introduce(user.getIntroduce())
                 .build();
+    }
+
+    @Test
+    void testSignupAndReturnUser() {
+        when(userRepository.existsByEmail(any())).thenReturn(false);
+        when(userRepository.save(any())).thenReturn(user);
+        
         UserResponseDto result = authService.signupAndReturnUser(userSaveRequestDto);
 
         assertNotNull(result);

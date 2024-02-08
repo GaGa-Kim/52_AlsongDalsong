@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -35,6 +36,11 @@ public class Scrap extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Post_Id")
     private Post postId; // 게시글 외래키
+
+    @Builder
+    public Scrap(Long id) {
+        this.id = id;
+    }
 
     public void setUser(User user) {
         this.userId = user;

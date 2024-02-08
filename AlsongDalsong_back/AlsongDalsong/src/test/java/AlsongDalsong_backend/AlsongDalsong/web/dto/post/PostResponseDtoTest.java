@@ -12,9 +12,11 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NAME;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NICKNAME;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_OLD;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_CONTENT;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_ID;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PROFILE;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_REASON;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_TODO;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_USER_ID;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHAT;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -38,6 +40,7 @@ class PostResponseDtoTest {
     @BeforeEach
     void setUp() {
         user = User.builder()
+                .id(VALID_USER_ID)
                 .kakaoId(VALID_KAKAO_ID)
                 .name(VALID_NAME)
                 .email(VALID_EMAIL)
@@ -53,6 +56,7 @@ class PostResponseDtoTest {
     void
     testPostResponseDto() {
         Post post = Post.builder()
+                .id(VALID_POST_ID)
                 .todo(VALID_TODO)
                 .category(VALID_CATEGORY)
                 .who(VALID_WHO)

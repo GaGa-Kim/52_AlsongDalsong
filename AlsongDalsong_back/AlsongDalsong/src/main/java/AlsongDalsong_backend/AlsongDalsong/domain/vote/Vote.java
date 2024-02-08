@@ -41,7 +41,8 @@ public class Vote extends BaseTimeEntity {
     private Boolean vote; // 투표
 
     @Builder
-    public Vote(Boolean vote) {
+    public Vote(Long id, Boolean vote) {
+        this.id = id;
         this.vote = vote;
     }
 

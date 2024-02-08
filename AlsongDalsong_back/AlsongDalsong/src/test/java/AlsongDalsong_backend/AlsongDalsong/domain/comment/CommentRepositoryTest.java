@@ -1,5 +1,6 @@
 package AlsongDalsong_backend.AlsongDalsong.domain.comment;
 
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -15,8 +16,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
  */
 @DataJpaTest
 class CommentRepositoryTest {
-    private final Long postId = 1L;
-
     @Autowired
     private PostRepository postRepository;
 
@@ -25,7 +24,7 @@ class CommentRepositoryTest {
 
     @Test
     void findAllByPostIdOrderByLikeListDesc() {
-        Post post = postRepository.findById(postId).orElse(null);
+        Post post = postRepository.findById(VALID_POST_ID).orElse(null);
         List<Comment> foundCommentList = commentRepository.findAllByPostIdOrderByLikeListDesc(post);
 
         assertNotNull(foundCommentList);

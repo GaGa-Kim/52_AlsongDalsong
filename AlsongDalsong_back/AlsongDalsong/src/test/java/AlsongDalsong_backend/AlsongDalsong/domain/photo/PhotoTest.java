@@ -1,5 +1,9 @@
 package AlsongDalsong_backend.AlsongDalsong.domain.photo;
 
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_ORIG_PHOTO_NANE;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PHOTO_ID;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PHOTO_NAME;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PHOTO_URL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
@@ -15,7 +19,12 @@ class PhotoTest {
 
     @BeforeEach
     void setUp() {
-        photo = Photo.builder().origPhotoName("picture").photoName("picture").photoUrl("www.google.com").build();
+        photo = Photo.builder()
+                .id(VALID_PHOTO_ID)
+                .origPhotoName(VALID_ORIG_PHOTO_NANE)
+                .photoName(VALID_PHOTO_NAME)
+                .photoUrl(VALID_PHOTO_URL)
+                .build();
     }
 
     @Test

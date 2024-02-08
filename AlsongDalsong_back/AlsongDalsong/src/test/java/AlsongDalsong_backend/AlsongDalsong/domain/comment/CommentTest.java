@@ -1,5 +1,7 @@
 package AlsongDalsong_backend.AlsongDalsong.domain.comment;
 
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_COMMENT_CONTENT;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_COMMENT_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -20,7 +22,10 @@ class CommentTest {
 
     @BeforeEach
     void setUp() {
-        comment = Comment.builder().content("구매하세요").build();
+        comment = Comment.builder()
+                .id(VALID_COMMENT_ID)
+                .content(VALID_COMMENT_CONTENT)
+                .build();
     }
 
     @Test

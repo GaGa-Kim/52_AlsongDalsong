@@ -69,7 +69,8 @@ public class User extends BaseTimeEntity {
     private final List<Scrap> scrapList = new ArrayList<>(); // 회원 게시글 스크랩 리스트
 
     @Builder
-    public User(Long kakaoId, String name, String email, String nickname, String profile, String introduce) {
+    public User(Long id, Long kakaoId, String name, String email, String nickname, String profile, String introduce) {
+        this.id = id;
         this.kakaoId = kakaoId;
         this.name = name;
         this.email = email;

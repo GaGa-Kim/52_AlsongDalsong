@@ -1,6 +1,7 @@
 package AlsongDalsong_backend.AlsongDalsong.web.controller;
 
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_ORIG_PHOTO_NANE;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PHOTO_ID;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PHOTO_NAME;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PHOTO_URL;
 import static org.mockito.ArgumentMatchers.any;
@@ -48,8 +49,9 @@ import org.springframework.test.web.servlet.MockMvc;
 @WithMockUser(username = "테스트_최고관리자", roles = {"USER"})
 class PhotoControllerTest {
     private Photo photo;
+    private PhotoResponseDto photoResponseDto;
     private byte[] photoByteArray;
-    private String photoByBase;
+    private String photoByteBase;
     private HttpHeaders httpHeaders;
 
     @Autowired
@@ -64,19 +66,25 @@ class PhotoControllerTest {
     @BeforeEach
     void setUp() throws IOException {
         photo = Photo.builder()
+                .id(VALID_PHOTO_ID)
                 .origPhotoName(VALID_ORIG_PHOTO_NANE)
                 .photoName(VALID_PHOTO_NAME)
                 .photoUrl(VALID_PHOTO_URL)
                 .build();
+
+        photoResponseDto = PhotoResponseDto.builder()
+                .origPhotoName(photo.getOrigPhotoName())
+                .photoName(photo.getPhotoName())
+                .photoUrl(photo.getPhotoUrl())
+                .build();
         photoByteArray = IOUtils.toByteArray(photo.getPhotoUrl());
-        photoByBase = Base64.getEncoder().encodeToString(photoByteArray);
+        photoByteBase = Base64.getEncoder().encodeToString(photoByteArray);
         httpHeaders = new HttpHeaders();
     }
 
     @Test
     void testPhotoDetails() throws Exception {
-        when(photoService.findPhoto(any()))
-                .thenReturn(new PhotoResponseDto(photo.getOrigPhotoName(), photo.getPhotoName(), photo.getPhotoUrl()));
+        when(photoService.findPhoto(any())).thenReturn(photoResponseDto);
 
         mockMvc.perform(get("/api/photo/photoInfo")
                         .param("id", String.valueOf(anyLong()))
@@ -123,13 +131,13 @@ class PhotoControllerTest {
     void testPhotoBase64Details() throws Exception {
         when(photoService.findPhotoByPhotoId(any())).thenReturn(photo);
         when(storageService.findFileBase64(photo.getOrigPhotoName(), photo.getPhotoName()))
-                .thenReturn(new ResponseEntity<>(photoByBase, httpHeaders, HttpStatus.OK));
+                .thenReturn(new ResponseEntity<>(photoByteBase, httpHeaders, HttpStatus.OK));
 
         mockMvc.perform(get("/api/photo/photoBase")
                         .param("id", String.valueOf(anyLong()))
                         .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(content().string(photoByBase));
+                .andExpect(content().string(photoByteBase));
 
         verify(storageService, times(1)).findFileBase64(any(), any());
     }

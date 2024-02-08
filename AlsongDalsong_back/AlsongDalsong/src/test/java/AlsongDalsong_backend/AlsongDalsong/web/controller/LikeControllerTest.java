@@ -1,7 +1,15 @@
 package AlsongDalsong_backend.AlsongDalsong.web.controller;
 
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_COMMENT_CONTENT;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_COMMENT_ID;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_INTRODUCE;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_KAKAO_ID;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_LIKE_ID;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NAME;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NICKNAME;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PROFILE;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_USER_ID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -15,9 +23,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import AlsongDalsong_backend.AlsongDalsong.config.SecurityConfig;
 import AlsongDalsong_backend.AlsongDalsong.config.jwt.JwtRequestFilter;
+import AlsongDalsong_backend.AlsongDalsong.domain.comment.Comment;
+import AlsongDalsong_backend.AlsongDalsong.domain.like.Like;
+import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import AlsongDalsong_backend.AlsongDalsong.service.like.LikeService;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.like.LikeRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -38,20 +50,45 @@ import org.springframework.test.web.servlet.MockMvc;
         })
 @WithMockUser(username = "테스트_최고관리자", roles = {"USER"})
 class LikeControllerTest {
+    private LikeRequestDto likeRequestDto;
+
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
     private LikeService likeService;
 
+    @BeforeEach
+    void setUp() {
+        User user = User.builder()
+                .id(VALID_USER_ID)
+                .kakaoId(VALID_KAKAO_ID)
+                .name(VALID_NAME)
+                .email(VALID_EMAIL)
+                .nickname(VALID_NICKNAME)
+                .profile(VALID_PROFILE)
+                .introduce(VALID_INTRODUCE)
+                .build();
+        Comment comment = Comment.builder()
+                .id(VALID_COMMENT_ID)
+                .content(VALID_COMMENT_CONTENT)
+                .build();
+        Like like = Like.builder()
+                .id(VALID_LIKE_ID)
+                .build();
+        like.setUser(user);
+        like.setComment(comment);
+
+        likeRequestDto = LikeRequestDto.builder()
+                .email(like.getUserId().getEmail())
+                .commentId(like.getCommentId().getId())
+                .build();
+    }
+
     @Test
     void testLikeSaveAdd() throws Exception {
         when(likeService.saveLike(any())).thenReturn(true);
 
-        LikeRequestDto likeRequestDto = LikeRequestDto.builder()
-                .email(VALID_EMAIL)
-                .commentId(VALID_COMMENT_ID)
-                .build();
         mockMvc.perform(post("/api/like/save")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(likeRequestDto))
@@ -65,11 +102,7 @@ class LikeControllerTest {
     @Test
     void testLikeSaveDelete() throws Exception {
         when(likeService.saveLike(any())).thenReturn(false);
-
-        LikeRequestDto likeRequestDto = LikeRequestDto.builder()
-                .email(VALID_EMAIL)
-                .commentId(VALID_COMMENT_ID)
-                .build();
+        
         mockMvc.perform(post("/api/like/save")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(likeRequestDto))

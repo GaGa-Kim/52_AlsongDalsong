@@ -8,26 +8,14 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.Set;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-import org.junit.jupiter.api.BeforeAll;
+import AlsongDalsong_backend.AlsongDalsong.ValidatorUtil;
 import org.junit.jupiter.api.Test;
 
 /**
  * CommentUpdateRequestDto 검증 테스트
  */
 class CommentUpdateRequestDtoTest {
-    private static ValidatorFactory factory;
-    private static Validator validator;
-
-    @BeforeAll
-    static void init() {
-        factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
-    }
+    private final ValidatorUtil<CommentUpdateRequestDto> validatorUtil = new ValidatorUtil<>();
 
     @Test
     void testCommentUpdateRequestDto() {
@@ -53,7 +41,7 @@ class CommentUpdateRequestDtoTest {
                 .content(VALID_COMMENT_CONTENT)
                 .build();
 
-        validate(commentUpdateRequestDto);
+        validatorUtil.validate(commentUpdateRequestDto);
     }
 
     @Test
@@ -65,7 +53,7 @@ class CommentUpdateRequestDtoTest {
                 .content(VALID_COMMENT_CONTENT)
                 .build();
 
-        validate(commentUpdateRequestDto);
+        validatorUtil.validate(commentUpdateRequestDto);
     }
 
     @Test
@@ -77,7 +65,7 @@ class CommentUpdateRequestDtoTest {
                 .content(VALID_COMMENT_CONTENT)
                 .build();
 
-        validate(commentUpdateRequestDto);
+        validatorUtil.validate(commentUpdateRequestDto);
     }
 
     @Test
@@ -89,13 +77,6 @@ class CommentUpdateRequestDtoTest {
                 .content(INVALID_BLANK)
                 .build();
 
-        validate(commentUpdateRequestDto);
-    }
-
-    void validate(CommentUpdateRequestDto commentUpdateRequestDto) {
-        Set<ConstraintViolation<CommentUpdateRequestDto>> violations = validator.validate(commentUpdateRequestDto);
-        for (ConstraintViolation<CommentUpdateRequestDto> violation : violations) {
-            System.err.println(violation.getMessage());
-        }
+        validatorUtil.validate(commentUpdateRequestDto);
     }
 }

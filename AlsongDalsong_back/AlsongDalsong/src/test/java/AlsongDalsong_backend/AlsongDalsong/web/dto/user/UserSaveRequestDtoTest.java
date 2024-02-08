@@ -9,26 +9,14 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NICKNAME;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PROFILE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.Set;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-import org.junit.jupiter.api.BeforeAll;
+import AlsongDalsong_backend.AlsongDalsong.ValidatorUtil;
 import org.junit.jupiter.api.Test;
 
 /**
  * UserSaveRequestDto 검증 테스트
  */
 class UserSaveRequestDtoTest {
-    private static ValidatorFactory factory;
-    private static Validator validator;
-
-    @BeforeAll
-    static void init() {
-        factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
-    }
+    private final ValidatorUtil<UserSaveRequestDto> validatorUtil = new ValidatorUtil<>();
 
     @Test
     void testUserSaveRequestDto() {
@@ -57,7 +45,7 @@ class UserSaveRequestDtoTest {
                 .introduce(VALID_INTRODUCE)
                 .build();
 
-        validate(userSaveRequestDto);
+        validatorUtil.validate(userSaveRequestDto);
     }
 
     @Test
@@ -70,7 +58,7 @@ class UserSaveRequestDtoTest {
                 .introduce(VALID_INTRODUCE)
                 .build();
 
-        validate(userSaveRequestDto);
+        validatorUtil.validate(userSaveRequestDto);
     }
 
     @Test
@@ -83,13 +71,6 @@ class UserSaveRequestDtoTest {
                 .introduce(VALID_INTRODUCE)
                 .build();
 
-        validate(userSaveRequestDto);
-    }
-
-    void validate(UserSaveRequestDto userSaveRequestDto) {
-        Set<ConstraintViolation<UserSaveRequestDto>> violations = validator.validate(userSaveRequestDto);
-        for (ConstraintViolation<UserSaveRequestDto> violation : violations) {
-            System.err.println(violation.getMessage());
-        }
+        validatorUtil.validate(userSaveRequestDto);
     }
 }

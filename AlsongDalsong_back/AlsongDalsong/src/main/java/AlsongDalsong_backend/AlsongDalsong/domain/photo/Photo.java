@@ -42,7 +42,8 @@ public class Photo extends BaseTimeEntity {
     private String photoUrl; // 사진 Url
 
     @Builder
-    public Photo(String origPhotoName, String photoName, String photoUrl) {
+    public Photo(Long id, String origPhotoName, String photoName, String photoUrl) {
+        this.id = id;
         this.origPhotoName = origPhotoName;
         this.photoName = photoName;
         this.photoUrl = photoUrl;

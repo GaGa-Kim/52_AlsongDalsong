@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -38,6 +39,11 @@ public class Like extends BaseTimeEntity {
     @JoinColumn(name = "Comment_Id")
     private Comment commentId; // 댓글 외래키
 
+    @Builder
+    public Like(Long id) {
+        this.id = id;
+    }
+    
     public void setUser(User user) {
         this.userId = user;
     }

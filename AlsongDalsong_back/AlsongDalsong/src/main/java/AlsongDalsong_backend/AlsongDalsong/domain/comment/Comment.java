@@ -51,7 +51,8 @@ public class Comment extends BaseTimeEntity {
     private List<Like> likeList = new ArrayList<>(); // 댓글 좋아요 리스트
 
     @Builder
-    public Comment(String content) {
+    public Comment(Long id, String content) {
+        this.id = id;
         this.content = content;
     }
 

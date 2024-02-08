@@ -1,5 +1,6 @@
 package AlsongDalsong_backend.AlsongDalsong.service.like;
 
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_LIKE_ID;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -31,6 +32,7 @@ class LikeServiceImplTest {
     private User mockUser;
     private Comment mockComment;
     private Like like;
+    private LikeRequestDto likeRequestDto;
 
     @InjectMocks
     private LikeServiceImpl likeService;
@@ -49,9 +51,16 @@ class LikeServiceImplTest {
         mockUser = mock(User.class);
         mockComment = mock(Comment.class);
 
-        like = new Like();
+        like = Like.builder()
+                .id(VALID_LIKE_ID)
+                .build();
         like.setUser(mockUser);
         like.setComment(mockComment);
+
+        likeRequestDto = LikeRequestDto.builder()
+                .email(like.getUserId().getEmail())
+                .commentId(like.getCommentId().getId())
+                .build();
     }
 
     @Test
@@ -61,10 +70,6 @@ class LikeServiceImplTest {
         when(likeRepository.existsByUserIdAndCommentId(any(), any())).thenReturn(false);
         when(likeRepository.save(any())).thenReturn(like);
 
-        LikeRequestDto likeRequestDto = LikeRequestDto.builder()
-                .email(like.getUserId().getEmail())
-                .commentId(like.getCommentId().getId())
-                .build();
         boolean result = likeService.saveLike(likeRequestDto);
 
         assertTrue(result);
@@ -84,11 +89,7 @@ class LikeServiceImplTest {
         when(likeRepository.existsByUserIdAndCommentId(any(), any())).thenReturn(true);
         when(likeRepository.findByUserIdAndCommentId(any(), any())).thenReturn(like);
         doNothing().when(likeRepository).delete(any());
-
-        LikeRequestDto likeRequestDto = LikeRequestDto.builder()
-                .email(like.getUserId().getEmail())
-                .commentId(like.getCommentId().getId())
-                .build();
+        
         boolean result = likeService.saveLike(likeRequestDto);
 
         assertFalse(result);

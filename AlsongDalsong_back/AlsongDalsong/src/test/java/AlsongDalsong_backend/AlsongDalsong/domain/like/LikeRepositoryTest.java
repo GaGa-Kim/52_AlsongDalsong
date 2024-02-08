@@ -1,5 +1,7 @@
 package AlsongDalsong_backend.AlsongDalsong.domain.like;
 
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_COMMENT_ID;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -16,9 +18,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
  */
 @DataJpaTest
 class LikeRepositoryTest {
-    private final String existEmail = "1234@gmail.com";
-    private final Long commentId = 1L;
-
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -28,8 +27,8 @@ class LikeRepositoryTest {
 
     @Test
     void findByUserIdAndCommentId() {
-        User user = userRepository.findByEmail(existEmail);
-        Comment comment = commentRepository.findById(commentId).orElse(null);
+        User user = userRepository.findByEmail(VALID_EMAIL);
+        Comment comment = commentRepository.findById(VALID_COMMENT_ID).orElse(null);
         Like foundLike = likeRepository.findByUserIdAndCommentId(user, comment);
 
         assertNotNull(foundLike);
@@ -37,8 +36,8 @@ class LikeRepositoryTest {
 
     @Test
     void existByUserIdAndPostId() {
-        User user = userRepository.findByEmail(existEmail);
-        Comment comment = commentRepository.findById(commentId).orElse(null);
+        User user = userRepository.findByEmail(VALID_EMAIL);
+        Comment comment = commentRepository.findById(VALID_COMMENT_ID).orElse(null);
         boolean existLike = likeRepository.existsByUserIdAndCommentId(user, comment);
 
         assertTrue(existLike);

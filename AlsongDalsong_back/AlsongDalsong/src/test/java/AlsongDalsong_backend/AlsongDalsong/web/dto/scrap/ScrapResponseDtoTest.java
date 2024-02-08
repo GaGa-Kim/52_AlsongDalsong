@@ -12,9 +12,12 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NAME;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NICKNAME;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_OLD;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_CONTENT;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_ID;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PROFILE;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_REASON;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_SCRAP_ID;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_TODO;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_USER_ID;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHAT;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -35,6 +38,7 @@ class ScrapResponseDtoTest {
     @BeforeEach
     void setUp() {
         user = User.builder()
+                .id(VALID_USER_ID)
                 .kakaoId(VALID_KAKAO_ID)
                 .name(VALID_NAME)
                 .email(VALID_EMAIL)
@@ -43,6 +47,7 @@ class ScrapResponseDtoTest {
                 .introduce(VALID_INTRODUCE)
                 .build();
         post = Post.builder()
+                .id(VALID_POST_ID)
                 .todo(VALID_TODO)
                 .category(VALID_CATEGORY)
                 .who(VALID_WHO)
@@ -59,7 +64,9 @@ class ScrapResponseDtoTest {
 
     @Test
     void testScrapResponseDto() {
-        Scrap scrap = new Scrap();
+        Scrap scrap = Scrap.builder()
+                .id(VALID_SCRAP_ID)
+                .build();
         scrap.setUser(user);
         scrap.setPost(post);
 

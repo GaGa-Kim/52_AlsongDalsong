@@ -14,12 +14,7 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHAT;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.Set;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-import org.junit.jupiter.api.BeforeAll;
+import AlsongDalsong_backend.AlsongDalsong.ValidatorUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,15 +22,8 @@ import org.junit.jupiter.api.Test;
  * PostSaveRequest 검증 테스트
  */
 class PostSaveRequestTest {
-    private static ValidatorFactory factory;
-    private static Validator validator;
+    private final ValidatorUtil<PostSaveRequestDto> validatorUtil = new ValidatorUtil<>();
     private PostSaveRequestVO postSaveRequestVO;
-
-    @BeforeAll
-    static void init() {
-        factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
-    }
 
     @BeforeEach
     void setUp() {
@@ -124,19 +112,12 @@ class PostSaveRequestTest {
         postSaveRequestVO.setImportance(null);
         parameter_validate(postSaveRequestVO);
     }
-    
+
     void parameter_validate(PostSaveRequestVO postSaveRequestVO) {
         PostSaveRequestDto postSaveRequestDto = PostSaveRequestDto.builder()
                 .postSaveRequestVO(postSaveRequestVO)
                 .build();
 
-        validate(postSaveRequestDto);
-    }
-
-    void validate(PostSaveRequestDto postSaveRequestDto) {
-        Set<ConstraintViolation<PostSaveRequestDto>> violations = validator.validate(postSaveRequestDto);
-        for (ConstraintViolation<PostSaveRequestDto> violation : violations) {
-            System.err.println(violation.getMessage());
-        }
+        validatorUtil.validate(postSaveRequestDto);
     }
 }

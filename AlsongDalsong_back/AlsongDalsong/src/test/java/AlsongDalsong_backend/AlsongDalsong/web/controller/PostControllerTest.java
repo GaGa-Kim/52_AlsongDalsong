@@ -3,12 +3,20 @@ package AlsongDalsong_backend.AlsongDalsong.web.controller;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_CATEGORY;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_DATE;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_DECISION;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_IMPORTANCE;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_INTRODUCE;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_KAKAO_ID;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_LINK;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NAME;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NICKNAME;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_OLD;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_CONTENT;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_ID;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PROFILE;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_REASON;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_TODO;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_USER_ID;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHAT;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHO;
 import static org.hamcrest.Matchers.hasSize;
@@ -61,9 +69,9 @@ import org.springframework.test.web.servlet.MockMvc;
         })
 @WithMockUser(username = "테스트_최고관리자", roles = {"USER"})
 class PostControllerTest {
-    private Post post;
-    private List<Long> photoId;
-    private Pair<Long, Long> vote;
+    private PostSaveRequestVO postSaveRequestVO;
+    private PostUpdateRequestVO postUpdateRequestVO;
+    private PostResponseDto postResponseDto;
 
     @Autowired
     private MockMvc mockMvc;
@@ -73,8 +81,17 @@ class PostControllerTest {
 
     @BeforeEach
     void setUp() {
-        User user = new User();
-        post = Post.builder()
+        User user = User.builder()
+                .id(VALID_USER_ID)
+                .kakaoId(VALID_KAKAO_ID)
+                .name(VALID_NAME)
+                .email(VALID_EMAIL)
+                .nickname(VALID_NICKNAME)
+                .profile(VALID_PROFILE)
+                .introduce(VALID_INTRODUCE)
+                .build();
+        Post post = Post.builder()
+                .id(VALID_POST_ID)
                 .todo(VALID_TODO)
                 .category(VALID_CATEGORY)
                 .who(VALID_WHO)
@@ -88,15 +105,8 @@ class PostControllerTest {
                 .reason(VALID_REASON)
                 .build();
         post.setUser(user);
-        photoId = new ArrayList<>();
-        vote = Pair.of(0L, 0L);
-    }
 
-    @Test
-    void testPostAdd() throws Exception {
-        when(postService.addPostWithPhotos(any(), any())).thenReturn(new PostResponseDto(post, photoId, vote));
-
-        PostSaveRequestVO postSaveRequestVO = PostSaveRequestVO.builder()
+        postSaveRequestVO = PostSaveRequestVO.builder()
                 .email(post.getUserId().getEmail())
                 .todo(post.getTodo().getTodo())
                 .category(post.getCategory().getCategory())
@@ -109,92 +119,7 @@ class PostControllerTest {
                 .importance(post.getImportance())
                 .photos(null)
                 .build();
-        mockMvc.perform(post("/api/post/save")
-                        .contentType(MediaType.MULTIPART_FORM_DATA)
-                        .content(new ObjectMapper().writeValueAsString(postSaveRequestVO))
-                        .with(csrf()))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(post.getId()));
-
-        verify(postService, times(1)).addPostWithPhotos(any(), any());
-    }
-
-    @Test
-    void testPostDetails() throws Exception {
-        when(postService.findPostDetailByPostId(any())).thenReturn(new PostResponseDto(post, photoId, vote));
-
-        mockMvc.perform(get("/api/post/inquire")
-                        .param("id", String.valueOf(anyLong()))
-                        .with(csrf()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(post.getId()));
-
-        verify(postService, times(1)).findPostDetailByPostId(any());
-    }
-
-    @Test
-    void testPostLatestList() throws Exception {
-        when(postService.findLatestPosts(any()))
-                .thenReturn(Collections.singletonList(new PostResponseDto(post, photoId, vote)));
-
-        mockMvc.perform(get("/api/post/inquireLatest")
-                        .param("todo", anyString())
-                        .with(csrf()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)));
-
-        verify(postService, times(1)).findLatestPosts(any());
-    }
-
-    @Test
-    void testPostPopularList() throws Exception {
-        when(postService.findPopularPosts(any()))
-                .thenReturn(Collections.singletonList(new PostResponseDto(post, photoId, vote)));
-
-        mockMvc.perform(get("/api/post/inquirePopular")
-                        .param("todo", anyString())
-                        .with(csrf()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)));
-
-        verify(postService, times(1)).findPopularPosts(any());
-    }
-
-    @Test
-    void testPostCategoryList() throws Exception {
-        when(postService.findPostsByCategory(any(), any()))
-                .thenReturn(Collections.singletonList(new PostResponseDto(post, photoId, vote)));
-
-        mockMvc.perform(get("/api/post/inquireCategory")
-                        .param("todo", anyString())
-                        .param("category", anyString())
-                        .with(csrf()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)));
-
-        verify(postService, times(1)).findPostsByCategory(any(), any());
-    }
-
-    @Test
-    void testPostUserList() throws Exception {
-        when(postService.findUserPosts(any()))
-                .thenReturn(Collections.singletonList(new PostResponseDto(post, photoId, vote)));
-
-        mockMvc.perform(get("/api/post/my")
-                        .param("email", anyString())
-                        .with(csrf()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)));
-
-        verify(postService, times(1)).findUserPosts(any());
-    }
-
-    @Test
-    void testPostModify() throws Exception {
-        when(postService.modifyPost(any(), any(), any())).thenReturn(new PostResponseDto(post, photoId, vote));
-
-        PostUpdateRequestVO postUpdateRequestVO = PostUpdateRequestVO.builder()
+        postUpdateRequestVO = PostUpdateRequestVO.builder()
                 .id(post.getId())
                 .email(post.getUserId().getEmail())
                 .todo(post.getTodo().getTodo())
@@ -209,13 +134,103 @@ class PostControllerTest {
                 .photos(null)
                 .deleteId(null)
                 .build();
+        List<Long> photoId = new ArrayList<>();
+        Pair<Long, Long> vote = Pair.of(0L, 0L);
+        postResponseDto = new PostResponseDto(post, photoId, vote);
+    }
+
+    @Test
+    void testPostAdd() throws Exception {
+        when(postService.addPostWithPhotos(any(), any())).thenReturn(postResponseDto);
+
+        mockMvc.perform(post("/api/post/save")
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                        .content(new ObjectMapper().writeValueAsString(postSaveRequestVO))
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value(postUpdateRequestVO.getId()));
+
+        verify(postService, times(1)).addPostWithPhotos(any(), any());
+    }
+
+    @Test
+    void testPostDetails() throws Exception {
+        when(postService.findPostDetailByPostId(any())).thenReturn(postResponseDto);
+
+        mockMvc.perform(get("/api/post/inquire")
+                        .param("id", String.valueOf(anyLong()))
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(postUpdateRequestVO.getId()));
+
+        verify(postService, times(1)).findPostDetailByPostId(any());
+    }
+
+    @Test
+    void testPostLatestList() throws Exception {
+        when(postService.findLatestPosts(any())).thenReturn(Collections.singletonList(postResponseDto));
+
+        mockMvc.perform(get("/api/post/inquireLatest")
+                        .param("todo", anyString())
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)));
+
+        verify(postService, times(1)).findLatestPosts(any());
+    }
+
+    @Test
+    void testPostPopularList() throws Exception {
+        when(postService.findPopularPosts(any())).thenReturn(Collections.singletonList(postResponseDto));
+
+        mockMvc.perform(get("/api/post/inquirePopular")
+                        .param("todo", anyString())
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)));
+
+        verify(postService, times(1)).findPopularPosts(any());
+    }
+
+    @Test
+    void testPostCategoryList() throws Exception {
+        when(postService.findPostsByCategory(any(), any())).thenReturn(Collections.singletonList(postResponseDto));
+
+        mockMvc.perform(get("/api/post/inquireCategory")
+                        .param("todo", anyString())
+                        .param("category", anyString())
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)));
+
+        verify(postService, times(1)).findPostsByCategory(any(), any());
+    }
+
+    @Test
+    void testPostUserList() throws Exception {
+        when(postService.findUserPosts(any())).thenReturn(Collections.singletonList(postResponseDto));
+
+        mockMvc.perform(get("/api/post/my")
+                        .param("email", anyString())
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)));
+
+        verify(postService, times(1)).findUserPosts(any());
+    }
+
+    @Test
+    void testPostModify() throws Exception {
+        when(postService.modifyPost(any(), any(), any())).thenReturn(postResponseDto);
+
         mockMvc.perform(put("/api/post/update")
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .content(new ObjectMapper().writeValueAsString(postUpdateRequestVO))
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(post.getId()));
+                .andExpect(jsonPath("$.id").value(postUpdateRequestVO.getId()));
 
         verify(postService, times(1)).modifyPost(any(), any(), any());
     }
@@ -236,8 +251,7 @@ class PostControllerTest {
 
     @Test
     void testPostModifyDecision() throws Exception {
-        when(postService.modifyPostDecision(any(), any(), any(), any()))
-                .thenReturn(new PostResponseDto(post, photoId, vote));
+        when(postService.modifyPostDecision(any(), any(), any(), any())).thenReturn(postResponseDto);
 
         mockMvc.perform(put("/api/post/updateDecision")
                         .param("id", String.valueOf(anyLong()))
@@ -247,7 +261,7 @@ class PostControllerTest {
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(post.getId()));
+                .andExpect(jsonPath("$.id").value(postUpdateRequestVO.getId()));
 
         verify(postService, times(1)).modifyPostDecision(any(), any(), any(), any());
     }

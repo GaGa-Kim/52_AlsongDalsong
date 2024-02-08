@@ -7,6 +7,7 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_IMPORTANCE
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_LINK;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_OLD;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_CONTENT;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_ID;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_REASON;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_TODO;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHAT;
@@ -23,11 +24,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import AlsongDalsong_backend.AlsongDalsong.domain.photo.Photo;
-import AlsongDalsong_backend.AlsongDalsong.domain.post.Category;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Decision;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.PostRepository;
-import AlsongDalsong_backend.AlsongDalsong.domain.post.Todo;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import AlsongDalsong_backend.AlsongDalsong.service.photo.PhotoService;
 import AlsongDalsong_backend.AlsongDalsong.service.photo.StorageService;
@@ -57,8 +56,8 @@ class PostServiceImplTest {
     private User mockUser;
     private Photo mockPhoto;
     private Post post;
-    private PostSaveRequestVO postSaveRequestVO;
-    private PostUpdateRequestVO postUpdateRequestVO;
+    private PostSaveRequestDto postSaveRequestDto;
+    private PostUpdateRequestDto postUpdateRequestDto;
 
     @InjectMocks
     private PostServiceImpl postService;
@@ -82,6 +81,7 @@ class PostServiceImplTest {
         mockPhoto.setPost(post);
 
         post = Post.builder()
+                .id(VALID_POST_ID)
                 .todo(VALID_TODO)
                 .category(VALID_CATEGORY)
                 .who(VALID_WHO)
@@ -97,7 +97,7 @@ class PostServiceImplTest {
         post.setUser(mockUser);
         post.addPhotoList(mockPhoto);
 
-        postSaveRequestVO = PostSaveRequestVO.builder()
+        PostSaveRequestVO postSaveRequestVO = PostSaveRequestVO.builder()
                 .email(post.getUserId().getEmail())
                 .todo(post.getTodo().getTodo())
                 .category(post.getCategory().getCategory())
@@ -110,8 +110,8 @@ class PostServiceImplTest {
                 .importance(post.getImportance())
                 .photos(null)
                 .build();
-
-        postUpdateRequestVO = PostUpdateRequestVO.builder()
+        postSaveRequestDto = new PostSaveRequestDto(postSaveRequestVO);
+        PostUpdateRequestVO postUpdateRequestVO = PostUpdateRequestVO.builder()
                 .id(post.getId())
                 .email(post.getUserId().getEmail())
                 .todo(post.getTodo().getTodo())
@@ -126,6 +126,7 @@ class PostServiceImplTest {
                 .photos(null)
                 .deleteId(null)
                 .build();
+        postUpdateRequestDto = new PostUpdateRequestDto(postUpdateRequestVO);
     }
 
     @Test
@@ -135,7 +136,6 @@ class PostServiceImplTest {
         when(storageService.addPhoto(any())).thenReturn(Collections.singletonList(mockPhoto));
         when(photoService.addPhoto(any())).thenReturn(mockPhoto);
 
-        PostSaveRequestDto postSaveRequestDto = PostSaveRequestDto.builder().postSaveRequestVO(postSaveRequestVO).build();
         List<MultipartFile> photos = new ArrayList<>();
         PostResponseDto result = postService.addPostWithPhotos(postSaveRequestDto, photos);
 
@@ -178,7 +178,7 @@ class PostServiceImplTest {
     void testFindLatestPosts() {
         when(postRepository.findByTodo(any())).thenReturn(Collections.singletonList(post));
 
-        List<PostResponseDto> result = postService.findLatestPosts(Todo.TO_BUY_OR_NOT_TO_BUY.getTodo());
+        List<PostResponseDto> result = postService.findLatestPosts(post.getTodo().getTodo());
 
         assertNotNull(result);
         assertEquals(1, result.size());
@@ -189,10 +189,9 @@ class PostServiceImplTest {
 
     @Test
     void testFindPopularPosts() {
-        when(postRepository.findByTodoAndDecisionOrderByVoteListDesc(any(), any()))
-                .thenReturn(Collections.singletonList(post));
+        when(postRepository.findByTodoAndDecisionOrderByVoteListDesc(any(), any())).thenReturn(Collections.singletonList(post));
 
-        List<PostResponseDto> result = postService.findPopularPosts(Todo.TO_BUY_OR_NOT_TO_BUY.getTodo());
+        List<PostResponseDto> result = postService.findPopularPosts(post.getTodo().getTodo());
 
         assertNotNull(result);
         assertEquals(1, result.size());
@@ -206,7 +205,7 @@ class PostServiceImplTest {
         when(postRepository.findByTodoAndCategory(any(), any())).thenReturn(Collections.singletonList(post));
 
         List<PostResponseDto> result =
-                postService.findPostsByCategory(Todo.TO_BUY_OR_NOT_TO_BUY.getTodo(), Category.FASHION.getCategory());
+                postService.findPostsByCategory(post.getTodo().getTodo(), post.getCategory().getCategory());
 
         assertNotNull(result);
         assertEquals(1, result.size());
@@ -237,7 +236,6 @@ class PostServiceImplTest {
         when(storageService.addPhoto(any())).thenReturn(Collections.singletonList(mockPhoto));
         when(photoService.addPhoto(any())).thenReturn(mockPhoto);
 
-        PostUpdateRequestDto postUpdateRequestDto = PostUpdateRequestDto.builder().postUpdateRequestVO(postUpdateRequestVO).build();
         List<MultipartFile> photos = new ArrayList<>();
         List<Long> deletePhotoIds = new ArrayList<>();
         PostResponseDto result = postService.modifyPost(postUpdateRequestDto, photos, deletePhotoIds);

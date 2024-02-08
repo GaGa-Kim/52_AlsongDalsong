@@ -1,5 +1,17 @@
 package AlsongDalsong_backend.AlsongDalsong.domain.post;
 
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_CATEGORY;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_DATE;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_DECISION;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_IMPORTANCE;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_LINK;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_OLD;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_CONTENT;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_ID;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_REASON;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_TODO;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHAT;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -23,17 +35,18 @@ class PostTest {
     @BeforeEach
     void setUp() {
         post = Post.builder()
-                .todo(Todo.TO_BUY_OR_NOT_TO_BUY)
-                .category(Category.FASHION)
-                .who(Who.WOMAN)
-                .old(Old.TWENTIES)
-                .date("2024년 2월")
-                .what("신발")
-                .content("신발을 살까 말까요?")
-                .link("www.google.com")
-                .importance(3)
-                .decision(Decision.UNDECIDED)
-                .reason(null)
+                .id(VALID_POST_ID)
+                .todo(VALID_TODO)
+                .category(VALID_CATEGORY)
+                .who(VALID_WHO)
+                .old(VALID_OLD)
+                .date(VALID_DATE)
+                .what(VALID_WHAT)
+                .content(VALID_POST_CONTENT)
+                .link(VALID_LINK)
+                .importance(VALID_IMPORTANCE)
+                .decision(VALID_DECISION)
+                .reason(VALID_REASON)
                 .build();
     }
 
@@ -49,12 +62,10 @@ class PostTest {
 
     @Test
     void testSetDecision() {
-        String decision = "결정";
-        String reason = "너무 마음에 든다.";
-        post.setDecision(decision, reason);
+        post.setDecision(Decision.DECIDED.getDecision(), VALID_REASON);
 
-        assertEquals(Decision.ofDecision(decision), post.getDecision());
-        assertEquals(reason, post.getReason());
+        assertEquals(Decision.DECIDED, post.getDecision());
+        assertEquals(VALID_REASON, post.getReason());
     }
 
     @Test

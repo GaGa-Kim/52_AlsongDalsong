@@ -19,7 +19,7 @@ insert into likes (like_id, created_date_time, modified_date_time, user_id, comm
     (1, '2023-01-19 17:12:41.445', '2023-01-19 17:12:41.445', 1, 1);
 
 insert into vote (vote_id, created_date_time, modified_date_time, user_id, post_id, vote) values
-    (1, '2023-01-19 17:14:41.445', '2023-01-19 17:14:41.445', 2, 1, '1');
+    (1, '2023-01-19 17:14:41.445', '2023-01-19 17:14:41.445', 1, 1, '1');
 
 insert into scrap (scrap_id, created_date_time, modified_date_time, user_id, post_id) values
-    (1, '2023-01-19 17:13:41.445', '2023-01-19 17:13:41.445', 1, 2);
+    (1, '2023-01-19 17:13:41.445', '2023-01-19 17:13:41.445', 1, 1);

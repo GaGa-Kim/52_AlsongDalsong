@@ -6,26 +6,14 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_TOKEN;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.Set;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-import org.junit.jupiter.api.BeforeAll;
+import AlsongDalsong_backend.AlsongDalsong.ValidatorUtil;
 import org.junit.jupiter.api.Test;
 
 /**
  * TokenDtoTest 검증 테스트
  */
 class TokenDtoTest {
-    private static ValidatorFactory factory;
-    private static Validator validator;
-
-    @BeforeAll
-    static void init() {
-        factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
-    }
+    private final ValidatorUtil<TokenDto> validatorUtil = new ValidatorUtil<>();
 
     @Test
     void testTokenDto() {
@@ -45,7 +33,7 @@ class TokenDtoTest {
                 .email(VALID_EMAIL)
                 .build();
 
-        validate(tokenDto);
+        validatorUtil.validate(tokenDto);
     }
 
     @Test
@@ -55,13 +43,6 @@ class TokenDtoTest {
                 .email(INVALID_EMAIL)
                 .build();
 
-        validate(tokenDto);
-    }
-
-    void validate(TokenDto tokenDto) {
-        Set<ConstraintViolation<TokenDto>> violations = validator.validate(tokenDto);
-        for (ConstraintViolation<TokenDto> violation : violations) {
-            System.err.println(violation.getMessage());
-        }
+        validatorUtil.validate(tokenDto);
     }
 }

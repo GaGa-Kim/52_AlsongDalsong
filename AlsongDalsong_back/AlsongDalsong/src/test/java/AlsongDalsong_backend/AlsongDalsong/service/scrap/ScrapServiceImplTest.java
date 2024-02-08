@@ -1,7 +1,6 @@
 package AlsongDalsong_backend.AlsongDalsong.service.scrap;
 
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_ID;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_SCRAP_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -39,6 +38,7 @@ class ScrapServiceImplTest {
     private User mockUser;
     private Post mockPost;
     private Scrap scrap;
+    private ScrapRequestDto scrapRequestDto;
 
     @InjectMocks
     private ScrapServiceImpl scrapService;
@@ -57,9 +57,16 @@ class ScrapServiceImplTest {
         mockUser = mock(User.class);
         mockPost = mock(Post.class);
 
-        scrap = new Scrap();
+        scrap = Scrap.builder()
+                .id(VALID_SCRAP_ID)
+                .build();
         scrap.setUser(mockUser);
         scrap.setPost(mockPost);
+
+        scrapRequestDto = ScrapRequestDto.builder()
+                .email(scrap.getUserId().getEmail())
+                .postId(scrap.getPostId().getId())
+                .build();
     }
 
     @Test
@@ -69,10 +76,6 @@ class ScrapServiceImplTest {
         when(scrapRepository.existsByUserIdAndPostId(any(), any())).thenReturn(false);
         when(scrapRepository.save(any())).thenReturn(scrap);
 
-        ScrapRequestDto scrapRequestDto = ScrapRequestDto.builder()
-                .email(VALID_EMAIL)
-                .postId(VALID_POST_ID)
-                .build();
         boolean result = scrapService.saveScrap(scrapRequestDto);
 
         assertTrue(result);
@@ -93,10 +96,6 @@ class ScrapServiceImplTest {
         when(scrapRepository.findByUserIdAndPostId(any(), any())).thenReturn(scrap);
         doNothing().when(scrapRepository).delete(scrap);
 
-        ScrapRequestDto scrapRequestDto = ScrapRequestDto.builder()
-                .email(VALID_EMAIL)
-                .postId(VALID_POST_ID)
-                .build();
         boolean result = scrapService.saveScrap(scrapRequestDto);
 
         assertFalse(result);

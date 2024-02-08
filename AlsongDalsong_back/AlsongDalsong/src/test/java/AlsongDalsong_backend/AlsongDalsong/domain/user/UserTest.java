@@ -1,5 +1,12 @@
 package AlsongDalsong_backend.AlsongDalsong.domain.user;
 
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_INTRODUCE;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_KAKAO_ID;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NAME;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NICKNAME;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PROFILE;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_USER_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -22,12 +29,13 @@ class UserTest {
     @BeforeEach
     void setUp() {
         user = User.builder()
-                .kakaoId(123L)
-                .name("알송달송")
-                .email("alsongdalsong@gmail.com")
-                .nickname("알송이")
-                .profile("profile.jpg")
-                .introduce("안녕하세요")
+                .id(VALID_USER_ID)
+                .kakaoId(VALID_KAKAO_ID)
+                .name(VALID_NAME)
+                .email(VALID_EMAIL)
+                .nickname(VALID_NICKNAME)
+                .profile(VALID_PROFILE)
+                .introduce(VALID_INTRODUCE)
                 .build();
     }
 

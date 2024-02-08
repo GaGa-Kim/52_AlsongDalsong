@@ -1,6 +1,7 @@
 package AlsongDalsong_backend.AlsongDalsong.service.vote;
 
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_VOTE;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_VOTE_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -33,6 +34,8 @@ class VoteServiceImplTest {
     private User mockUser;
     private Post mockPost;
     private Vote vote;
+    private VoteRequestDto voteTrueRequestDto;
+    private VoteRequestDto voteFalseResponseDto;
 
     @InjectMocks
     private VoteServiceImpl voteService;
@@ -52,10 +55,22 @@ class VoteServiceImplTest {
         mockPost = mock(Post.class);
 
         vote = Vote.builder()
+                .id(VALID_VOTE_ID)
                 .vote(VALID_VOTE)
                 .build();
         vote.setUser(mockUser);
         vote.setPost(mockPost);
+
+        voteTrueRequestDto = VoteRequestDto.builder()
+                .email(vote.getUserId().getEmail())
+                .postId(vote.getPostId().getId())
+                .vote(true)
+                .build();
+        voteFalseResponseDto = VoteRequestDto.builder()
+                .email(vote.getUserId().getEmail())
+                .postId(vote.getPostId().getId())
+                .vote(false)
+                .build();
     }
 
     @Test
@@ -65,12 +80,7 @@ class VoteServiceImplTest {
         when(voteRepository.existsByUserIdAndPostId(any(), any())).thenReturn(false);
         when(voteRepository.save(any())).thenReturn(vote);
 
-        VoteRequestDto voteRequestDto = VoteRequestDto.builder()
-                .email(vote.getUserId().getEmail())
-                .postId(vote.getPostId().getId())
-                .vote(true)
-                .build();
-        String result = voteService.saveVote(voteRequestDto);
+        String result = voteService.saveVote(voteTrueRequestDto);
 
         assertEquals("true", result);
 
@@ -90,12 +100,7 @@ class VoteServiceImplTest {
         when(voteRepository.findByUserIdAndPostId(any(), any())).thenReturn(vote);
         doNothing().when(voteRepository).delete(vote);
 
-        VoteRequestDto voteRequestDto = VoteRequestDto.builder()
-                .email(vote.getUserId().getEmail())
-                .postId(vote.getPostId().getId())
-                .vote(true)
-                .build();
-        String result = voteService.saveVote(voteRequestDto);
+        String result = voteService.saveVote(voteTrueRequestDto);
 
         assertEquals("투표하지 않았습니다.", result);
 
@@ -114,12 +119,7 @@ class VoteServiceImplTest {
         when(voteRepository.existsByUserIdAndPostId(any(), any())).thenReturn(true);
         when(voteRepository.findByUserIdAndPostId(any(), any())).thenReturn(vote);
 
-        VoteRequestDto voteRequestDto = VoteRequestDto.builder()
-                .email(vote.getUserId().getEmail())
-                .postId(vote.getPostId().getId())
-                .vote(false)
-                .build();
-        String result = voteService.saveVote(voteRequestDto);
+        String result = voteService.saveVote(voteFalseResponseDto);
 
         assertEquals("false", result);
 

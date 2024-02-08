@@ -6,6 +6,7 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_KAKAO_ID;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NAME;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NICKNAME;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PROFILE;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_USER_ID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
@@ -61,8 +62,9 @@ import org.springframework.test.web.servlet.request.RequestPostProcessor;
 @WithMockUser(username = "테스트_최고관리자", roles = {"USER"})
 class UserControllerTest {
     private User user;
+    private UserUpdateRequestDto userUpdateRequestDto;
     private byte[] profileByteArray;
-    private String profileByBase;
+    private String profileByteBase;
     private HttpHeaders httpHeaders;
     private Map<String, Object> propensityMap;
 
@@ -78,6 +80,7 @@ class UserControllerTest {
     @BeforeEach
     void setUp() throws IOException {
         user = User.builder()
+                .id(VALID_USER_ID)
                 .kakaoId(VALID_KAKAO_ID)
                 .name(VALID_NAME)
                 .email(VALID_EMAIL)
@@ -85,8 +88,14 @@ class UserControllerTest {
                 .profile(VALID_PROFILE)
                 .introduce(VALID_INTRODUCE)
                 .build();
+
+        userUpdateRequestDto = UserUpdateRequestDto.builder()
+                .email(user.getEmail())
+                .nickname(user.getNickname())
+                .introduce(user.getIntroduce())
+                .build();
         profileByteArray = IOUtils.toByteArray(user.getProfile());
-        profileByBase = Base64.getEncoder().encodeToString(profileByteArray);
+        profileByteBase = Base64.getEncoder().encodeToString(profileByteArray);
         httpHeaders = new HttpHeaders();
         propensityMap = new HashMap<>();
     }
@@ -108,11 +117,6 @@ class UserControllerTest {
     void testUserProfileModify() throws Exception {
         when(userService.modifyUserProfile(any())).thenReturn(user);
 
-        UserUpdateRequestDto userUpdateRequestDto = UserUpdateRequestDto.builder()
-                .email(user.getEmail())
-                .nickname(user.getNickname())
-                .introduce(user.getIntroduce())
-                .build();
         mockMvc.perform(put("/api/user/updateInfo")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(userUpdateRequestDto))
@@ -157,13 +161,13 @@ class UserControllerTest {
     void testUserProfileImageAsBase64() throws Exception {
         when(userService.findUserByEmail(any())).thenReturn(user);
         when(userService.findUserProfileImageAsBase64(any()))
-                .thenReturn(new ResponseEntity<>(profileByBase, httpHeaders, HttpStatus.OK));
+                .thenReturn(new ResponseEntity<>(profileByteBase, httpHeaders, HttpStatus.OK));
 
         mockMvc.perform(get("/api/user/profileBase")
                         .param("email", anyString())
                         .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").value(profileByBase));
+                .andExpect(jsonPath("$").value(profileByteBase));
 
         verify(userService, times(1)).findUserByEmail(any());
         verify(userService, times(1)).findUserProfileImageAsBase64(any());

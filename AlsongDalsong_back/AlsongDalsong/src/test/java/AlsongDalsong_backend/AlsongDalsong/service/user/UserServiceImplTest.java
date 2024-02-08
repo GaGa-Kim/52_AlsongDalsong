@@ -6,6 +6,7 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_KAKAO_ID;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NAME;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NICKNAME;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PROFILE;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_USER_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -42,6 +43,7 @@ import org.springframework.web.multipart.MultipartFile;
 class UserServiceImplTest {
     private User user;
     private Post mockPost;
+    private UserUpdateRequestDto userUpdateRequestDto;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -58,6 +60,7 @@ class UserServiceImplTest {
     @BeforeEach
     void setUp() {
         user = User.builder()
+                .id(VALID_USER_ID)
                 .kakaoId(VALID_KAKAO_ID)
                 .name(VALID_NAME)
                 .email(VALID_EMAIL)
@@ -67,6 +70,12 @@ class UserServiceImplTest {
                 .build();
         mockPost = mock(Post.class);
         mockPost.setUser(user);
+
+        userUpdateRequestDto = UserUpdateRequestDto.builder()
+                .email(user.getEmail())
+                .nickname(user.getNickname())
+                .introduce(user.getIntroduce())
+                .build();
     }
 
     @Test
@@ -103,11 +112,6 @@ class UserServiceImplTest {
     void testModifyUserProfile() {
         when(userRepository.findByEmail(any())).thenReturn(user);
 
-        UserUpdateRequestDto userUpdateRequestDto = UserUpdateRequestDto.builder()
-                .email(user.getEmail())
-                .nickname(user.getNickname())
-                .introduce(user.getIntroduce())
-                .build();
         User result = userService.modifyUserProfile(userUpdateRequestDto);
 
         assertNotNull(result);

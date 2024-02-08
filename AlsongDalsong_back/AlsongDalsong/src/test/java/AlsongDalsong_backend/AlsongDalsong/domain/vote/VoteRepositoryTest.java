@@ -1,5 +1,7 @@
 package AlsongDalsong_backend.AlsongDalsong.domain.vote;
 
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_ID;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -16,9 +18,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
  */
 @DataJpaTest
 class VoteRepositoryTest {
-    private final String existEmail = "123@gmail.com";
-    private final Long postId = 1L;
-
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -28,8 +27,8 @@ class VoteRepositoryTest {
 
     @Test
     void findByUserIdAndPostId() {
-        User user = userRepository.findByEmail(existEmail);
-        Post post = postRepository.findById(postId).orElse(null);
+        User user = userRepository.findByEmail(VALID_EMAIL);
+        Post post = postRepository.findById(VALID_POST_ID).orElse(null);
         Vote foundVote = voteRepository.findByUserIdAndPostId(user, post);
 
         assertNotNull(foundVote);
@@ -37,8 +36,8 @@ class VoteRepositoryTest {
 
     @Test
     void existByUserIdAndPostId() {
-        User user = userRepository.findByEmail(existEmail);
-        Post post = postRepository.findById(postId).orElse(null);
+        User user = userRepository.findByEmail(VALID_EMAIL);
+        Post post = postRepository.findById(VALID_POST_ID).orElse(null);
         boolean existVote = voteRepository.existsByUserIdAndPostId(user, post);
 
         assertTrue(existVote);

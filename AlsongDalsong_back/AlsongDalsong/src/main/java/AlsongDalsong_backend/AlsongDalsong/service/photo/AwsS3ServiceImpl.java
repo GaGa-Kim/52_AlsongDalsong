@@ -69,11 +69,11 @@ public class AwsS3ServiceImpl implements StorageService {
                             .photoName(photoName)
                             .photoUrl(findFileUrl(photoName))
                             .build();
-                    return new Photo(
-                            photoResponseDto.getOrigPhotoName(),
-                            photoResponseDto.getPhotoName(),
-                            photoResponseDto.getPhotoUrl()
-                    );
+                    return Photo.builder()
+                            .origPhotoName(photoResponseDto.getOrigPhotoName())
+                            .photoName(photoResponseDto.getPhotoName())
+                            .photoUrl(photoResponseDto.getPhotoUrl())
+                            .build();
                 })
                 .collect(Collectors.toList());
     }
@@ -174,7 +174,7 @@ public class AwsS3ServiceImpl implements StorageService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, INVALID_FORMAT);
         }
     }
-    
+
     /**
      * AWS S3 버킷에서 ByteArray 형식으로 파일을 조회한다.
      *
