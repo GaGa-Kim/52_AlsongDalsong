@@ -23,8 +23,6 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHAT;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHO;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -68,6 +66,7 @@ import org.springframework.test.web.servlet.MockMvc;
         })
 @WithMockUser(username = "테스트_최고관리자", roles = {"USER"})
 class CommentControllerTest {
+    private Comment comment;
     private CommentSaveRequestDto commentSaveRequestDto;
     private CommentUpdateRequestDto commentUpdateRequestDto;
     private CommentResponseDto commentResponseDto;
@@ -103,13 +102,13 @@ class CommentControllerTest {
                 .decision(VALID_DECISION)
                 .reason(VALID_REASON)
                 .build();
-        Comment comment = Comment.builder()
+
+        comment = Comment.builder()
                 .id(VALID_COMMENT_ID)
                 .content(VALID_COMMENT_CONTENT)
                 .build();
         comment.setUser(user);
         comment.setPost(post);
-
         commentSaveRequestDto = CommentSaveRequestDto.builder()
                 .email(comment.getUserId().getEmail())
                 .postId(comment.getPostId().getId())
@@ -144,7 +143,7 @@ class CommentControllerTest {
         when(commentService.findPostCommentsByLikes(any())).thenReturn(Collections.singletonList(commentResponseDto));
 
         mockMvc.perform(get("/api/comment/inquire")
-                        .param("postId", String.valueOf(anyLong()))
+                        .param("postId", String.valueOf(comment.getPostId().getId()))
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
@@ -172,8 +171,8 @@ class CommentControllerTest {
         when(commentService.removeComment(any(), any())).thenReturn(true);
 
         mockMvc.perform(delete("/api/comment/delete")
-                        .param("id", String.valueOf(anyLong()))
-                        .param("email", anyString())
+                        .param("id", String.valueOf(comment.getId()))
+                        .param("email", comment.getUserId().getEmail())
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").value(true));

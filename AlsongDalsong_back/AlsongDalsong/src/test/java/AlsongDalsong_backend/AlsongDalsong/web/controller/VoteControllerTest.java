@@ -22,8 +22,6 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_VOTE_ID;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHAT;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHO;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -61,6 +59,7 @@ import org.springframework.test.web.servlet.MockMvc;
         })
 @WithMockUser(username = "테스트_최고관리자", roles = {"USER"})
 class VoteControllerTest {
+    private Vote vote;
     private VoteRequestDto voteRequestDto;
 
     @Autowired
@@ -94,13 +93,13 @@ class VoteControllerTest {
                 .decision(VALID_DECISION)
                 .reason(VALID_REASON)
                 .build();
-        Vote vote = Vote.builder()
+
+        vote = Vote.builder()
                 .id(VALID_VOTE_ID)
                 .vote(VALID_VOTE)
                 .build();
         vote.setUser(user);
         vote.setPost(post);
-
         voteRequestDto = VoteRequestDto.builder()
                 .email(vote.getUserId().getEmail())
                 .postId(vote.getPostId().getId())
@@ -155,8 +154,8 @@ class VoteControllerTest {
         when(voteService.findVote(any(), any())).thenReturn("true");
 
         mockMvc.perform(post("/api/vote/check")
-                        .param("postId", String.valueOf(anyLong()))
-                        .param("email", anyString())
+                        .param("postId", String.valueOf(vote.getPostId().getId()))
+                        .param("email", vote.getUserId().getEmail())
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").value("true"));

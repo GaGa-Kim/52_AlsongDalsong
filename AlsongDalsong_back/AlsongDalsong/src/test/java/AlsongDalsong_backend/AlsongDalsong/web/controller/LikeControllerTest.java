@@ -11,8 +11,6 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NICKNAME;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PROFILE;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_USER_ID;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -50,6 +48,7 @@ import org.springframework.test.web.servlet.MockMvc;
         })
 @WithMockUser(username = "테스트_최고관리자", roles = {"USER"})
 class LikeControllerTest {
+    private Like like;
     private LikeRequestDto likeRequestDto;
 
     @Autowired
@@ -73,12 +72,12 @@ class LikeControllerTest {
                 .id(VALID_COMMENT_ID)
                 .content(VALID_COMMENT_CONTENT)
                 .build();
-        Like like = Like.builder()
+
+        like = Like.builder()
                 .id(VALID_LIKE_ID)
                 .build();
         like.setUser(user);
         like.setComment(comment);
-
         likeRequestDto = LikeRequestDto.builder()
                 .email(like.getUserId().getEmail())
                 .commentId(like.getCommentId().getId())
@@ -102,7 +101,7 @@ class LikeControllerTest {
     @Test
     void testLikeSaveDelete() throws Exception {
         when(likeService.saveLike(any())).thenReturn(false);
-        
+
         mockMvc.perform(post("/api/like/save")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(likeRequestDto))
@@ -118,8 +117,8 @@ class LikeControllerTest {
         when(likeService.findLike(any(), any())).thenReturn(true);
 
         mockMvc.perform(post("/api/like/check")
-                        .param("id", String.valueOf(anyLong()))
-                        .param("email", anyString())
+                        .param("id", String.valueOf(like.getId()))
+                        .param("email", like.getUserId().getEmail())
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").value(true));

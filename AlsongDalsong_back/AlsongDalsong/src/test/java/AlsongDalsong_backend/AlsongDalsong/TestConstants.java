@@ -11,6 +11,7 @@ import AlsongDalsong_backend.AlsongDalsong.domain.post.Who;
  */
 public class TestConstants {
     // User Valid Test Constants
+    public static final String VALID_KAKAO_CODE = "code";
     public static final Long VALID_USER_ID = 1L;
     public static final Long VALID_KAKAO_ID = 1L;
     public static final String VALID_NAME = "이름";
@@ -46,7 +47,7 @@ public class TestConstants {
 
     // Like Valid Test Constants
     public static final Long VALID_LIKE_ID = 1L;
-    
+
     // Vote Valid Test Constants
     public static final Long VALID_VOTE_ID = 1L;
     public static final Boolean VALID_VOTE = true;

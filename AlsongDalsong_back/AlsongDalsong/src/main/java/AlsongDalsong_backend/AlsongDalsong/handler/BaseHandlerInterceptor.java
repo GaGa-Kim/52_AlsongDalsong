@@ -1,4 +1,4 @@
-package AlsongDalsong_backend.AlsongDalsong.config;
+package AlsongDalsong_backend.AlsongDalsong.handler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

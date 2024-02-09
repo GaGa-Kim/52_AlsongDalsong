@@ -21,8 +21,6 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHAT;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHO;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -69,6 +67,7 @@ import org.springframework.test.web.servlet.MockMvc;
         })
 @WithMockUser(username = "테스트_최고관리자", roles = {"USER"})
 class PostControllerTest {
+    private Post post;
     private PostSaveRequestVO postSaveRequestVO;
     private PostUpdateRequestVO postUpdateRequestVO;
     private PostResponseDto postResponseDto;
@@ -90,7 +89,8 @@ class PostControllerTest {
                 .profile(VALID_PROFILE)
                 .introduce(VALID_INTRODUCE)
                 .build();
-        Post post = Post.builder()
+
+        post = Post.builder()
                 .id(VALID_POST_ID)
                 .todo(VALID_TODO)
                 .category(VALID_CATEGORY)
@@ -105,7 +105,6 @@ class PostControllerTest {
                 .reason(VALID_REASON)
                 .build();
         post.setUser(user);
-
         postSaveRequestVO = PostSaveRequestVO.builder()
                 .email(post.getUserId().getEmail())
                 .todo(post.getTodo().getTodo())
@@ -159,7 +158,7 @@ class PostControllerTest {
         when(postService.findPostDetailByPostId(any())).thenReturn(postResponseDto);
 
         mockMvc.perform(get("/api/post/inquire")
-                        .param("id", String.valueOf(anyLong()))
+                        .param("id", String.valueOf(post.getId()))
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(postUpdateRequestVO.getId()));
@@ -172,7 +171,7 @@ class PostControllerTest {
         when(postService.findLatestPosts(any())).thenReturn(Collections.singletonList(postResponseDto));
 
         mockMvc.perform(get("/api/post/inquireLatest")
-                        .param("todo", anyString())
+                        .param("todo", post.getTodo().getTodo())
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
@@ -185,7 +184,7 @@ class PostControllerTest {
         when(postService.findPopularPosts(any())).thenReturn(Collections.singletonList(postResponseDto));
 
         mockMvc.perform(get("/api/post/inquirePopular")
-                        .param("todo", anyString())
+                        .param("todo", post.getTodo().getTodo())
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
@@ -198,8 +197,8 @@ class PostControllerTest {
         when(postService.findPostsByCategory(any(), any())).thenReturn(Collections.singletonList(postResponseDto));
 
         mockMvc.perform(get("/api/post/inquireCategory")
-                        .param("todo", anyString())
-                        .param("category", anyString())
+                        .param("todo", post.getTodo().getTodo())
+                        .param("category", post.getCategory().getCategory())
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
@@ -212,7 +211,7 @@ class PostControllerTest {
         when(postService.findUserPosts(any())).thenReturn(Collections.singletonList(postResponseDto));
 
         mockMvc.perform(get("/api/post/my")
-                        .param("email", anyString())
+                        .param("email", post.getUserId().getEmail())
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
@@ -240,8 +239,8 @@ class PostControllerTest {
         when(postService.removePost(any(), any())).thenReturn(true);
 
         mockMvc.perform(delete("/api/post/delete")
-                        .param("id", String.valueOf(anyLong()))
-                        .param("email", anyString())
+                        .param("id", String.valueOf(post.getId()))
+                        .param("email", post.getUserId().getEmail())
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").value(true));
@@ -254,10 +253,10 @@ class PostControllerTest {
         when(postService.modifyPostDecision(any(), any(), any(), any())).thenReturn(postResponseDto);
 
         mockMvc.perform(put("/api/post/updateDecision")
-                        .param("id", String.valueOf(anyLong()))
-                        .param("email", anyString())
-                        .param("decision", anyString())
-                        .param("reason", anyString())
+                        .param("id", String.valueOf(post.getId()))
+                        .param("email", post.getUserId().getEmail())
+                        .param("decision", post.getDecision().getDecision())
+                        .param("reason", post.getReason())
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))

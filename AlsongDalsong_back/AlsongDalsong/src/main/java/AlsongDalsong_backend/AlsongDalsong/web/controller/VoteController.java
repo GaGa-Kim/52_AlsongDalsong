@@ -10,10 +10,11 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Api(tags = {"Vote API (투표 API)"})
 @RestController
+@Validated
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/vote")
@@ -46,7 +48,7 @@ public class VoteController {
             @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com")
     })
     public ResponseEntity<String> voteDetails(@RequestParam @NotNull(message = Message.INPUT_POST_ID) Long postId,
-                                              @RequestParam @NotBlank(message = INPUT_EMAIL) String email) {
+                                              @RequestParam @Email(message = INPUT_EMAIL) String email) {
         return ResponseEntity.ok().body(voteService.findVote(postId, email));
     }
 }

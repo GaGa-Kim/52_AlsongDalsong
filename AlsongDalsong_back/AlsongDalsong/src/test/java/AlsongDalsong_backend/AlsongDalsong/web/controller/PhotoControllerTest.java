@@ -5,7 +5,6 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PHOTO_ID;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PHOTO_NAME;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PHOTO_URL;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -71,7 +70,6 @@ class PhotoControllerTest {
                 .photoName(VALID_PHOTO_NAME)
                 .photoUrl(VALID_PHOTO_URL)
                 .build();
-
         photoResponseDto = PhotoResponseDto.builder()
                 .origPhotoName(photo.getOrigPhotoName())
                 .photoName(photo.getPhotoName())
@@ -87,7 +85,7 @@ class PhotoControllerTest {
         when(photoService.findPhoto(any())).thenReturn(photoResponseDto);
 
         mockMvc.perform(get("/api/photo/photoInfo")
-                        .param("id", String.valueOf(anyLong()))
+                        .param("id", String.valueOf(photo.getId()))
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.origPhotoName").value(photo.getOrigPhotoName()))
@@ -103,7 +101,7 @@ class PhotoControllerTest {
         when(storageService.findFileUrl(any())).thenReturn(photo.getPhotoUrl());
 
         mockMvc.perform(get("/api/photo/photoURL")
-                        .param("id", String.valueOf(anyLong()))
+                        .param("id", String.valueOf(photo.getId()))
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").value(photo.getPhotoUrl()));
@@ -118,7 +116,7 @@ class PhotoControllerTest {
                 .thenReturn(new ResponseEntity<>(photoByteArray, httpHeaders, HttpStatus.OK));
 
         mockMvc.perform(get("/api/photo/photoByte")
-                        .param("id", String.valueOf(anyLong()))
+                        .param("id", String.valueOf(photo.getId()))
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_OCTET_STREAM))
@@ -134,7 +132,7 @@ class PhotoControllerTest {
                 .thenReturn(new ResponseEntity<>(photoByteBase, httpHeaders, HttpStatus.OK));
 
         mockMvc.perform(get("/api/photo/photoBase")
-                        .param("id", String.valueOf(anyLong()))
+                        .param("id", String.valueOf(photo.getId()))
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().string(photoByteBase));

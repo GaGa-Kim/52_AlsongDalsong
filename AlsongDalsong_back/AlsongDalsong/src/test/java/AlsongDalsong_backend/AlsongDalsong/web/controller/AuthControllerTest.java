@@ -2,6 +2,7 @@ package AlsongDalsong_backend.AlsongDalsong.web.controller;
 
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_INTRODUCE;
+import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_KAKAO_CODE;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_KAKAO_ID;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NAME;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NICKNAME;
@@ -9,7 +10,6 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PROFILE;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_TOKEN;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_USER_ID;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -51,6 +51,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @WithMockUser(username = "테스트_최고관리자", roles = {"USER"})
 class AuthControllerTest {
     private static final String AUTHORIZATION = "Authorization";
+    private User user;
     private UserSaveRequestDto userSaveRequestDto;
     private UserResponseDto userResponseDto;
     private TokenDto tokenDto;
@@ -63,7 +64,7 @@ class AuthControllerTest {
 
     @BeforeEach
     void setUp() {
-        User user = User.builder()
+        user = User.builder()
                 .id(VALID_USER_ID)
                 .kakaoId(VALID_KAKAO_ID)
                 .name(VALID_NAME)
@@ -72,7 +73,6 @@ class AuthControllerTest {
                 .profile(VALID_PROFILE)
                 .introduce(VALID_INTRODUCE)
                 .build();
-
         userSaveRequestDto = UserSaveRequestDto.builder()
                 .name(user.getName())
                 .email(user.getEmail())
@@ -92,7 +92,7 @@ class AuthControllerTest {
         when(authService.socialSignupAndGenerateToken(any())).thenReturn(tokenDto);
 
         mockMvc.perform(get("/auth/kakao")
-                        .param("code", anyString()))
+                        .param("code", VALID_KAKAO_CODE))
                 .andExpect(status().isOk())
                 .andExpect(header().exists(AUTHORIZATION))
                 .andExpect(content().string(tokenDto.getEmail()));
@@ -120,7 +120,7 @@ class AuthControllerTest {
         when(authService.loginAndGenerateToken(any())).thenReturn(tokenDto);
 
         mockMvc.perform(get("/auth/login")
-                        .param("email", anyString()))
+                        .param("email", user.getEmail()))
                 .andExpect(status().isOk())
                 .andExpect(header().exists(AUTHORIZATION))
                 .andExpect(content().string(tokenDto.getEmail()));

@@ -22,8 +22,6 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHAT;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHO;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -65,6 +63,7 @@ import org.springframework.test.web.servlet.MockMvc;
         })
 @WithMockUser(username = "테스트_최고관리자", roles = {"USER"})
 class ScrapControllerTest {
+    private Scrap scrap;
     private ScrapRequestDto scrapRequestDto;
     private ScrapResponseDto scrapResponseDto;
 
@@ -99,12 +98,12 @@ class ScrapControllerTest {
                 .decision(VALID_DECISION)
                 .reason(VALID_REASON)
                 .build();
-        Scrap scrap = Scrap.builder()
+
+        scrap = Scrap.builder()
                 .id(VALID_SCRAP_ID)
                 .build();
         scrap.setUser(user);
         scrap.setPost(post);
-
         scrapRequestDto = ScrapRequestDto.builder()
                 .email(scrap.getUserId().getEmail())
                 .postId(scrap.getPostId().getId())
@@ -145,8 +144,8 @@ class ScrapControllerTest {
         when(scrapService.findScrap(any(), any())).thenReturn(true);
 
         mockMvc.perform(post("/api/scrap/check")
-                        .param("postId", String.valueOf(anyLong()))
-                        .param("email", anyString())
+                        .param("postId", String.valueOf(scrap.getPostId().getId()))
+                        .param("email", scrap.getUserId().getEmail())
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").value(true));
@@ -159,7 +158,7 @@ class ScrapControllerTest {
         when(scrapService.findUserScraps(any())).thenReturn(Collections.singletonList(scrapResponseDto));
 
         mockMvc.perform(get("/api/scrap/inquire")
-                        .param("email", anyString())
+                        .param("email", scrap.getUserId().getEmail())
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))

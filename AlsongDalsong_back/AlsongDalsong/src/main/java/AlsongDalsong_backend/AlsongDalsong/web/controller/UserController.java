@@ -13,10 +13,11 @@ import io.swagger.annotations.ApiOperation;
 import java.io.IOException;
 import java.util.Map;
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Api(tags = {"User API (회원 API)"})
 @RestController
+@Validated
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/user")
@@ -49,7 +51,7 @@ public class UserController {
     @GetMapping("/me")
     @ApiOperation(value = "회원 정보", notes = "회원 정보를 리턴합니다.")
     @ApiImplicitParam(name = "email", value = EMAIL_VALUE, example = EMAIL_EXAMPLE, required = true)
-    public ResponseEntity<UserResponseDto> userDetails(@RequestParam @NotBlank(message = INPUT_EMAIL) String email) {
+    public ResponseEntity<UserResponseDto> userDetails(@RequestParam @Email(message = INPUT_EMAIL) String email) {
         User user = userService.findUserByEmail(email);
         return ResponseEntity.ok().body(new UserResponseDto(user));
     }
@@ -65,7 +67,7 @@ public class UserController {
     @GetMapping("/profileUrl")
     @ApiOperation(value = "회원 프로필 URL 정보 조회", notes = "회원 프로필 사진 URL 정보를 조회하여 리턴합니다.")
     @ApiImplicitParam(name = "email", value = EMAIL_VALUE, example = EMAIL_EXAMPLE, required = true)
-    public ResponseEntity<String> userProfileImageAsUrl(@RequestParam @NotBlank(message = INPUT_EMAIL) String email) {
+    public ResponseEntity<String> userProfileImageAsUrl(@RequestParam @Email(message = INPUT_EMAIL) String email) {
         User user = userService.findUserByEmail(email);
         if (isKakaoProfile(user)) {
             return ResponseEntity.ok().body(user.getProfile());
@@ -76,7 +78,7 @@ public class UserController {
     @GetMapping("/profileByte")
     @ApiOperation(value = "회원 프로필 bytearray 정보 조회", notes = "회원 프로필 사진을 bytearray로 리턴합니다.")
     @ApiImplicitParam(name = "email", value = EMAIL_VALUE, example = EMAIL_EXAMPLE, required = true)
-    public ResponseEntity<byte[]> userProfileImageAsBytes(@RequestParam @NotBlank(message = INPUT_EMAIL) String email) throws IOException {
+    public ResponseEntity<byte[]> userProfileImageAsBytes(@RequestParam @Email(message = INPUT_EMAIL) String email) throws IOException {
         User user = userService.findUserByEmail(email);
         if (isKakaoProfile(user)) {
             return userService.findUserProfileImageAsBytes(email);
@@ -87,7 +89,7 @@ public class UserController {
     @GetMapping("/profileBase")
     @ApiOperation(value = "회원 프로필 Base64 정보 조회", notes = "회원 프로필 사진을 Base64로 리턴합니다.")
     @ApiImplicitParam(name = "email", value = EMAIL_VALUE, example = EMAIL_EXAMPLE, required = true)
-    public ResponseEntity<String> userProfileImageAsBase64(@RequestParam @NotBlank(message = INPUT_EMAIL) String email) throws IOException {
+    public ResponseEntity<String> userProfileImageAsBase64(@RequestParam @Email(message = INPUT_EMAIL) String email) throws IOException {
         User user = userService.findUserByEmail(email);
         if (isKakaoProfile(user)) {
             return userService.findUserProfileImageAsBase64(email);
@@ -98,7 +100,7 @@ public class UserController {
     @PutMapping(value = "/updateProfile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiOperation(value = "회원 프로필 사진 수정", notes = "회원 프로필 사진을 수정한 후 수정된 회원 정보를 리턴합니다.")
     @ApiImplicitParam(name = "email", value = EMAIL_VALUE, example = EMAIL_EXAMPLE, required = true)
-    public ResponseEntity<UserResponseDto> userProfileImageModify(@RequestParam @NotBlank(message = INPUT_EMAIL) String email,
+    public ResponseEntity<UserResponseDto> userProfileImageModify(@RequestParam @Email(message = INPUT_EMAIL) String email,
                                                                   @RequestPart MultipartFile multipartFile) {
         User user = userService.modifyUserProfileImage(email, multipartFile);
         return ResponseEntity.ok().body(new UserResponseDto(user));
@@ -107,14 +109,14 @@ public class UserController {
     @GetMapping("/propensity")
     @ApiOperation(value = "사용자별 구매 성향", notes = "사용자별 구매 성향을 리턴합니다. (살까 말까 미정/결정/취소, 할까 말까 미정/결정/취소, 갈까 말까 미정/결정/취소 갯수)")
     @ApiImplicitParam(name = "email", value = EMAIL_VALUE, example = EMAIL_EXAMPLE, required = true)
-    public Map<String, Object> userPropensityDetails(@RequestParam @NotBlank(message = INPUT_EMAIL) String email) {
+    public Map<String, Object> userPropensityDetails(@RequestParam @Email(message = INPUT_EMAIL) String email) {
         return userService.findUserDecisionPropensity(email);
     }
 
     @PostMapping("/withdraw")
     @ApiOperation(value = "회원 탈퇴", notes = "회원 탈퇴를 한 후, true를 리턴합니다.")
     @ApiImplicitParam(name = "email", value = EMAIL_VALUE, example = EMAIL_EXAMPLE, required = true)
-    public ResponseEntity<Boolean> userWithdraw(@RequestParam @NotBlank(message = INPUT_EMAIL) String email) {
+    public ResponseEntity<Boolean> userWithdraw(@RequestParam @Email(message = INPUT_EMAIL) String email) {
         return ResponseEntity.ok().body(userService.withdrawUserAccount(email));
     }
 

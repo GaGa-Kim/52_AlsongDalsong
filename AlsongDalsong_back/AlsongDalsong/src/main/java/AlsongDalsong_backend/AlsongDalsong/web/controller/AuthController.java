@@ -11,10 +11,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import javax.validation.Valid;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Api(tags = {"Auth API (인증 API)"})
 @RestController
+@Validated
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/auth")
@@ -55,7 +58,7 @@ public class AuthController {
     @GetMapping("/login")
     @ApiOperation(value = "일반 로그인", notes = "일반 로그인을 한 후, jwt 토큰과 회원 이메일을 리턴합니다.")
     @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com", required = true)
-    public ResponseEntity<String> login(@RequestParam @NotBlank(message = INPUT_EMAIL) String email) {
+    public ResponseEntity<String> login(@RequestParam @Email(message = INPUT_EMAIL) String email) {
         TokenDto tokenDto = authService.loginAndGenerateToken(email);
         return ResponseEntity.ok().headers(createHeader(tokenDto)).body(tokenDto.getEmail());
     }

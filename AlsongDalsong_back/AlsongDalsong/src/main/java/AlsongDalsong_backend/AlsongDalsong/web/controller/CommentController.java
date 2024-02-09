@@ -14,10 +14,11 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Api(tags = {"Comment API (댓글 API)"})
 @RestController
+@Validated
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/comment")
@@ -67,7 +69,7 @@ public class CommentController {
             @ApiImplicitParam(name = "email", value = "댓글 작성자 이메일", example = "1234@gmail.com"),
     })
     public ResponseEntity<Boolean> commentRemove(@RequestParam @NotNull(message = INPUT_COMMENT_ID) Long id,
-                                                 @RequestParam @NotBlank(message = INPUT_EMAIL) String email) {
+                                                 @RequestParam @Email(message = INPUT_EMAIL) String email) {
         return ResponseEntity.ok().body(commentService.removeComment(id, email));
     }
 }

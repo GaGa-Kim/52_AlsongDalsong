@@ -15,11 +15,13 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import javax.validation.Valid;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,6 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Api(tags = {"Post API (게시글 API)"})
 @RestController
+@Validated
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/post")
@@ -84,7 +87,7 @@ public class PostController {
     @GetMapping("/my")
     @ApiOperation(value = "사용자별 쓴 글 조회", notes = "사용자별 쓴 글 목록을 조회하여 리턴합니다.")
     @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com")
-    public ResponseEntity<List<PostResponseDto>> postUserList(@RequestParam @NotBlank(message = INPUT_EMAIL) String email) {
+    public ResponseEntity<List<PostResponseDto>> postUserList(@RequestParam @Email(message = INPUT_EMAIL) String email) {
         return ResponseEntity.ok().body(postService.findUserPosts(email));
     }
 
@@ -104,7 +107,7 @@ public class PostController {
             @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com"),
     })
     public ResponseEntity<Boolean> postRemove(@RequestParam @NotNull(message = Message.INPUT_POST_ID) Long id,
-                                              @RequestParam @NotBlank(message = INPUT_EMAIL) String email) {
+                                              @RequestParam @Email(message = INPUT_EMAIL) String email) {
         return ResponseEntity.ok().body(postService.removePost(id, email));
     }
 
@@ -117,7 +120,7 @@ public class PostController {
             @ApiImplicitParam(name = "reason", value = "결정 이유", example = "비싸서")
     })
     public ResponseEntity<PostResponseDto> postModifyDecision(@RequestParam @NotNull(message = Message.INPUT_POST_ID) Long id,
-                                                              @RequestParam @NotBlank(message = INPUT_EMAIL) String email,
+                                                              @RequestParam @Email(message = INPUT_EMAIL) String email,
                                                               @RequestParam @NotBlank(message = Message.INPUT_DECISION) String decision,
                                                               @RequestParam @NotBlank(message = Message.INPUT_REASON) String reason) {
         return ResponseEntity.ok().body(postService.modifyPostDecision(id, email, decision, reason));

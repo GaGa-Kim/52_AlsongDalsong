@@ -1,5 +1,6 @@
 package AlsongDalsong_backend.AlsongDalsong.config;
 
+import AlsongDalsong_backend.AlsongDalsong.handler.BaseHandlerInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

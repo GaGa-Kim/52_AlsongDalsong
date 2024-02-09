@@ -8,7 +8,6 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NICKNAME;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PROFILE;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_USER_ID;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -88,7 +87,6 @@ class UserControllerTest {
                 .profile(VALID_PROFILE)
                 .introduce(VALID_INTRODUCE)
                 .build();
-
         userUpdateRequestDto = UserUpdateRequestDto.builder()
                 .email(user.getEmail())
                 .nickname(user.getNickname())
@@ -105,7 +103,7 @@ class UserControllerTest {
         when(userService.findUserByEmail(any())).thenReturn(user);
 
         mockMvc.perform(get("/api/user/me")
-                        .param("email", anyString())
+                        .param("email", user.getEmail())
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(user.getId()));
@@ -133,7 +131,7 @@ class UserControllerTest {
         when(userService.findUserByEmail(any())).thenReturn(user);
 
         mockMvc.perform(get("/api/user/profileUrl")
-                        .param("email", anyString())
+                        .param("email", user.getEmail())
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").value(user.getProfile()));
@@ -148,7 +146,7 @@ class UserControllerTest {
                 .thenReturn(new ResponseEntity<>(profileByteArray, httpHeaders, HttpStatus.OK));
 
         mockMvc.perform(get("/api/user/profileByte")
-                        .param("email", anyString())
+                        .param("email", user.getEmail())
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").value(user.getProfile()));
@@ -164,7 +162,7 @@ class UserControllerTest {
                 .thenReturn(new ResponseEntity<>(profileByteBase, httpHeaders, HttpStatus.OK));
 
         mockMvc.perform(get("/api/user/profileBase")
-                        .param("email", anyString())
+                        .param("email", user.getEmail())
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").value(profileByteBase));
@@ -203,7 +201,7 @@ class UserControllerTest {
         when(userService.findUserDecisionPropensity(any())).thenReturn(propensityMap);
 
         mockMvc.perform(get("/api/user/propensity")
-                        .param("email", anyString())
+                        .param("email", user.getEmail())
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").value(propensityMap));
@@ -216,7 +214,7 @@ class UserControllerTest {
         when(userService.withdrawUserAccount(any())).thenReturn(true);
 
         mockMvc.perform(post("/api/user/withdraw")
-                        .param("email", anyString())
+                        .param("email", user.getEmail())
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").value(true));
