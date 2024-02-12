@@ -1,12 +1,11 @@
 package AlsongDalsong_backend.AlsongDalsong.domain.vote;
 
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_VOTE;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_VOTE_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,10 +19,7 @@ class VoteTest {
 
     @BeforeEach
     void setUp() {
-        vote = Vote.builder()
-                .id(VALID_VOTE_ID)
-                .vote(VALID_VOTE)
-                .build();
+        vote = TestObjectFactory.initVote();
     }
 
     @Test

@@ -1,8 +1,5 @@
 package AlsongDalsong_backend.AlsongDalsong.service.comment;
 
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_COMMENT_CONTENT;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_COMMENT_ID;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -13,8 +10,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.domain.comment.Comment;
 import AlsongDalsong_backend.AlsongDalsong.domain.comment.CommentRepository;
+import AlsongDalsong_backend.AlsongDalsong.domain.like.Like;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import AlsongDalsong_backend.AlsongDalsong.service.post.PostService;
@@ -37,55 +36,36 @@ import org.mockito.junit.jupiter.MockitoExtension;
  */
 @ExtendWith(MockitoExtension.class)
 class CommentServiceImplTest {
-    private User mockUser;
-    private Post mockPost;
     private Comment comment;
     private CommentSaveRequestDto commentSaveRequestDto;
     private CommentUpdateRequestDto commentUpdateRequestDto;
 
     @InjectMocks
     private CommentServiceImpl commentService;
-
     @Mock
     private CommentRepository commentRepository;
-
     @Mock
     private UserService userService;
-
     @Mock
     private PostService postService;
 
     @BeforeEach
     void setUp() {
-        mockUser = mock(User.class);
-        mockPost = mock(Post.class);
+        comment = TestObjectFactory.initComment();
+        comment.setUser(mock(User.class));
+        comment.setPost(mock(Post.class));
+        comment.addLikeList(mock(Like.class));
 
-        comment = Comment.builder()
-                .id(VALID_COMMENT_ID)
-                .content(VALID_COMMENT_CONTENT)
-                .build();
-        comment.setUser(mockUser);
-        comment.setPost(mockPost);
-
-        commentSaveRequestDto = CommentSaveRequestDto.builder()
-                .email(comment.getUserId().getEmail())
-                .postId(comment.getPostId().getId())
-                .content(comment.getContent())
-                .build();
-        commentUpdateRequestDto = CommentUpdateRequestDto.builder()
-                .id(comment.getId())
-                .email(comment.getUserId().getEmail())
-                .postId(VALID_POST_ID)
-                .content(comment.getContent())
-                .build();
+        commentSaveRequestDto = TestObjectFactory.initCommentSaveRequestDto(comment);
+        commentUpdateRequestDto = TestObjectFactory.initCommentUpdateRequestDto(comment);
     }
 
     @Test
     void testAddComment() {
-        when(userService.findUserByEmail(any())).thenReturn(mockUser);
-        when(postService.findPostByPostId(any())).thenReturn(mockPost);
+        when(userService.findUserByEmail(any())).thenReturn(comment.getUserId());
+        when(postService.findPostByPostId(any())).thenReturn(comment.getPostId());
         when(commentRepository.save(any())).thenReturn(comment);
-        when(postService.findPostByPostId(any())).thenReturn(mockPost);
+        when(postService.findPostByPostId(any())).thenReturn(comment.getPostId());
         when(commentRepository.findAllByPostIdOrderByLikeListDesc(any())).thenReturn(Collections.singletonList(comment));
 
         List<CommentResponseDto> result = commentService.addComment(commentSaveRequestDto);
@@ -98,8 +78,8 @@ class CommentServiceImplTest {
         verify(postService, times(2)).findPostByPostId(any());
         verify(commentRepository, times(1)).save(any());
         verify(commentRepository, times(1)).findAllByPostIdOrderByLikeListDesc(any());
-        verify(mockPost, times(1)).addCommentList(any());
-        verify(mockUser, times(1)).updatePoint(any());
+        verify(comment.getPostId(), times(1)).addCommentList(any());
+        verify(comment.getUserId(), times(1)).updatePoint(any());
     }
 
     @Test
@@ -116,10 +96,10 @@ class CommentServiceImplTest {
 
     @Test
     void testFindPostCommentsByLikes() {
-        when(postService.findPostByPostId(any())).thenReturn(mockPost);
+        when(postService.findPostByPostId(any())).thenReturn(comment.getPostId());
         when(commentRepository.findAllByPostIdOrderByLikeListDesc(any())).thenReturn(Collections.singletonList(comment));
 
-        List<CommentResponseDto> result = commentService.findPostCommentsByLikes(mockPost.getId());
+        List<CommentResponseDto> result = commentService.findPostCommentsByLikes(comment.getPostId().getId());
 
         assertNotNull(result);
         assertEquals(1, result.size());
@@ -131,7 +111,7 @@ class CommentServiceImplTest {
 
     @Test
     void testModifyComment() {
-        when(userService.findUserByEmail(any())).thenReturn(mockUser);
+        when(userService.findUserByEmail(any())).thenReturn(comment.getUserId());
         when(commentRepository.findById(any())).thenReturn(Optional.ofNullable(comment));
         when(commentRepository.findAllByPostIdOrderByLikeListDesc(any())).thenReturn(Collections.singletonList(comment));
 
@@ -148,11 +128,11 @@ class CommentServiceImplTest {
 
     @Test
     void testRemoveComment() {
-        when(userService.findUserByEmail(any())).thenReturn(mockUser);
+        when(userService.findUserByEmail(any())).thenReturn(comment.getUserId());
         when(commentRepository.findById(any())).thenReturn(Optional.ofNullable(comment));
         doNothing().when(commentRepository).delete(any());
 
-        boolean result = commentService.removeComment(comment.getId(), mockUser.getEmail());
+        boolean result = commentService.removeComment(comment.getId(), comment.getUserId().getEmail());
 
         assertTrue(result);
 

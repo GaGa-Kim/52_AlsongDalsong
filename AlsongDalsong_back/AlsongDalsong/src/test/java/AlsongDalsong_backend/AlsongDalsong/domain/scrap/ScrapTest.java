@@ -1,9 +1,9 @@
 package AlsongDalsong_backend.AlsongDalsong.domain.scrap;
 
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_SCRAP_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
+import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,9 +17,7 @@ class ScrapTest {
 
     @BeforeEach
     void setUp() {
-        scrap = Scrap.builder()
-                .id(VALID_SCRAP_ID)
-                .build();
+        scrap = TestObjectFactory.initScrap();
     }
 
     @Test

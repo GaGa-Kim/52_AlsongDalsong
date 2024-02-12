@@ -7,7 +7,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 /**
- * RequestDto Validator 검증
+ * RequestDto 검증 유틸리티 클래스
  */
 public class ValidatorUtil<T> {
     private static final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();

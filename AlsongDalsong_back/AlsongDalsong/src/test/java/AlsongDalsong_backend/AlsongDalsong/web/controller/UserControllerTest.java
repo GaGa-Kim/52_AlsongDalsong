@@ -1,12 +1,5 @@
 package AlsongDalsong_backend.AlsongDalsong.web.controller;
 
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_INTRODUCE;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_KAKAO_ID;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NAME;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NICKNAME;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PROFILE;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_USER_ID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -20,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.config.SecurityConfig;
 import AlsongDalsong_backend.AlsongDalsong.config.jwt.JwtRequestFilter;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
@@ -53,12 +47,10 @@ import org.springframework.test.web.servlet.request.RequestPostProcessor;
 /**
  * 회원 컨트롤러 테스트
  */
-@WebMvcTest(controllers = UserController.class,
-        excludeFilters = {
-                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class),
-                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = JwtRequestFilter.class)
-        })
-@WithMockUser(username = "테스트_최고관리자", roles = {"USER"})
+@WebMvcTest(controllers = UserController.class, excludeFilters = {
+        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class),
+        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = JwtRequestFilter.class)})
+@WithMockUser
 class UserControllerTest {
     private User user;
     private UserUpdateRequestDto userUpdateRequestDto;
@@ -69,29 +61,18 @@ class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
     @MockBean
     private UserService userService;
-
     @MockBean
     private StorageService storageService;
 
     @BeforeEach
     void setUp() throws IOException {
-        user = User.builder()
-                .id(VALID_USER_ID)
-                .kakaoId(VALID_KAKAO_ID)
-                .name(VALID_NAME)
-                .email(VALID_EMAIL)
-                .nickname(VALID_NICKNAME)
-                .profile(VALID_PROFILE)
-                .introduce(VALID_INTRODUCE)
-                .build();
-        userUpdateRequestDto = UserUpdateRequestDto.builder()
-                .email(user.getEmail())
-                .nickname(user.getNickname())
-                .introduce(user.getIntroduce())
-                .build();
+        user = TestObjectFactory.initUser();
+        user.addPostList(TestObjectFactory.initPost());
+        user.addScrapList(TestObjectFactory.initScrap());
+
+        userUpdateRequestDto = TestObjectFactory.initUserUpdateRequestDto(user);
         profileByteArray = IOUtils.toByteArray(user.getProfile());
         profileByteBase = Base64.getEncoder().encodeToString(profileByteArray);
         httpHeaders = new HttpHeaders();

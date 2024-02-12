@@ -1,14 +1,8 @@
 package AlsongDalsong_backend.AlsongDalsong.web.dto.user;
 
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_INTRODUCE;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_KAKAO_ID;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NAME;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NICKNAME;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PROFILE;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_USER_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import org.junit.jupiter.api.Test;
 
@@ -18,16 +12,10 @@ import org.junit.jupiter.api.Test;
 class UserResponseDtoTest {
     @Test
     void testUserResponseDto() {
-        User user = User.builder()
-                .id(VALID_USER_ID)
-                .kakaoId(VALID_KAKAO_ID)
-                .name(VALID_NAME)
-                .email(VALID_EMAIL)
-                .nickname(VALID_NICKNAME)
-                .profile(VALID_PROFILE)
-                .introduce(VALID_INTRODUCE)
-                .build();
-
+        User user = TestObjectFactory.initUser();
+        user.addPostList(TestObjectFactory.initPost());
+        user.addScrapList(TestObjectFactory.initScrap());
+        
         UserResponseDto userResponseDto = new UserResponseDto(user);
 
         assertEquals(user.getId(), userResponseDto.getId());

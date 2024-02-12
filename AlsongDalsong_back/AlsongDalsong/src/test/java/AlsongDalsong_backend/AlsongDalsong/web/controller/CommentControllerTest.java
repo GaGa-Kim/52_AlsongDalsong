@@ -1,26 +1,5 @@
 package AlsongDalsong_backend.AlsongDalsong.web.controller;
 
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_CATEGORY;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_COMMENT_CONTENT;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_COMMENT_ID;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_DATE;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_DECISION;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_IMPORTANCE;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_INTRODUCE;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_KAKAO_ID;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_LINK;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NAME;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NICKNAME;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_OLD;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_CONTENT;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_ID;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PROFILE;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_REASON;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_TODO;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_USER_ID;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHAT;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHO;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
@@ -34,11 +13,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.config.SecurityConfig;
 import AlsongDalsong_backend.AlsongDalsong.config.jwt.JwtRequestFilter;
 import AlsongDalsong_backend.AlsongDalsong.domain.comment.Comment;
-import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
-import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import AlsongDalsong_backend.AlsongDalsong.service.comment.CommentService;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.comment.CommentResponseDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.comment.CommentSaveRequestDto;
@@ -59,12 +37,10 @@ import org.springframework.test.web.servlet.MockMvc;
 /**
  * 댓글 컨트롤러 테스트
  */
-@WebMvcTest(controllers = CommentController.class,
-        excludeFilters = {
-                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class),
-                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = JwtRequestFilter.class)
-        })
-@WithMockUser(username = "테스트_최고관리자", roles = {"USER"})
+@WebMvcTest(controllers = CommentController.class, excludeFilters = {
+        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class),
+        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = JwtRequestFilter.class)})
+@WithMockUser
 class CommentControllerTest {
     private Comment comment;
     private CommentSaveRequestDto commentSaveRequestDto;
@@ -73,54 +49,19 @@ class CommentControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
     @MockBean
     private CommentService commentService;
 
     @BeforeEach
     void setUp() {
-        User user = User.builder()
-                .id(VALID_USER_ID)
-                .kakaoId(VALID_KAKAO_ID)
-                .name(VALID_NAME)
-                .email(VALID_EMAIL)
-                .nickname(VALID_NICKNAME)
-                .profile(VALID_PROFILE)
-                .introduce(VALID_INTRODUCE)
-                .build();
-        Post post = Post.builder()
-                .id(VALID_POST_ID)
-                .todo(VALID_TODO)
-                .category(VALID_CATEGORY)
-                .who(VALID_WHO)
-                .old(VALID_OLD)
-                .date(VALID_DATE)
-                .what(VALID_WHAT)
-                .content(VALID_POST_CONTENT)
-                .link(VALID_LINK)
-                .importance(VALID_IMPORTANCE)
-                .decision(VALID_DECISION)
-                .reason(VALID_REASON)
-                .build();
+        comment = TestObjectFactory.initComment();
+        comment.setUser(TestObjectFactory.initUser());
+        comment.setPost(TestObjectFactory.initPost());
+        comment.addLikeList(TestObjectFactory.initLike());
 
-        comment = Comment.builder()
-                .id(VALID_COMMENT_ID)
-                .content(VALID_COMMENT_CONTENT)
-                .build();
-        comment.setUser(user);
-        comment.setPost(post);
-        commentSaveRequestDto = CommentSaveRequestDto.builder()
-                .email(comment.getUserId().getEmail())
-                .postId(comment.getPostId().getId())
-                .content(comment.getContent())
-                .build();
-        commentUpdateRequestDto = CommentUpdateRequestDto.builder()
-                .id(comment.getId())
-                .email(comment.getUserId().getEmail())
-                .postId(comment.getPostId().getId())
-                .content(comment.getContent())
-                .build();
-        commentResponseDto = new CommentResponseDto(comment);
+        commentSaveRequestDto = TestObjectFactory.initCommentSaveRequestDto(comment);
+        commentUpdateRequestDto = TestObjectFactory.initCommentUpdateRequestDto(comment);
+        commentResponseDto = TestObjectFactory.initCommentResponseDto(comment);
     }
 
     @Test

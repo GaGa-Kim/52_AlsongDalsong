@@ -1,7 +1,5 @@
 package AlsongDalsong_backend.AlsongDalsong.service.vote;
 
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_VOTE;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_VOTE_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -12,6 +10,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import AlsongDalsong_backend.AlsongDalsong.domain.vote.Vote;
@@ -31,52 +30,33 @@ import org.mockito.junit.jupiter.MockitoExtension;
  */
 @ExtendWith(MockitoExtension.class)
 class VoteServiceImplTest {
-    private User mockUser;
-    private Post mockPost;
     private Vote vote;
     private VoteRequestDto voteTrueRequestDto;
     private VoteRequestDto voteFalseResponseDto;
 
     @InjectMocks
     private VoteServiceImpl voteService;
-
     @Mock
     private VoteRepository voteRepository;
-
     @Mock
     private UserService userService;
-
     @Mock
     private PostService postService;
 
     @BeforeEach
     void setUp() {
-        mockUser = mock(User.class);
-        mockPost = mock(Post.class);
+        vote = TestObjectFactory.initVote();
+        vote.setUser(mock(User.class));
+        vote.setPost(mock(Post.class));
 
-        vote = Vote.builder()
-                .id(VALID_VOTE_ID)
-                .vote(VALID_VOTE)
-                .build();
-        vote.setUser(mockUser);
-        vote.setPost(mockPost);
-
-        voteTrueRequestDto = VoteRequestDto.builder()
-                .email(vote.getUserId().getEmail())
-                .postId(vote.getPostId().getId())
-                .vote(true)
-                .build();
-        voteFalseResponseDto = VoteRequestDto.builder()
-                .email(vote.getUserId().getEmail())
-                .postId(vote.getPostId().getId())
-                .vote(false)
-                .build();
+        voteTrueRequestDto = TestObjectFactory.initVoteRequestDto(vote, true);
+        voteFalseResponseDto = TestObjectFactory.initVoteRequestDto(vote, false);
     }
 
     @Test
     void testSaveAddVote() {
-        when(userService.findUserByEmail(any())).thenReturn(mockUser);
-        when(postService.findPostByPostId(any())).thenReturn(mockPost);
+        when(userService.findUserByEmail(any())).thenReturn(vote.getUserId());
+        when(postService.findPostByPostId(any())).thenReturn(vote.getPostId());
         when(voteRepository.existsByUserIdAndPostId(any(), any())).thenReturn(false);
         when(voteRepository.save(any())).thenReturn(vote);
 
@@ -88,14 +68,14 @@ class VoteServiceImplTest {
         verify(postService, times(1)).findPostByPostId(anyLong());
         verify(voteRepository, times(1)).existsByUserIdAndPostId(any(), any());
         verify(voteRepository, times(1)).save(any());
-        verify(mockPost, times(1)).addVoteList(any());
-        verify(mockUser, times(1)).updatePoint(any());
+        verify(vote.getPostId(), times(1)).addVoteList(any());
+        verify(vote.getUserId(), times(1)).updatePoint(any());
     }
 
     @Test
     void testSaveDeleteVote() {
-        when(userService.findUserByEmail(any())).thenReturn(mockUser);
-        when(postService.findPostByPostId(any())).thenReturn(mockPost);
+        when(userService.findUserByEmail(any())).thenReturn(vote.getUserId());
+        when(postService.findPostByPostId(any())).thenReturn(vote.getPostId());
         when(voteRepository.existsByUserIdAndPostId(any(), any())).thenReturn(true);
         when(voteRepository.findByUserIdAndPostId(any(), any())).thenReturn(vote);
         doNothing().when(voteRepository).delete(vote);
@@ -109,13 +89,13 @@ class VoteServiceImplTest {
         verify(voteRepository, times(1)).existsByUserIdAndPostId(any(), any());
         verify(voteRepository, times(1)).findByUserIdAndPostId(any(), any());
         verify(voteRepository, times(1)).delete(any());
-        verify(mockUser, times(1)).updatePoint(any());
+        verify(vote.getUserId(), times(1)).updatePoint(any());
     }
 
     @Test
     void testSaveModifyVote() {
-        when(userService.findUserByEmail(any())).thenReturn(mockUser);
-        when(postService.findPostByPostId(any())).thenReturn(mockPost);
+        when(userService.findUserByEmail(any())).thenReturn(vote.getUserId());
+        when(postService.findPostByPostId(any())).thenReturn(vote.getPostId());
         when(voteRepository.existsByUserIdAndPostId(any(), any())).thenReturn(true);
         when(voteRepository.findByUserIdAndPostId(any(), any())).thenReturn(vote);
 
@@ -131,12 +111,12 @@ class VoteServiceImplTest {
 
     @Test
     void testFindVote() {
-        when(userService.findUserByEmail(any())).thenReturn(mockUser);
-        when(postService.findPostByPostId(any())).thenReturn(mockPost);
+        when(userService.findUserByEmail(any())).thenReturn(vote.getUserId());
+        when(postService.findPostByPostId(any())).thenReturn(vote.getPostId());
         when(voteRepository.existsByUserIdAndPostId(any(), any())).thenReturn(true);
         when(voteRepository.findByUserIdAndPostId(any(), any())).thenReturn(vote);
 
-        String result = voteService.findVote(mockPost.getId(), mockUser.getEmail());
+        String result = voteService.findVote(vote.getPostId().getId(), vote.getUserId().getEmail());
 
         assertNotNull(result);
 

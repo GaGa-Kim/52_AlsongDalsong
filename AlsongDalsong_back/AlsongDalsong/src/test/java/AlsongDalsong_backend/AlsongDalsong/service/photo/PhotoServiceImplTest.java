@@ -1,19 +1,18 @@
 package AlsongDalsong_backend.AlsongDalsong.service.photo;
 
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_ORIG_PHOTO_NANE;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PHOTO_ID;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PHOTO_NAME;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PHOTO_URL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.domain.photo.Photo;
 import AlsongDalsong_backend.AlsongDalsong.domain.photo.PhotoRepository;
+import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.photo.PhotoResponseDto;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,18 +31,13 @@ class PhotoServiceImplTest {
 
     @InjectMocks
     private PhotoServiceImpl photoService;
-
     @Mock
     private PhotoRepository photoRepository;
 
     @BeforeEach
     void setUp() {
-        photo = Photo.builder()
-                .id(VALID_PHOTO_ID)
-                .origPhotoName(VALID_ORIG_PHOTO_NANE)
-                .photoName(VALID_PHOTO_NAME)
-                .photoUrl(VALID_PHOTO_URL)
-                .build();
+        photo = TestObjectFactory.initPhoto();
+        photo.setPost(mock(Post.class));
     }
 
     @Test

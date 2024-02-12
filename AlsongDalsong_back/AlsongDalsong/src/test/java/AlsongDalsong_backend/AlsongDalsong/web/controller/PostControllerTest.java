@@ -1,24 +1,5 @@
 package AlsongDalsong_backend.AlsongDalsong.web.controller;
 
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_CATEGORY;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_DATE;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_DECISION;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_IMPORTANCE;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_INTRODUCE;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_KAKAO_ID;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_LINK;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NAME;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NICKNAME;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_OLD;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_CONTENT;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_ID;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PROFILE;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_REASON;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_TODO;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_USER_ID;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHAT;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHO;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
@@ -33,18 +14,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.config.SecurityConfig;
 import AlsongDalsong_backend.AlsongDalsong.config.jwt.JwtRequestFilter;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
-import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import AlsongDalsong_backend.AlsongDalsong.service.post.PostService;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.post.PostResponseDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.post.PostSaveRequestVO;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.post.PostUpdateRequestVO;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +31,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
-import org.springframework.data.util.Pair;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -60,12 +38,10 @@ import org.springframework.test.web.servlet.MockMvc;
 /**
  * 게시글 컨트롤러 테스트
  */
-@WebMvcTest(controllers = PostController.class,
-        excludeFilters = {
-                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class),
-                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = JwtRequestFilter.class)
-        })
-@WithMockUser(username = "테스트_최고관리자", roles = {"USER"})
+@WebMvcTest(controllers = PostController.class, excludeFilters = {
+        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class),
+        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = JwtRequestFilter.class)})
+@WithMockUser
 class PostControllerTest {
     private Post post;
     private PostSaveRequestVO postSaveRequestVO;
@@ -74,68 +50,21 @@ class PostControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
     @MockBean
     private PostService postService;
 
     @BeforeEach
     void setUp() {
-        User user = User.builder()
-                .id(VALID_USER_ID)
-                .kakaoId(VALID_KAKAO_ID)
-                .name(VALID_NAME)
-                .email(VALID_EMAIL)
-                .nickname(VALID_NICKNAME)
-                .profile(VALID_PROFILE)
-                .introduce(VALID_INTRODUCE)
-                .build();
+        post = TestObjectFactory.initPost();
+        post.setUser(TestObjectFactory.initUser());
+        post.addPhotoList(TestObjectFactory.initPhoto());
+        post.addCommentList(TestObjectFactory.initComment());
+        post.addVoteList(TestObjectFactory.initVote());
+        post.addScrapList(TestObjectFactory.initScrap());
 
-        post = Post.builder()
-                .id(VALID_POST_ID)
-                .todo(VALID_TODO)
-                .category(VALID_CATEGORY)
-                .who(VALID_WHO)
-                .old(VALID_OLD)
-                .date(VALID_DATE)
-                .what(VALID_WHAT)
-                .content(VALID_POST_CONTENT)
-                .link(VALID_LINK)
-                .importance(VALID_IMPORTANCE)
-                .decision(VALID_DECISION)
-                .reason(VALID_REASON)
-                .build();
-        post.setUser(user);
-        postSaveRequestVO = PostSaveRequestVO.builder()
-                .email(post.getUserId().getEmail())
-                .todo(post.getTodo().getTodo())
-                .category(post.getCategory().getCategory())
-                .what(post.getWhat())
-                .old(post.getOld().getOld())
-                .date(post.getDate())
-                .who(post.getWho().getWho())
-                .content(post.getContent())
-                .link(post.getLink())
-                .importance(post.getImportance())
-                .photos(null)
-                .build();
-        postUpdateRequestVO = PostUpdateRequestVO.builder()
-                .id(post.getId())
-                .email(post.getUserId().getEmail())
-                .todo(post.getTodo().getTodo())
-                .category(post.getCategory().getCategory())
-                .what(post.getWhat())
-                .old(post.getOld().getOld())
-                .date(post.getDate())
-                .who(post.getWho().getWho())
-                .content(post.getContent())
-                .link(post.getLink())
-                .importance(post.getImportance())
-                .photos(null)
-                .deleteId(null)
-                .build();
-        List<Long> photoId = new ArrayList<>();
-        Pair<Long, Long> vote = Pair.of(0L, 0L);
-        postResponseDto = new PostResponseDto(post, photoId, vote);
+        postSaveRequestVO = TestObjectFactory.initPostSaveRequestVO(post);
+        postUpdateRequestVO = TestObjectFactory.initPostUpdateRequestVO(post);
+        postResponseDto = TestObjectFactory.initPostResponseDto(post);
     }
 
     @Test

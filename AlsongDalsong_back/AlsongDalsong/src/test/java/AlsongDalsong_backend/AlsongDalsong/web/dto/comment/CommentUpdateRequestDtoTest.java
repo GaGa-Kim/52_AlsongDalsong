@@ -35,9 +35,9 @@ class CommentUpdateRequestDtoTest {
     @Test
     void commentId_validation() {
         CommentUpdateRequestDto commentUpdateRequestDto = CommentUpdateRequestDto.builder()
-                .id(VALID_COMMENT_ID)
+                .id(null)
                 .email(VALID_EMAIL)
-                .postId(null)
+                .postId(VALID_POST_ID)
                 .content(VALID_COMMENT_CONTENT)
                 .build();
 

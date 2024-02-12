@@ -1,6 +1,5 @@
 package AlsongDalsong_backend.AlsongDalsong.service.like;
 
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_LIKE_ID;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -10,6 +9,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.domain.comment.Comment;
 import AlsongDalsong_backend.AlsongDalsong.domain.like.Like;
 import AlsongDalsong_backend.AlsongDalsong.domain.like.LikeRepository;
@@ -29,44 +29,31 @@ import org.mockito.junit.jupiter.MockitoExtension;
  */
 @ExtendWith(MockitoExtension.class)
 class LikeServiceImplTest {
-    private User mockUser;
-    private Comment mockComment;
     private Like like;
     private LikeRequestDto likeRequestDto;
 
     @InjectMocks
     private LikeServiceImpl likeService;
-
     @Mock
     private LikeRepository likeRepository;
-
     @Mock
     private UserService userService;
-
     @Mock
     private CommentService commentService;
 
     @BeforeEach
     void setUp() {
-        mockUser = mock(User.class);
-        mockComment = mock(Comment.class);
+        like = TestObjectFactory.initLike();
+        like.setUser(mock(User.class));
+        like.setComment(mock(Comment.class));
 
-        like = Like.builder()
-                .id(VALID_LIKE_ID)
-                .build();
-        like.setUser(mockUser);
-        like.setComment(mockComment);
-
-        likeRequestDto = LikeRequestDto.builder()
-                .email(like.getUserId().getEmail())
-                .commentId(like.getCommentId().getId())
-                .build();
+        likeRequestDto = TestObjectFactory.initLikeRequestDto(like);
     }
 
     @Test
     void testSaveAddLike() {
-        when(userService.findUserByEmail(any())).thenReturn(mockUser);
-        when(commentService.findCommentByCommentId(any())).thenReturn(mockComment);
+        when(userService.findUserByEmail(any())).thenReturn(like.getUserId());
+        when(commentService.findCommentByCommentId(any())).thenReturn(like.getCommentId());
         when(likeRepository.existsByUserIdAndCommentId(any(), any())).thenReturn(false);
         when(likeRepository.save(any())).thenReturn(like);
 
@@ -78,18 +65,18 @@ class LikeServiceImplTest {
         verify(commentService, times(1)).findCommentByCommentId(any());
         verify(likeRepository, times(1)).existsByUserIdAndCommentId(any(), any());
         verify(likeRepository, times(1)).save(any());
-        verify(mockComment, times(1)).addLikeList(any());
-        verify(mockUser, times(1)).updatePoint(any());
+        verify(like.getCommentId(), times(1)).addLikeList(any());
+        verify(like.getUserId(), times(1)).updatePoint(any());
     }
 
     @Test
     void testSaveDeleteLike() {
-        when(userService.findUserByEmail(any())).thenReturn(mockUser);
-        when(commentService.findCommentByCommentId(any())).thenReturn(mockComment);
+        when(userService.findUserByEmail(any())).thenReturn(like.getUserId());
+        when(commentService.findCommentByCommentId(any())).thenReturn(like.getCommentId());
         when(likeRepository.existsByUserIdAndCommentId(any(), any())).thenReturn(true);
         when(likeRepository.findByUserIdAndCommentId(any(), any())).thenReturn(like);
         doNothing().when(likeRepository).delete(any());
-        
+
         boolean result = likeService.saveLike(likeRequestDto);
 
         assertFalse(result);
@@ -99,16 +86,16 @@ class LikeServiceImplTest {
         verify(likeRepository, times(1)).existsByUserIdAndCommentId(any(), any());
         verify(likeRepository, times(1)).findByUserIdAndCommentId(any(), any());
         verify(likeRepository, times(1)).delete(any());
-        verify(mockUser, times(1)).updatePoint(any());
+        verify(like.getUserId(), times(1)).updatePoint(any());
     }
 
     @Test
     void testFindLike() {
-        when(userService.findUserByEmail(any())).thenReturn(mockUser);
-        when(commentService.findCommentByCommentId(any())).thenReturn(mockComment);
+        when(userService.findUserByEmail(any())).thenReturn(like.getUserId());
+        when(commentService.findCommentByCommentId(any())).thenReturn(like.getCommentId());
         when(likeRepository.existsByUserIdAndCommentId(any(), any())).thenReturn(true);
 
-        boolean result = likeService.findLike(mockComment.getId(), mockUser.getEmail());
+        boolean result = likeService.findLike(like.getCommentId().getId(), like.getUserId().getEmail());
 
         assertTrue(result);
 

@@ -1,12 +1,5 @@
 package AlsongDalsong_backend.AlsongDalsong.domain.user;
 
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_INTRODUCE;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_KAKAO_ID;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NAME;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NICKNAME;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PROFILE;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_USER_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -14,6 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.constants.Rule;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import AlsongDalsong_backend.AlsongDalsong.domain.scrap.Scrap;
@@ -28,15 +22,7 @@ class UserTest {
 
     @BeforeEach
     void setUp() {
-        user = User.builder()
-                .id(VALID_USER_ID)
-                .kakaoId(VALID_KAKAO_ID)
-                .name(VALID_NAME)
-                .email(VALID_EMAIL)
-                .nickname(VALID_NICKNAME)
-                .profile(VALID_PROFILE)
-                .introduce(VALID_INTRODUCE)
-                .build();
+        user = TestObjectFactory.initUser();
     }
 
     @Test

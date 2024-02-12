@@ -2,20 +2,12 @@ package AlsongDalsong_backend.AlsongDalsong.web.dto.post;
 
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.INVALID_BLANK;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.INVALID_EMAIL;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_CATEGORY;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_DATE;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_IMPORTANCE;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_LINK;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_OLD;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_CONTENT;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_ID;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_TODO;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHAT;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.ValidatorUtil;
+import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
+import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -28,21 +20,10 @@ class PostUpdateRequestTest {
 
     @BeforeEach
     void setUp() {
-        postUpdateRequestVO = PostUpdateRequestVO.builder()
-                .id(VALID_POST_ID)
-                .email(VALID_EMAIL)
-                .todo(VALID_TODO.getTodo())
-                .category(VALID_CATEGORY.getCategory())
-                .what(VALID_WHAT)
-                .old(VALID_OLD.getOld())
-                .date(VALID_DATE)
-                .who(VALID_WHO.getWho())
-                .content(VALID_POST_CONTENT)
-                .link(VALID_LINK)
-                .importance(VALID_IMPORTANCE)
-                .photos(null)
-                .deleteId(null)
-                .build();
+        User user = TestObjectFactory.initUser();
+        Post post = TestObjectFactory.initPost();
+        post.setUser(user);
+        postUpdateRequestVO = TestObjectFactory.initPostUpdateRequestVO(post);
     }
 
     @Test

@@ -1,22 +1,19 @@
 package AlsongDalsong_backend.AlsongDalsong.service.user;
 
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_INTRODUCE;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_KAKAO_ID;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NAME;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NICKNAME;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PROFILE;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_TOKEN;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_USER_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.config.jwt.TokenProvider;
+import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
+import AlsongDalsong_backend.AlsongDalsong.domain.scrap.Scrap;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.UserRepository;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.auth.TokenDto;
@@ -39,39 +36,25 @@ class AuthServiceImplTest {
 
     @InjectMocks
     private AuthServiceImpl authService;
-
     @Mock
     private UserRepository userRepository;
-
     @Mock
     private TokenProvider tokenProvider;
 
     @BeforeEach
     void setUp() {
-        user = User.builder()
-                .id(VALID_USER_ID)
-                .kakaoId(VALID_KAKAO_ID)
-                .name(VALID_NAME)
-                .email(VALID_EMAIL)
-                .nickname(VALID_NICKNAME)
-                .profile(VALID_PROFILE)
-                .introduce(VALID_INTRODUCE)
-                .build();
-
-        userSaveRequestDto = UserSaveRequestDto.builder()
-                .name(user.getName())
-                .email(user.getEmail())
-                .nickname(user.getNickname())
-                .profile(user.getProfile())
-                .introduce(user.getIntroduce())
-                .build();
+        user = TestObjectFactory.initUser();
+        user.addPostList(mock(Post.class));
+        user.addScrapList(mock(Scrap.class));
+        
+        userSaveRequestDto = TestObjectFactory.initUserSaveRequestDto(user);
     }
 
     @Test
     void testSignupAndReturnUser() {
         when(userRepository.existsByEmail(any())).thenReturn(false);
         when(userRepository.save(any())).thenReturn(user);
-        
+
         UserResponseDto result = authService.signupAndReturnUser(userSaveRequestDto);
 
         assertNotNull(result);

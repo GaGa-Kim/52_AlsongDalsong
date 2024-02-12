@@ -1,13 +1,12 @@
 package AlsongDalsong_backend.AlsongDalsong.domain.comment;
 
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_COMMENT_CONTENT;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_COMMENT_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.domain.like.Like;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
@@ -22,10 +21,7 @@ class CommentTest {
 
     @BeforeEach
     void setUp() {
-        comment = Comment.builder()
-                .id(VALID_COMMENT_ID)
-                .content(VALID_COMMENT_CONTENT)
-                .build();
+        comment = TestObjectFactory.initComment();
     }
 
     @Test

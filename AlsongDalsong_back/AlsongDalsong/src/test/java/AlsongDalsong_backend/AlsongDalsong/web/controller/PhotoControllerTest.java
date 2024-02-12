@@ -1,9 +1,5 @@
 package AlsongDalsong_backend.AlsongDalsong.web.controller;
 
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_ORIG_PHOTO_NANE;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PHOTO_ID;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PHOTO_NAME;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PHOTO_URL;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -14,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.config.SecurityConfig;
 import AlsongDalsong_backend.AlsongDalsong.config.jwt.JwtRequestFilter;
 import AlsongDalsong_backend.AlsongDalsong.domain.photo.Photo;
@@ -40,12 +37,10 @@ import org.springframework.test.web.servlet.MockMvc;
 /**
  * 사진 컨트롤러 테스트
  */
-@WebMvcTest(controllers = PhotoController.class,
-        excludeFilters = {
-                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class),
-                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = JwtRequestFilter.class)
-        })
-@WithMockUser(username = "테스트_최고관리자", roles = {"USER"})
+@WebMvcTest(controllers = PhotoController.class, excludeFilters = {
+        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class),
+        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = JwtRequestFilter.class)})
+@WithMockUser
 class PhotoControllerTest {
     private Photo photo;
     private PhotoResponseDto photoResponseDto;
@@ -55,26 +50,17 @@ class PhotoControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
     @MockBean
     private PhotoService photoService;
-
     @MockBean
     private StorageService storageService;
 
     @BeforeEach
     void setUp() throws IOException {
-        photo = Photo.builder()
-                .id(VALID_PHOTO_ID)
-                .origPhotoName(VALID_ORIG_PHOTO_NANE)
-                .photoName(VALID_PHOTO_NAME)
-                .photoUrl(VALID_PHOTO_URL)
-                .build();
-        photoResponseDto = PhotoResponseDto.builder()
-                .origPhotoName(photo.getOrigPhotoName())
-                .photoName(photo.getPhotoName())
-                .photoUrl(photo.getPhotoUrl())
-                .build();
+        photo = TestObjectFactory.initPhoto();
+        photo.setPost(TestObjectFactory.initPost());
+
+        photoResponseDto = TestObjectFactory.initPhotoResponseDto(photo);
         photoByteArray = IOUtils.toByteArray(photo.getPhotoUrl());
         photoByteBase = Base64.getEncoder().encodeToString(photoByteArray);
         httpHeaders = new HttpHeaders();

@@ -1,12 +1,5 @@
 package AlsongDalsong_backend.AlsongDalsong.service.user;
 
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_INTRODUCE;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_KAKAO_ID;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NAME;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NICKNAME;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PROFILE;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_USER_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -17,10 +10,12 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Decision;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.PostRepository;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Todo;
+import AlsongDalsong_backend.AlsongDalsong.domain.scrap.Scrap;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.UserRepository;
 import AlsongDalsong_backend.AlsongDalsong.service.photo.StorageService;
@@ -42,40 +37,24 @@ import org.springframework.web.multipart.MultipartFile;
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
     private User user;
-    private Post mockPost;
     private UserUpdateRequestDto userUpdateRequestDto;
 
     @InjectMocks
     private UserServiceImpl userService;
-
     @Mock
     private UserRepository userRepository;
-
     @Mock
     private PostRepository postRepository;
-
     @Mock
     private StorageService storageService;
 
     @BeforeEach
     void setUp() {
-        user = User.builder()
-                .id(VALID_USER_ID)
-                .kakaoId(VALID_KAKAO_ID)
-                .name(VALID_NAME)
-                .email(VALID_EMAIL)
-                .nickname(VALID_NICKNAME)
-                .profile(VALID_PROFILE)
-                .introduce(VALID_INTRODUCE)
-                .build();
-        mockPost = mock(Post.class);
-        mockPost.setUser(user);
+        user = TestObjectFactory.initUser();
+        user.addPostList(mock(Post.class));
+        user.addScrapList(mock(Scrap.class));
 
-        userUpdateRequestDto = UserUpdateRequestDto.builder()
-                .email(user.getEmail())
-                .nickname(user.getNickname())
-                .introduce(user.getIntroduce())
-                .build();
+        userUpdateRequestDto = TestObjectFactory.initUserUpdateRequestDto(user);
     }
 
     @Test
@@ -140,9 +119,10 @@ class UserServiceImplTest {
     @Test
     void testFindUserDecisionPropensity() {
         when(userRepository.findByEmail(any())).thenReturn(user);
-        when(mockPost.getTodo()).thenReturn(Todo.TO_BUY_OR_NOT_TO_BUY);
-        when(mockPost.getDecision()).thenReturn(Decision.UNDECIDED);
-        when(postRepository.countByUserIdAndTodoAndDecision(user, mockPost.getTodo(), mockPost.getDecision())).thenReturn(1L);
+        when(user.getPostList().get(0).getTodo()).thenReturn(Todo.TO_BUY_OR_NOT_TO_BUY);
+        when(user.getPostList().get(0).getDecision()).thenReturn(Decision.UNDECIDED);
+        when(postRepository.countByUserIdAndTodoAndDecision(user, user.getPostList().get(0).getTodo(),
+                user.getPostList().get(0).getDecision())).thenReturn(1L);
 
         Map<String, Object> result = userService.findUserDecisionPropensity(user.getEmail());
 

@@ -1,9 +1,9 @@
 package AlsongDalsong_backend.AlsongDalsong.domain.like;
 
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_LIKE_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
+import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.domain.comment.Comment;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,9 +17,7 @@ class LikeTest {
 
     @BeforeEach
     void setUp() {
-        like = Like.builder()
-                .id(VALID_LIKE_ID)
-                .build();
+        like = TestObjectFactory.initLike();
     }
 
     @Test

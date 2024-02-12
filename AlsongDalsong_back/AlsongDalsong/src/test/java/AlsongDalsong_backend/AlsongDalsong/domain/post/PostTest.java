@@ -1,23 +1,13 @@
 package AlsongDalsong_backend.AlsongDalsong.domain.post;
 
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_CATEGORY;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_DATE;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_DECISION;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_IMPORTANCE;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_LINK;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_OLD;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_CONTENT;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_ID;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_REASON;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_TODO;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHAT;
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_WHO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.domain.comment.Comment;
 import AlsongDalsong_backend.AlsongDalsong.domain.photo.Photo;
 import AlsongDalsong_backend.AlsongDalsong.domain.scrap.Scrap;
@@ -34,20 +24,7 @@ class PostTest {
 
     @BeforeEach
     void setUp() {
-        post = Post.builder()
-                .id(VALID_POST_ID)
-                .todo(VALID_TODO)
-                .category(VALID_CATEGORY)
-                .who(VALID_WHO)
-                .old(VALID_OLD)
-                .date(VALID_DATE)
-                .what(VALID_WHAT)
-                .content(VALID_POST_CONTENT)
-                .link(VALID_LINK)
-                .importance(VALID_IMPORTANCE)
-                .decision(VALID_DECISION)
-                .reason(VALID_REASON)
-                .build();
+        post = TestObjectFactory.initPost();
     }
 
     @Test

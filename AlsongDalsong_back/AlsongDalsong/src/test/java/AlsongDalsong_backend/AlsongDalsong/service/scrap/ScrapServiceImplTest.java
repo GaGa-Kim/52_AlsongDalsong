@@ -1,6 +1,5 @@
 package AlsongDalsong_backend.AlsongDalsong.service.scrap;
 
-import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_SCRAP_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -12,6 +11,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Todo;
 import AlsongDalsong_backend.AlsongDalsong.domain.scrap.Scrap;
@@ -35,44 +35,31 @@ import org.mockito.junit.jupiter.MockitoExtension;
  */
 @ExtendWith(MockitoExtension.class)
 class ScrapServiceImplTest {
-    private User mockUser;
-    private Post mockPost;
     private Scrap scrap;
     private ScrapRequestDto scrapRequestDto;
 
     @InjectMocks
     private ScrapServiceImpl scrapService;
-
     @Mock
     private ScrapRepository scrapRepository;
-
     @Mock
     private UserService userService;
-
     @Mock
     private PostService postService;
 
     @BeforeEach
     void setUp() {
-        mockUser = mock(User.class);
-        mockPost = mock(Post.class);
+        scrap = TestObjectFactory.initScrap();
+        scrap.setUser(mock(User.class));
+        scrap.setPost(mock(Post.class));
 
-        scrap = Scrap.builder()
-                .id(VALID_SCRAP_ID)
-                .build();
-        scrap.setUser(mockUser);
-        scrap.setPost(mockPost);
-
-        scrapRequestDto = ScrapRequestDto.builder()
-                .email(scrap.getUserId().getEmail())
-                .postId(scrap.getPostId().getId())
-                .build();
+        scrapRequestDto = TestObjectFactory.initScrapRequestDto(scrap);
     }
 
     @Test
     void testSaveAddScrap() {
-        when(userService.findUserByEmail(any())).thenReturn(mockUser);
-        when(postService.findPostByPostId(any())).thenReturn(mockPost);
+        when(userService.findUserByEmail(any())).thenReturn(scrap.getUserId());
+        when(postService.findPostByPostId(any())).thenReturn(scrap.getPostId());
         when(scrapRepository.existsByUserIdAndPostId(any(), any())).thenReturn(false);
         when(scrapRepository.save(any())).thenReturn(scrap);
 
@@ -84,14 +71,14 @@ class ScrapServiceImplTest {
         verify(postService, times(1)).findPostByPostId(any());
         verify(scrapRepository, times(1)).existsByUserIdAndPostId(any(), any());
         verify(scrapRepository, times(1)).save(any());
-        verify(mockUser, times(1)).addScrapList(any());
-        verify(mockPost, times(1)).addScrapList(any());
+        verify(scrap.getUserId(), times(1)).addScrapList(any());
+        verify(scrap.getPostId(), times(1)).addScrapList(any());
     }
 
     @Test
     void testSaveDeleteScrap() {
-        when(userService.findUserByEmail(any())).thenReturn(mockUser);
-        when(postService.findPostByPostId(any())).thenReturn(mockPost);
+        when(userService.findUserByEmail(any())).thenReturn(scrap.getUserId());
+        when(postService.findPostByPostId(any())).thenReturn(scrap.getPostId());
         when(scrapRepository.existsByUserIdAndPostId(any(), any())).thenReturn(true);
         when(scrapRepository.findByUserIdAndPostId(any(), any())).thenReturn(scrap);
         doNothing().when(scrapRepository).delete(scrap);
@@ -109,11 +96,11 @@ class ScrapServiceImplTest {
 
     @Test
     void testFindScrap() {
-        when(userService.findUserByEmail(any())).thenReturn(mockUser);
-        when(postService.findPostByPostId(any())).thenReturn(mockPost);
+        when(userService.findUserByEmail(any())).thenReturn(scrap.getUserId());
+        when(postService.findPostByPostId(any())).thenReturn(scrap.getPostId());
         when(scrapRepository.existsByUserIdAndPostId(any(), any())).thenReturn(true);
 
-        boolean result = scrapService.findScrap(mockPost.getId(), mockUser.getEmail());
+        boolean result = scrapService.findScrap(scrap.getPostId().getId(), scrap.getUserId().getEmail());
 
         assertTrue(result);
 
@@ -124,12 +111,12 @@ class ScrapServiceImplTest {
 
     @Test
     void testFindUserScraps() {
-        when(userService.findUserByEmail(any())).thenReturn(mockUser);
-        when(postService.findPostByPostId(any())).thenReturn(mockPost);
-        when(mockPost.getTodo()).thenReturn(Todo.TO_GO_OR_NOT_TO_GO);
+        when(userService.findUserByEmail(any())).thenReturn(scrap.getUserId());
+        when(postService.findPostByPostId(any())).thenReturn(scrap.getPostId());
+        when(scrap.getPostId().getTodo()).thenReturn(Todo.TO_GO_OR_NOT_TO_GO);
         when(scrapRepository.findByUserId(any())).thenReturn(Collections.singletonList(scrap));
 
-        List<ScrapResponseDto> result = scrapService.findUserScraps(mockUser.getEmail());
+        List<ScrapResponseDto> result = scrapService.findUserScraps(scrap.getUserId().getEmail());
 
         assertNotNull(result);
         assertEquals(1, result.size());
