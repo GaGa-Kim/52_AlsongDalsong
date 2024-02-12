@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.domain.Time;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
-import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,13 +14,11 @@ import org.springframework.data.util.Pair;
  * PostResponseDto 검증 테스트
  */
 class PostResponseDtoTest {
-    private User user;
     private List<Long> photoId;
     private Pair<Long, Long> vote;
 
     @BeforeEach
     void setUp() {
-        user = TestObjectFactory.initUser();
         photoId = List.of(1L);
         vote = Pair.of(1L, 1L);
     }
@@ -40,8 +37,8 @@ class PostResponseDtoTest {
 
         assertEquals(post.getId(), postResponseDto.getId());
         assertEquals(Time.calculateTime(post.getCreatedDateTime()), postResponseDto.getCreatedDateTime());
-        assertEquals(user.getEmail(), postResponseDto.getEmail());
-        assertEquals(user.getNickname(), postResponseDto.getNickname());
+        assertEquals(post.getUserId().getEmail(), postResponseDto.getEmail());
+        assertEquals(post.getUserId().getNickname(), postResponseDto.getNickname());
         assertEquals(post.getTodo().getTodo(), postResponseDto.getTodo());
         assertEquals(post.getCategory().getCategory(), postResponseDto.getCategory());
         assertEquals(post.getWho().getWho(), postResponseDto.getWho());

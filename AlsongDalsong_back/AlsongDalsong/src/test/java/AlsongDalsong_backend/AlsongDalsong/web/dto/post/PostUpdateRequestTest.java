@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.ValidatorUtil;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
-import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,9 +19,8 @@ class PostUpdateRequestTest {
 
     @BeforeEach
     void setUp() {
-        User user = TestObjectFactory.initUser();
         Post post = TestObjectFactory.initPost();
-        post.setUser(user);
+        post.setUser(TestObjectFactory.initUser());
         postUpdateRequestVO = TestObjectFactory.initPostUpdateRequestVO(post);
     }
 
