@@ -4,7 +4,7 @@ import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import AlsongDalsong_backend.AlsongDalsong.domain.scrap.Scrap;
 import AlsongDalsong_backend.AlsongDalsong.domain.scrap.ScrapRepository;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
-import AlsongDalsong_backend.AlsongDalsong.exception.NotFoundException;
+import AlsongDalsong_backend.AlsongDalsong.except.NotFoundException;
 import AlsongDalsong_backend.AlsongDalsong.service.post.PostService;
 import AlsongDalsong_backend.AlsongDalsong.service.user.UserService;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.scrap.ScrapRequestDto;

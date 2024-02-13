@@ -4,7 +4,7 @@ import AlsongDalsong_backend.AlsongDalsong.domain.comment.Comment;
 import AlsongDalsong_backend.AlsongDalsong.domain.like.Like;
 import AlsongDalsong_backend.AlsongDalsong.domain.like.LikeRepository;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
-import AlsongDalsong_backend.AlsongDalsong.exception.UnauthorizedEditException;
+import AlsongDalsong_backend.AlsongDalsong.except.UnauthorizedEditException;
 import AlsongDalsong_backend.AlsongDalsong.service.comment.CommentService;
 import AlsongDalsong_backend.AlsongDalsong.service.user.UserService;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.like.LikeRequestDto;

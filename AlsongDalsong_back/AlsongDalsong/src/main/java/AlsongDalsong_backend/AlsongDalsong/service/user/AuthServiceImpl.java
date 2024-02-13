@@ -1,10 +1,11 @@
 package AlsongDalsong_backend.AlsongDalsong.service.user;
 
-import AlsongDalsong_backend.AlsongDalsong.config.jwt.TokenProvider;
+import AlsongDalsong_backend.AlsongDalsong.config.GlobalConfig;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.UserRepository;
-import AlsongDalsong_backend.AlsongDalsong.exception.DuplicateEmailException;
-import AlsongDalsong_backend.AlsongDalsong.exception.WithdrawnException;
+import AlsongDalsong_backend.AlsongDalsong.except.DuplicateEmailException;
+import AlsongDalsong_backend.AlsongDalsong.except.WithdrawnException;
+import AlsongDalsong_backend.AlsongDalsong.jwt.TokenProvider;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.auth.KakaoProfile;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.auth.KakaoProfile.KakaoAccount;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.auth.OauthToken;
@@ -12,7 +13,6 @@ import AlsongDalsong_backend.AlsongDalsong.web.dto.auth.TokenDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.user.UserResponseDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.user.UserSaveRequestDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -34,14 +34,9 @@ public class AuthServiceImpl implements AuthService {
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";
 
+    private final GlobalConfig globalConfig;
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
-
-    @Value("${kakao.client_id}")
-    public String client_id;
-
-    @Value("${kakao.redirect_uri}")
-    public String redirect_uri;
 
     /**
      * 카카오 회원가입 또는 로그인을 진행한 후, JWT 토큰을 생성한다.
@@ -119,8 +114,8 @@ public class AuthServiceImpl implements AuthService {
     private MultiValueMap<String, String> createParam(String code) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
-        params.add("client_id", client_id);
-        params.add("redirect_uri", redirect_uri);
+        params.add("client_id", globalConfig.getKakao_client_id());
+        params.add("redirect_uri", globalConfig.getKakao_redirect_uri());
         params.add("code", code);
         return params;
     }

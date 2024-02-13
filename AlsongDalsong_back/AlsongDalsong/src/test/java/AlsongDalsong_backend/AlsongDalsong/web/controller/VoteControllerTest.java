@@ -11,8 +11,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.config.SecurityConfig;
-import AlsongDalsong_backend.AlsongDalsong.config.jwt.JwtRequestFilter;
 import AlsongDalsong_backend.AlsongDalsong.domain.vote.Vote;
+import AlsongDalsong_backend.AlsongDalsong.jwt.JwtRequestFilter;
 import AlsongDalsong_backend.AlsongDalsong.service.vote.VoteService;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.vote.VoteRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;

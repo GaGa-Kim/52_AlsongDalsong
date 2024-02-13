@@ -1,4 +1,4 @@
-package AlsongDalsong_backend.AlsongDalsong.config.jwt;
+package AlsongDalsong_backend.AlsongDalsong.jwt;
 
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;

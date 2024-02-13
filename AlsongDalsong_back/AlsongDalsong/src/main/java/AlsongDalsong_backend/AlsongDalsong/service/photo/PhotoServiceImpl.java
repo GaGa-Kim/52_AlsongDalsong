@@ -2,7 +2,7 @@ package AlsongDalsong_backend.AlsongDalsong.service.photo;
 
 import AlsongDalsong_backend.AlsongDalsong.domain.photo.Photo;
 import AlsongDalsong_backend.AlsongDalsong.domain.photo.PhotoRepository;
-import AlsongDalsong_backend.AlsongDalsong.exception.NotFoundException;
+import AlsongDalsong_backend.AlsongDalsong.except.NotFoundException;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.photo.PhotoResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

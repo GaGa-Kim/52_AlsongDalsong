@@ -1,5 +1,6 @@
-package AlsongDalsong_backend.AlsongDalsong.config.jwt;
+package AlsongDalsong_backend.AlsongDalsong.jwt;
 
+import AlsongDalsong_backend.AlsongDalsong.config.GlobalConfig;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,17 +22,20 @@ import org.springframework.util.StringUtils;
 /**
  * Token 생성 및 유효성 확인
  */
+@Slf4j
 @Component
 public class TokenProvider {
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";
     private static final int PREFIX_INDEX = 7;
 
-    @Value("${jwt.secret}")
     public String secret;
-
-    @Value("${jwt.expiration_time}")
     public int expiration_time;
+
+    public TokenProvider(GlobalConfig config) {
+        this.secret = config.getJwt_secret();
+        this.expiration_time = config.getJwt_expiration_time();
+    }
 
     public String createToken(User user) {
         return JWT.create()
@@ -59,13 +63,13 @@ public class TokenProvider {
             JWT.require(Algorithm.HMAC512(secret)).build().verify(token);
             return true;
         } catch (IllegalArgumentException e) {
-            System.out.println("토큰을 얻을 수 없습니다.");
+            log.error("토큰을 얻을 수 없습니다.");
             return false;
         } catch (TokenExpiredException e) {
-            System.out.println("토큰이 만료되었습니다.");
+            log.error("토큰이 만료되었습니다.");
             return false;
         } catch (JWTVerificationException e) {
-            System.out.println("유효하지 않은 토큰입니다.");
+            log.error("유효하지 않은 토큰입니다.");
             return false;
         }
     }

@@ -5,6 +5,7 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PHOTO_NAME
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import AlsongDalsong_backend.AlsongDalsong.config.GlobalConfig;
 import AlsongDalsong_backend.AlsongDalsong.domain.photo.Photo;
 import com.amazonaws.services.s3.AmazonS3Client;
 import io.findify.s3mock.S3Mock;
@@ -15,7 +16,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.ResponseEntity;
@@ -36,14 +36,16 @@ class AwsS3ServiceImplTest {
     private AwsS3ServiceImpl awsS3Service;
 
     @BeforeAll
-    static void setUp(@Value("${cloud.aws.s3.bucket}") String bucket,
-                      @Autowired S3Mock s3Mock, @Autowired AmazonS3Client amazonS3Client) {
+    static void setUp(@Autowired S3Mock s3Mock,
+                      @Autowired AmazonS3Client amazonS3Client,
+                      @Autowired GlobalConfig globalConfig) {
         s3Mock.start();
-        amazonS3Client.createBucket(bucket);
+        amazonS3Client.createBucket(globalConfig.getAws_bucket());
     }
 
     @AfterAll
-    static void tearDown(@Autowired S3Mock s3Mock, @Autowired AmazonS3Client amazonS3Client) {
+    static void tearDown(@Autowired S3Mock s3Mock,
+                         @Autowired AmazonS3Client amazonS3Client) {
         amazonS3Client.shutdown();
         s3Mock.stop();
     }

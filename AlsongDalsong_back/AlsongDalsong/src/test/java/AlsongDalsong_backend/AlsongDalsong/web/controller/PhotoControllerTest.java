@@ -12,8 +12,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.config.SecurityConfig;
-import AlsongDalsong_backend.AlsongDalsong.config.jwt.JwtRequestFilter;
 import AlsongDalsong_backend.AlsongDalsong.domain.photo.Photo;
+import AlsongDalsong_backend.AlsongDalsong.jwt.JwtRequestFilter;
 import AlsongDalsong_backend.AlsongDalsong.service.photo.PhotoService;
 import AlsongDalsong_backend.AlsongDalsong.service.photo.StorageService;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.photo.PhotoResponseDto;

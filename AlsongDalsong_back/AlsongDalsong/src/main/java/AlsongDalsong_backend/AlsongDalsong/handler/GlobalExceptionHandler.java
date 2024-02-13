@@ -1,9 +1,9 @@
 package AlsongDalsong_backend.AlsongDalsong.handler;
 
-import AlsongDalsong_backend.AlsongDalsong.exception.DuplicateEmailException;
-import AlsongDalsong_backend.AlsongDalsong.exception.NotFoundException;
-import AlsongDalsong_backend.AlsongDalsong.exception.UnauthorizedEditException;
-import AlsongDalsong_backend.AlsongDalsong.exception.WithdrawnException;
+import AlsongDalsong_backend.AlsongDalsong.except.DuplicateEmailException;
+import AlsongDalsong_backend.AlsongDalsong.except.NotFoundException;
+import AlsongDalsong_backend.AlsongDalsong.except.UnauthorizedEditException;
+import AlsongDalsong_backend.AlsongDalsong.except.WithdrawnException;
 import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.List;

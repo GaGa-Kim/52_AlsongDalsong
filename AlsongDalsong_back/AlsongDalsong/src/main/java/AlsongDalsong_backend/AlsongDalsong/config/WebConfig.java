@@ -16,6 +16,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
     @Bean
+    public GlobalConfig config() {
+        return new GlobalConfig();
+    }
+    
+    @Bean
     public BaseHandlerInterceptor baseHandlerInterceptor() {
         return new BaseHandlerInterceptor();
     }

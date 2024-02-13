@@ -11,11 +11,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
-import AlsongDalsong_backend.AlsongDalsong.config.jwt.TokenProvider;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import AlsongDalsong_backend.AlsongDalsong.domain.scrap.Scrap;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.UserRepository;
+import AlsongDalsong_backend.AlsongDalsong.jwt.TokenProvider;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.auth.TokenDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.user.UserResponseDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.user.UserSaveRequestDto;
@@ -46,7 +46,7 @@ class AuthServiceImplTest {
         user = TestObjectFactory.initUser();
         user.addPostList(mock(Post.class));
         user.addScrapList(mock(Scrap.class));
-        
+
         userSaveRequestDto = TestObjectFactory.initUserSaveRequestDto(user);
     }
 

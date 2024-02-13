@@ -1,5 +1,6 @@
 package AlsongDalsong_backend.AlsongDalsong.service.photo;
 
+import AlsongDalsong_backend.AlsongDalsong.config.GlobalConfig;
 import AlsongDalsong_backend.AlsongDalsong.domain.photo.Photo;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.photo.PhotoResponseDto;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -16,9 +17,9 @@ import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,9 +39,14 @@ public class AwsS3ServiceImpl implements StorageService {
     private static final String FILE_NAME_SEPARATOR = ".";
 
     private final AmazonS3Client amazonS3Client;
+    private final GlobalConfig globalConfig;
 
-    @Value("${cloud.aws.s3.bucket}")
     public String bucket;
+
+    @PostConstruct
+    public void initBucket() {
+        bucket = globalConfig.getAws_bucket();
+    }
 
     /**
      * AWS S3 버킷에 회원 프로필 이미지(파일)를 저장한다.

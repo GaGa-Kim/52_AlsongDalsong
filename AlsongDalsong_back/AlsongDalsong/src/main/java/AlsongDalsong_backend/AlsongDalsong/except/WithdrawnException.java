@@ -1,4 +1,4 @@
-package AlsongDalsong_backend.AlsongDalsong.exception;
+package AlsongDalsong_backend.AlsongDalsong.except;
 
 import AlsongDalsong_backend.AlsongDalsong.handler.ErrorCode;
 

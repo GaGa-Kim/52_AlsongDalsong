@@ -15,8 +15,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.config.SecurityConfig;
-import AlsongDalsong_backend.AlsongDalsong.config.jwt.JwtRequestFilter;
 import AlsongDalsong_backend.AlsongDalsong.domain.comment.Comment;
+import AlsongDalsong_backend.AlsongDalsong.jwt.JwtRequestFilter;
 import AlsongDalsong_backend.AlsongDalsong.service.comment.CommentService;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.comment.CommentResponseDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.comment.CommentSaveRequestDto;
