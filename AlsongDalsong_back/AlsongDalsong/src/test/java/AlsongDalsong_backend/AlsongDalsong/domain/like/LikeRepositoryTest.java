@@ -9,6 +9,7 @@ import AlsongDalsong_backend.AlsongDalsong.domain.comment.Comment;
 import AlsongDalsong_backend.AlsongDalsong.domain.comment.CommentRepository;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.UserRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -26,6 +27,7 @@ class LikeRepositoryTest {
     private LikeRepository likeRepository;
 
     @Test
+    @DisplayName("회원 아이디와 댓글 아이디로 댓글 좋아요 조회 테스트")
     void findByUserIdAndCommentId() {
         User user = userRepository.findByEmail(VALID_EMAIL);
         Comment comment = commentRepository.findById(VALID_COMMENT_ID).orElse(null);
@@ -35,7 +37,8 @@ class LikeRepositoryTest {
     }
 
     @Test
-    void existByUserIdAndPostId() {
+    @DisplayName("회원 아이디와 댓글 아이디로 댓글 좋아요 존재 확인 테스트")
+    void existByUserIdAndCommentId() {
         User user = userRepository.findByEmail(VALID_EMAIL);
         Comment comment = commentRepository.findById(VALID_COMMENT_ID).orElse(null);
         boolean existLike = likeRepository.existsByUserIdAndCommentId(user, comment);

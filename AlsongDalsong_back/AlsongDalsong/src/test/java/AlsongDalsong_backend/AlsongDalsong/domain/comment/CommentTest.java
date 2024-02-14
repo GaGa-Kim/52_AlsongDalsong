@@ -11,6 +11,7 @@ import AlsongDalsong_backend.AlsongDalsong.domain.like.Like;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -25,6 +26,7 @@ class CommentTest {
     }
 
     @Test
+    @DisplayName("댓글 내용 수정 테스트")
     void testUpdate() {
         String newContent = "구매하지 마세요";
         comment.update(newContent);
@@ -33,6 +35,7 @@ class CommentTest {
     }
 
     @Test
+    @DisplayName("작성한 댓글의 작성자 연관관계 설정 테스트")
     void testSetUser() {
         User user = mock(User.class);
         comment.setUser(user);
@@ -41,6 +44,7 @@ class CommentTest {
     }
 
     @Test
+    @DisplayName("작성한 댓글의 게시글 연관관계 설정 테스트")
     void testSetPost() {
         Post post = mock(Post.class);
         comment.setPost(post);
@@ -50,6 +54,7 @@ class CommentTest {
     }
 
     @Test
+    @DisplayName("작성한 댓글의 댓글 좋아요 연관관계 설정 테스트")
     void testAddLikeList() {
         Like like = mock(Like.class);
         comment.addLikeList(like);

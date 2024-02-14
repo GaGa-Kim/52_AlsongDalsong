@@ -7,6 +7,7 @@ import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.domain.comment.Comment;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -21,6 +22,7 @@ class LikeTest {
     }
 
     @Test
+    @DisplayName("작성한 댓글 좋아요의 작성자 연관관계 설정 테스트")
     void testSetUser() {
         User user = mock(User.class);
         like.setUser(user);
@@ -29,6 +31,7 @@ class LikeTest {
     }
 
     @Test
+    @DisplayName("작성한 댓글 좋아요의 댓글 연관관계 설정 테스트")
     void testSetComment() {
         Comment comment = mock(Comment.class);
         like.setComment(comment);

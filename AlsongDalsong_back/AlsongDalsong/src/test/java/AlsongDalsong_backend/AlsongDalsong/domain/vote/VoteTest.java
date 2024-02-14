@@ -9,6 +9,7 @@ import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -23,6 +24,7 @@ class VoteTest {
     }
 
     @Test
+    @DisplayName("투표 수정 테스트")
     void testUpdate() {
         boolean reVote = false;
         vote.update(reVote);
@@ -31,6 +33,7 @@ class VoteTest {
     }
 
     @Test
+    @DisplayName("작성한 투표의 작성자 연관관계 설정 테스트")
     void testSetUser() {
         User user = mock(User.class);
         vote.setUser(user);
@@ -39,6 +42,7 @@ class VoteTest {
     }
 
     @Test
+    @DisplayName("작성한 투표의 게시글 연관관계 설정 테스트")
     void testSetPost() {
         Post post = mock(Post.class);
         vote.setPost(post);

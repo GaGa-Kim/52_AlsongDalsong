@@ -1,5 +1,6 @@
 package AlsongDalsong_backend.AlsongDalsong.service.comment;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -16,6 +17,8 @@ import AlsongDalsong_backend.AlsongDalsong.domain.comment.CommentRepository;
 import AlsongDalsong_backend.AlsongDalsong.domain.like.Like;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
+import AlsongDalsong_backend.AlsongDalsong.except.NotFoundException;
+import AlsongDalsong_backend.AlsongDalsong.except.UnauthorizedEditException;
 import AlsongDalsong_backend.AlsongDalsong.service.post.PostService;
 import AlsongDalsong_backend.AlsongDalsong.service.user.UserService;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.comment.CommentResponseDto;
@@ -25,6 +28,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -61,6 +65,7 @@ class CommentServiceImplTest {
     }
 
     @Test
+    @DisplayName("게시글에 댓글 작성 후 댓글 리스트 조회 테스트")
     void testAddComment() {
         when(userService.findUserByEmail(any())).thenReturn(comment.getUserId());
         when(postService.findPostByPostId(any())).thenReturn(comment.getPostId());
@@ -83,7 +88,8 @@ class CommentServiceImplTest {
     }
 
     @Test
-    void testFindCommentByCommentId() {
+    @DisplayName("댓글 아이디로 댓글 조회 테스트")
+    void testFindCommentByExistingCommentId() {
         when(commentRepository.findById(any())).thenReturn(Optional.ofNullable(comment));
 
         Comment result = commentService.findCommentByCommentId(comment.getId());
@@ -95,6 +101,17 @@ class CommentServiceImplTest {
     }
 
     @Test
+    @DisplayName("존재하지 않는 댓글 아이디로 댓글 조회 예외 발생 테스트")
+    void testFindCommentByNonExistingCommentIdExcept() {
+        Long nonExistingCommentId = 100L;
+        when(commentRepository.findById(any())).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> commentService.findCommentByCommentId(nonExistingCommentId))
+                .isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("게시글 아이디로 게시글 별 댓글 리스트 조회 테스트")
     void testFindPostCommentsByLikes() {
         when(postService.findPostByPostId(any())).thenReturn(comment.getPostId());
         when(commentRepository.findAllByPostIdOrderByLikeListDesc(any())).thenReturn(Collections.singletonList(comment));
@@ -110,6 +127,7 @@ class CommentServiceImplTest {
     }
 
     @Test
+    @DisplayName("댓글 수정 후 댓글 리스트 조회 테스트")
     void testModifyComment() {
         when(userService.findUserByEmail(any())).thenReturn(comment.getUserId());
         when(commentRepository.findById(any())).thenReturn(Optional.ofNullable(comment));
@@ -127,6 +145,18 @@ class CommentServiceImplTest {
     }
 
     @Test
+    @DisplayName("댓글 수정 시 작성자와 편집자가 다를 경우 예외 발생 테스트")
+    void testModifyCommentUnauthorizedExcept() {
+        User notWriter = mock(User.class);
+        when(userService.findUserByEmail(any())).thenReturn(notWriter);
+        when(commentRepository.findById(any())).thenReturn(Optional.ofNullable(comment));
+
+        assertThatThrownBy(() -> commentService.modifyComment(commentUpdateRequestDto))
+                .isInstanceOf(UnauthorizedEditException.class);
+    }
+
+    @Test
+    @DisplayName("댓글 아이디로 댓글 삭제 테스트")
     void testRemoveComment() {
         when(userService.findUserByEmail(any())).thenReturn(comment.getUserId());
         when(commentRepository.findById(any())).thenReturn(Optional.ofNullable(comment));
@@ -139,5 +169,16 @@ class CommentServiceImplTest {
         verify(userService, times(1)).findUserByEmail(any());
         verify(commentRepository, times(1)).findById(any());
         verify(commentRepository, times(1)).delete(any());
+    }
+
+    @Test
+    @DisplayName("댓글 삭제 시 작성자와 편집자가 다를 경우 예외 발생 테스트")
+    void testRemoveCommentUnauthorizedExcept() {
+        User notWriter = mock(User.class);
+        when(userService.findUserByEmail(any())).thenReturn(notWriter);
+        when(commentRepository.findById(any())).thenReturn(Optional.ofNullable(comment));
+
+        assertThatThrownBy(() -> commentService.removeComment(comment.getId(), comment.getUserId().getEmail()))
+                .isInstanceOf(UnauthorizedEditException.class);
     }
 }

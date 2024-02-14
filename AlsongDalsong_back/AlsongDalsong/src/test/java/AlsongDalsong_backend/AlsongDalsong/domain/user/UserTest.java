@@ -12,6 +12,7 @@ import AlsongDalsong_backend.AlsongDalsong.constants.Rule;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import AlsongDalsong_backend.AlsongDalsong.domain.scrap.Scrap;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -26,6 +27,7 @@ class UserTest {
     }
 
     @Test
+    @DisplayName("회원 정보 수정 테스트")
     void testUpdateInfo() {
         String newNickName = "달송이";
         String newIntroduce = "안녕하십니까";
@@ -36,6 +38,7 @@ class UserTest {
     }
 
     @Test
+    @DisplayName("회원 프로필 사진 수정 테스트")
     void testUpdateProfile() {
         String newProfile = "profile.png";
         user.updateProfile(newProfile);
@@ -44,6 +47,7 @@ class UserTest {
     }
 
     @Test
+    @DisplayName("스티커 추가 없이 포인트 업데이트 테스트")
     void testUpdatePoint_canNotAddStickers() {
         int point = 50;
         user.updatePoint(point);
@@ -53,6 +57,7 @@ class UserTest {
     }
 
     @Test
+    @DisplayName("스티커 추가 및 포인트 업데이트 테스트")
     void testUpdatePoint_canAddStickers() {
         int point = 101;
         user.updatePoint(point);
@@ -62,6 +67,7 @@ class UserTest {
     }
 
     @Test
+    @DisplayName("회원 탈퇴 테스트")
     void testWithdrawUser() {
         assertFalse(user.getWithdraw());
 
@@ -71,6 +77,7 @@ class UserTest {
     }
 
     @Test
+    @DisplayName("회원의 게시글 연관관계 설정 테스트")
     void testAddPostList() {
         Post post = mock(Post.class);
         user.addPostList(post);
@@ -80,6 +87,7 @@ class UserTest {
     }
 
     @Test
+    @DisplayName("회원의 스크랩 연관관계 설정 테스트")
     void testAddScrapList() {
         Scrap scrap = mock(Scrap.class);
         user.addScrapList(scrap);

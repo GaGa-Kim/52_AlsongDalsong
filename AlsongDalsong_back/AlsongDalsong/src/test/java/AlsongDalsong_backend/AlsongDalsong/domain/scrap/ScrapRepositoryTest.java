@@ -11,6 +11,7 @@ import AlsongDalsong_backend.AlsongDalsong.domain.post.PostRepository;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.UserRepository;
 import java.util.List;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -28,6 +29,7 @@ class ScrapRepositoryTest {
     private ScrapRepository scrapRepository;
 
     @Test
+    @DisplayName("회원 아이디와 게시글 아이디로 스크랩 조회 테스트")
     void findByUserIdAndPostId() {
         User user = userRepository.findByEmail(VALID_EMAIL);
         Post post = postRepository.findById(VALID_POST_ID).orElse(null);
@@ -37,6 +39,7 @@ class ScrapRepositoryTest {
     }
 
     @Test
+    @DisplayName("회원 아이디로 스크랩 리스트 조회 테스트")
     void findByUserId() {
         User user = userRepository.findByEmail(VALID_EMAIL);
         List<Scrap> foundScrapList = scrapRepository.findByUserId(user);
@@ -46,6 +49,7 @@ class ScrapRepositoryTest {
     }
 
     @Test
+    @DisplayName("회원 아이디와 게시글 아이디로 스크랩 존재 확인 테스트")
     void existByUserIdAndPostId() {
         User user = userRepository.findByEmail(VALID_EMAIL);
         Post post = postRepository.findById(VALID_POST_ID).orElse(null);

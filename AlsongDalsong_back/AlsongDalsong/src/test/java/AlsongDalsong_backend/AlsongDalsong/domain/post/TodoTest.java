@@ -3,6 +3,7 @@ package AlsongDalsong_backend.AlsongDalsong.domain.post;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Test;
  */
 class TodoTest {
     @Test
+    @DisplayName("올바른 게시글 분류 열거형 값 테스트")
     void ofTodo_ValidTodo() {
         String validTodo = "살까 말까";
 
@@ -20,6 +22,7 @@ class TodoTest {
     }
 
     @Test
+    @DisplayName("올바르지 않은 게시글 분류 열거형 값 테스트")
     void ofTodo_InvalidTodo() {
         String invalidTodo = "고민이야";
 
