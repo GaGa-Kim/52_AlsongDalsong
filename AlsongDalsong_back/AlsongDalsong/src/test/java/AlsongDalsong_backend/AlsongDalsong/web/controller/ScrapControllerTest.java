@@ -22,6 +22,7 @@ import AlsongDalsong_backend.AlsongDalsong.web.dto.scrap.ScrapResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -60,6 +61,7 @@ class ScrapControllerTest {
     }
 
     @Test
+    @DisplayName("게시글을 작성한 후, 작성한 게시글 리턴 테스트")
     void testScrapSaveAdd() throws Exception {
         when(scrapService.saveScrap(any())).thenReturn(true);
 
@@ -74,6 +76,7 @@ class ScrapControllerTest {
     }
 
     @Test
+    @DisplayName("게시글을 작성한 후, 작성한 게시글 리턴 테스트")
     void testScrapSaveDelete() throws Exception {
         when(scrapService.saveScrap(any())).thenReturn(false);
 
@@ -88,6 +91,7 @@ class ScrapControllerTest {
     }
 
     @Test
+    @DisplayName("게시글을 작성한 후, 작성한 게시글 리턴 테스트")
     void testScrapDetails() throws Exception {
         when(scrapService.findScrap(any(), any())).thenReturn(true);
 
@@ -102,6 +106,7 @@ class ScrapControllerTest {
     }
 
     @Test
+    @DisplayName("게시글을 작성한 후, 작성한 게시글 리턴 테스트")
     void testScrapUserList() throws Exception {
         when(scrapService.findUserScraps(any())).thenReturn(Collections.singletonList(scrapResponseDto));
 

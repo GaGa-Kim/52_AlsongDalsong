@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -80,6 +81,7 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("회원 정보 리턴 테스트")
     void testUserDetails() throws Exception {
         when(userService.findUserByEmail(any())).thenReturn(user);
 
@@ -93,6 +95,7 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("회원 정보 수정를 수정한 후, 수정된 회원 정보 리턴 테스트")
     void testUserProfileModify() throws Exception {
         when(userService.modifyUserProfile(any())).thenReturn(user);
 
@@ -108,6 +111,7 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("회원 프로필 사진 URL 정보 조회 리턴 테스트")
     void testUserProfileImageAsUrl() throws Exception {
         when(userService.findUserByEmail(any())).thenReturn(user);
 
@@ -121,6 +125,7 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("회원 프로필 사진 bytearray 리턴 테스트")
     void testUserProfileImageAsBytes() throws Exception {
         when(userService.findUserByEmail(any())).thenReturn(user);
         when(userService.findUserProfileImageAsBytes(any()))
@@ -137,6 +142,7 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("게시글을 스크랩한 후, true 리턴 테스트")
     void testUserProfileImageAsBase64() throws Exception {
         when(userService.findUserByEmail(any())).thenReturn(user);
         when(userService.findUserProfileImageAsBase64(any()))
@@ -153,6 +159,7 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("회원 프로필 사진 Base64 리턴 테스트")
     void testUserProfileImageModify() throws Exception {
         when(userService.modifyUserProfileImage(any(), any())).thenReturn(user);
 
@@ -178,6 +185,7 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("회원 프로필 사진을 수정한 후 수정된 회원 정보 리턴 테스트")
     void testUserPropensityDetails() throws Exception {
         when(userService.findUserDecisionPropensity(any())).thenReturn(propensityMap);
 
@@ -191,6 +199,7 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("회원 탈퇴를 한 후, true 리턴 테스트")
     void testUserWithdraw() throws Exception {
         when(userService.withdrawUserAccount(any())).thenReturn(true);
 

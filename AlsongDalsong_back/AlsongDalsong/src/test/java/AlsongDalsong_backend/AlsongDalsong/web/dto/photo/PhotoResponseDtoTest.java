@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.domain.photo.Photo;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.Test;
  */
 class PhotoResponseDtoTest {
     @Test
+    @DisplayName("PhotoResponseDto 생성 테스트")
     void testPhotoResponseDto() {
         Photo photo = TestObjectFactory.initPhoto();
         photo.setPost(TestObjectFactory.initPost());

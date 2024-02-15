@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.Base64;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -67,6 +68,7 @@ class PhotoControllerTest {
     }
 
     @Test
+    @DisplayName("사진 아이디로 이미지 정보 조회 리턴 테스트")
     void testPhotoDetails() throws Exception {
         when(photoService.findPhoto(any())).thenReturn(photoResponseDto);
 
@@ -82,6 +84,7 @@ class PhotoControllerTest {
     }
 
     @Test
+    @DisplayName("사진 아이디로 이미지 URL 정보 조회 리턴 테스트")
     void testPhotoUrlDetails() throws Exception {
         when(photoService.findPhotoByPhotoId(any())).thenReturn(photo);
         when(storageService.findFileUrl(any())).thenReturn(photo.getPhotoUrl());
@@ -96,6 +99,7 @@ class PhotoControllerTest {
     }
 
     @Test
+    @DisplayName("사진 아이디로 이미지를 bytearray 리턴 테스트")
     void testPhotoByteArrayDetails() throws Exception {
         when(photoService.findPhotoByPhotoId(any())).thenReturn(photo);
         when(storageService.findFileObject(photo.getOrigPhotoName(), photo.getPhotoName()))
@@ -112,6 +116,7 @@ class PhotoControllerTest {
     }
 
     @Test
+    @DisplayName("사진 아이디로 이미지를 Base64 리턴 테스트")
     void testPhotoBase64Details() throws Exception {
         when(photoService.findPhotoByPhotoId(any())).thenReturn(photo);
         when(storageService.findFileBase64(photo.getOrigPhotoName(), photo.getPhotoName()))

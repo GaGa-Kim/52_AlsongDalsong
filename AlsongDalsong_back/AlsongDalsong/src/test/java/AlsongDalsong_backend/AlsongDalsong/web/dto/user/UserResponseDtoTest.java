@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -11,11 +12,12 @@ import org.junit.jupiter.api.Test;
  */
 class UserResponseDtoTest {
     @Test
+    @DisplayName("UserResponseDto 생성 테스트")
     void testUserResponseDto() {
         User user = TestObjectFactory.initUser();
         user.addPostList(TestObjectFactory.initPost());
         user.addScrapList(TestObjectFactory.initScrap());
-        
+
         UserResponseDto userResponseDto = new UserResponseDto(user);
 
         assertEquals(user.getId(), userResponseDto.getId());

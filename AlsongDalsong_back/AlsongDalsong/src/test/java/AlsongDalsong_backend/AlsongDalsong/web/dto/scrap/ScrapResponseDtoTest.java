@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.domain.scrap.Scrap;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.Test;
  */
 class ScrapResponseDtoTest {
     @Test
+    @DisplayName("ScrapResponseDto 생성 테스트")
     void testScrapResponseDto() {
         Scrap scrap = TestObjectFactory.initScrap();
         scrap.setUser(TestObjectFactory.initUser());

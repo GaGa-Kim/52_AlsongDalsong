@@ -6,6 +6,7 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import AlsongDalsong_backend.AlsongDalsong.ValidatorUtil;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -15,6 +16,7 @@ class LikeRequestDtoTest {
     private final ValidatorUtil<LikeRequestDto> validatorUtil = new ValidatorUtil<>();
 
     @Test
+    @DisplayName("LikeRequestDto 생성 테스트")
     void testLikeRequestDto() {
         LikeRequestDto likeRequestDto = LikeRequestDto.builder()
                 .email(VALID_EMAIL)
@@ -26,6 +28,7 @@ class LikeRequestDtoTest {
     }
 
     @Test
+    @DisplayName("이메일 유효성 검증 테스트")
     void email_validation() {
         LikeRequestDto likeRequestDto = LikeRequestDto.builder()
                 .email(INVALID_EMAIL)
@@ -36,6 +39,7 @@ class LikeRequestDtoTest {
     }
 
     @Test
+    @DisplayName("댓글 아이디 유효성 검증 테스트")
     void commentId_validation() {
         LikeRequestDto likeRequestDto = LikeRequestDto.builder()
                 .email(VALID_EMAIL)

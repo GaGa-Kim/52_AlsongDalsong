@@ -17,6 +17,7 @@ import AlsongDalsong_backend.AlsongDalsong.service.like.LikeService;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.like.LikeRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -53,6 +54,7 @@ class LikeControllerTest {
     }
 
     @Test
+    @DisplayName("게시글을 스크랩한 후, true 리턴 테스트")
     void testLikeSaveAdd() throws Exception {
         when(likeService.saveLike(any())).thenReturn(true);
 
@@ -67,6 +69,7 @@ class LikeControllerTest {
     }
 
     @Test
+    @DisplayName("게시글이 이미 스크랩되어 있을 경우 스크랩이 취소되고 false 리턴 테스트")
     void testLikeSaveDelete() throws Exception {
         when(likeService.saveLike(any())).thenReturn(false);
 
@@ -81,6 +84,7 @@ class LikeControllerTest {
     }
 
     @Test
+    @DisplayName("사용자별 스크랩 목록 조회 리턴 테스트")
     void testLikeDetails() throws Exception {
         when(likeService.findLike(any(), any())).thenReturn(true);
 

@@ -7,6 +7,7 @@ import AlsongDalsong_backend.AlsongDalsong.domain.Time;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.util.Pair;
 
@@ -24,8 +25,8 @@ class PostResponseDtoTest {
     }
 
     @Test
-    void
-    testPostResponseDto() {
+    @DisplayName("PostResponseDto 생성 테스트")
+    void testPostResponseDto() {
         Post post = TestObjectFactory.initPost();
         post.setUser(TestObjectFactory.initUser());
         post.addPhotoList(TestObjectFactory.initPhoto());

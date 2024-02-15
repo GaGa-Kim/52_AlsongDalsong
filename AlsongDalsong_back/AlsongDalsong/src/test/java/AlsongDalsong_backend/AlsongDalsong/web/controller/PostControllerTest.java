@@ -25,6 +25,7 @@ import AlsongDalsong_backend.AlsongDalsong.web.dto.post.PostUpdateRequestVO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -68,6 +69,7 @@ class PostControllerTest {
     }
 
     @Test
+    @DisplayName("게시글을 작성한 후, 작성한 게시글 리턴 테스트")
     void testPostAdd() throws Exception {
         when(postService.addPostWithPhotos(any(), any())).thenReturn(postResponseDto);
 
@@ -83,6 +85,7 @@ class PostControllerTest {
     }
 
     @Test
+    @DisplayName("게시글 아이디에 따라 게시글 상세 조회 리턴 테스트")
     void testPostDetails() throws Exception {
         when(postService.findPostDetailByPostId(any())).thenReturn(postResponseDto);
 
@@ -96,6 +99,7 @@ class PostControllerTest {
     }
 
     @Test
+    @DisplayName("살까 말까 / 할까 말까 / 갈까 말까로 분류별 최신글 목록 조회 리턴 테스트")
     void testPostLatestList() throws Exception {
         when(postService.findLatestPosts(any())).thenReturn(Collections.singletonList(postResponseDto));
 
@@ -109,6 +113,7 @@ class PostControllerTest {
     }
 
     @Test
+    @DisplayName("살까 말까 / 할까 말까 / 갈까 말까로 분류별 인기글 목록 조회 리턴 테스트")
     void testPostPopularList() throws Exception {
         when(postService.findPopularPosts(any())).thenReturn(Collections.singletonList(postResponseDto));
 
@@ -122,6 +127,7 @@ class PostControllerTest {
     }
 
     @Test
+    @DisplayName("분류의 카테고리별로 게시글 목록 조회 리턴 테스트")
     void testPostCategoryList() throws Exception {
         when(postService.findPostsByCategory(any(), any())).thenReturn(Collections.singletonList(postResponseDto));
 
@@ -136,6 +142,7 @@ class PostControllerTest {
     }
 
     @Test
+    @DisplayName("사용자별 쓴 글 목록 조회 리턴 테스트")
     void testPostUserList() throws Exception {
         when(postService.findUserPosts(any())).thenReturn(Collections.singletonList(postResponseDto));
 
@@ -149,6 +156,7 @@ class PostControllerTest {
     }
 
     @Test
+    @DisplayName("게시글을 수정한 후, 수정한 게시글 리턴 테스트")
     void testPostModify() throws Exception {
         when(postService.modifyPost(any(), any(), any())).thenReturn(postResponseDto);
 
@@ -164,6 +172,7 @@ class PostControllerTest {
     }
 
     @Test
+    @DisplayName("게시글을 삭제한 후, true 리턴 테스트")
     void testPostRemove() throws Exception {
         when(postService.removePost(any(), any())).thenReturn(true);
 
@@ -178,6 +187,7 @@ class PostControllerTest {
     }
 
     @Test
+    @DisplayName("결정 미정이었던 게시글을 결정/취소에 따라 게시글을 확정한 후, 확정된 게시글 리턴 테스트")
     void testPostModifyDecision() throws Exception {
         when(postService.modifyPostDecision(any(), any(), any(), any())).thenReturn(postResponseDto);
 

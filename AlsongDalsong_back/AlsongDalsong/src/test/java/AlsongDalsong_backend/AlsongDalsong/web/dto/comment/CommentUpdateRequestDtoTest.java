@@ -9,6 +9,7 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import AlsongDalsong_backend.AlsongDalsong.ValidatorUtil;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -18,6 +19,7 @@ class CommentUpdateRequestDtoTest {
     private final ValidatorUtil<CommentUpdateRequestDto> validatorUtil = new ValidatorUtil<>();
 
     @Test
+    @DisplayName("CommentUpdateRequestDto 생성 테스트")
     void testCommentUpdateRequestDto() {
         CommentUpdateRequestDto commentUpdateRequestDto = CommentUpdateRequestDto.builder()
                 .id(VALID_COMMENT_ID)
@@ -33,6 +35,7 @@ class CommentUpdateRequestDtoTest {
     }
 
     @Test
+    @DisplayName("댓글 아이디 유효성 검증 테스트")
     void commentId_validation() {
         CommentUpdateRequestDto commentUpdateRequestDto = CommentUpdateRequestDto.builder()
                 .id(null)
@@ -45,6 +48,7 @@ class CommentUpdateRequestDtoTest {
     }
 
     @Test
+    @DisplayName("이메일 유효성 검증 테스트")
     void email_validation() {
         CommentUpdateRequestDto commentUpdateRequestDto = CommentUpdateRequestDto.builder()
                 .id(VALID_COMMENT_ID)
@@ -57,6 +61,7 @@ class CommentUpdateRequestDtoTest {
     }
 
     @Test
+    @DisplayName("게시글 아이디 유효성 검증 테스트")
     void postId_validation() {
         CommentUpdateRequestDto commentUpdateRequestDto = CommentUpdateRequestDto.builder()
                 .id(VALID_COMMENT_ID)
@@ -69,6 +74,7 @@ class CommentUpdateRequestDtoTest {
     }
 
     @Test
+    @DisplayName("댓글 내용 유효성 검증 테스트")
     void content_validation() {
         CommentUpdateRequestDto commentUpdateRequestDto = CommentUpdateRequestDto.builder()
                 .id(VALID_COMMENT_ID)

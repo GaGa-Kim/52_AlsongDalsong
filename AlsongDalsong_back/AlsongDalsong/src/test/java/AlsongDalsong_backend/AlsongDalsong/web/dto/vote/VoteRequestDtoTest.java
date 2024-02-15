@@ -7,6 +7,7 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_VOTE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import AlsongDalsong_backend.AlsongDalsong.ValidatorUtil;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -16,6 +17,7 @@ class VoteRequestDtoTest {
     private final ValidatorUtil<VoteRequestDto> validatorUtil = new ValidatorUtil<>();
 
     @Test
+    @DisplayName("VoteRequestDto 생성 테스트")
     void testVoteRequestDto() {
         VoteRequestDto voteRequestDto = VoteRequestDto.builder()
                 .email(VALID_EMAIL)
@@ -29,6 +31,7 @@ class VoteRequestDtoTest {
     }
 
     @Test
+    @DisplayName("이메일 유효성 검증 테스트")
     void email_validation() {
         VoteRequestDto voteRequestDto = VoteRequestDto.builder()
                 .email(INVALID_EMAIL)
@@ -40,6 +43,7 @@ class VoteRequestDtoTest {
     }
 
     @Test
+    @DisplayName("게시글 아이디 유효성 검증 테스트")
     void postId_validation() {
         VoteRequestDto voteRequestDto = VoteRequestDto.builder()
                 .email(VALID_EMAIL)
@@ -51,6 +55,7 @@ class VoteRequestDtoTest {
     }
 
     @Test
+    @DisplayName("투표 내용 유효성 검증 테스트")
     void vote_validation() {
         VoteRequestDto voteRequestDto = VoteRequestDto.builder()
                 .email(VALID_EMAIL)

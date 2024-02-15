@@ -279,6 +279,7 @@ class PostServiceImplTest {
 
         verify(userService, times(1)).findUserByEmail(any());
         verify(postRepository, times(1)).findById(any());
+        verify(post.getUserId(), times(1)).updatePoint(any());
     }
 
     @Test

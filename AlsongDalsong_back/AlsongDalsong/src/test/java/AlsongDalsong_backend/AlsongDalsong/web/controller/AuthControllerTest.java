@@ -23,6 +23,7 @@ import AlsongDalsong_backend.AlsongDalsong.web.dto.user.UserResponseDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.user.UserSaveRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -64,6 +65,7 @@ class AuthControllerTest {
     }
 
     @Test
+    @DisplayName("카카오 회원가입 또는 로그인을 한 후, jwt 토큰과 회원 이메일 리턴 테스트")
     void testSocialSignup() throws Exception {
         when(authService.socialSignupAndGenerateToken(any())).thenReturn(tokenDto);
 
@@ -77,6 +79,7 @@ class AuthControllerTest {
     }
 
     @Test
+    @DisplayName("일반 회원가입을 한 후, 가입된 회원 정보 리턴 테스트")
     void testSignup() throws Exception {
         when(authService.signupAndReturnUser(any())).thenReturn(userResponseDto);
 
@@ -92,6 +95,7 @@ class AuthControllerTest {
     }
 
     @Test
+    @DisplayName("일반 로그인을 한 후, jwt 토큰과 회원 이메일 리턴 테스트")
     void testLogin() throws Exception {
         when(authService.loginAndGenerateToken(any())).thenReturn(tokenDto);
 

@@ -17,6 +17,7 @@ import AlsongDalsong_backend.AlsongDalsong.service.vote.VoteService;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.vote.VoteRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -53,6 +54,7 @@ class VoteControllerTest {
     }
 
     @Test
+    @DisplayName("게시글에 투표를 한 후, true 리턴 테스트")
     void testVoteSaveAdd() throws Exception {
         when(voteService.saveVote(any())).thenReturn("true");
 
@@ -67,6 +69,7 @@ class VoteControllerTest {
     }
 
     @Test
+    @DisplayName("게시글에 투표를 취소한 후, 투표하지 않았습니다 리턴 테스트")
     void testVoteSaveDelete() throws Exception {
         when(voteService.saveVote(any())).thenReturn("투표하지 않았습니다.");
 
@@ -81,6 +84,7 @@ class VoteControllerTest {
     }
 
     @Test
+    @DisplayName("게시글에 투표를 변경한 후, false 리턴 테스트")
     void testVoteSaveModify() throws Exception {
         when(voteService.saveVote(any())).thenReturn("false");
 
@@ -95,6 +99,7 @@ class VoteControllerTest {
     }
 
     @Test
+    @DisplayName("회원 탈퇴를 한 후, true 리턴 테스트")
     void voteDetails() throws Exception {
         when(voteService.findVote(any(), any())).thenReturn("true");
 

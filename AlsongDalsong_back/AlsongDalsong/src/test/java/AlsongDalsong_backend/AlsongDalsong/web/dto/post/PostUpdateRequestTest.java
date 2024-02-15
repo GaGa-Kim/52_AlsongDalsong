@@ -8,6 +8,7 @@ import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.ValidatorUtil;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -25,6 +26,7 @@ class PostUpdateRequestTest {
     }
 
     @Test
+    @DisplayName("PostUpdateRequest 생성 테스트")
     void testPostUpdateRequestDto() {
         PostUpdateRequestDto postUpdateRequestDto = PostUpdateRequestDto.builder()
                 .postUpdateRequestVO(postUpdateRequestVO)
@@ -42,60 +44,70 @@ class PostUpdateRequestTest {
     }
 
     @Test
+    @DisplayName("게시글 아이디 유효성 검증 테스트")
     void postId_validation() {
         postUpdateRequestVO.setId(null);
         parameter_validate(postUpdateRequestVO);
     }
 
     @Test
+    @DisplayName("이메일 유효성 검증 테스트")
     void email_validation() {
         postUpdateRequestVO.setEmail(INVALID_EMAIL);
         parameter_validate(postUpdateRequestVO);
     }
 
     @Test
+    @DisplayName("분류 유효성 검증 테스트")
     void todo_validation() {
         postUpdateRequestVO.setTodo(INVALID_BLANK);
         parameter_validate(postUpdateRequestVO);
     }
 
     @Test
+    @DisplayName("카테고리 유효성 검증 테스트")
     void category_validation() {
         postUpdateRequestVO.setCategory(INVALID_BLANK);
         parameter_validate(postUpdateRequestVO);
     }
 
     @Test
+    @DisplayName("누가 유효성 검증 테스트")
     void who_validation() {
         postUpdateRequestVO.setWho(INVALID_BLANK);
         parameter_validate(postUpdateRequestVO);
     }
 
     @Test
+    @DisplayName("연령 유효성 검증 테스트")
     void old_validation() {
         postUpdateRequestVO.setOld(INVALID_BLANK);
         parameter_validate(postUpdateRequestVO);
     }
 
     @Test
+    @DisplayName("날짜 유효성 검증 테스트")
     void date_validation() {
         postUpdateRequestVO.setDate(INVALID_BLANK);
         parameter_validate(postUpdateRequestVO);
     }
 
     @Test
+    @DisplayName("무엇을 유효성 검증 테스트")
     void what_validation() {
         postUpdateRequestVO.setWhat(INVALID_BLANK);
         parameter_validate(postUpdateRequestVO);
     }
 
     @Test
+    @DisplayName("게시글 내용 유효성 검증 테스트")
     void content_validation() {
         postUpdateRequestVO.setContent(INVALID_BLANK);
         parameter_validate(postUpdateRequestVO);
     }
 
     @Test
+    @DisplayName("중요도 유효성 검증 테스트")
     void importance_validation() {
         postUpdateRequestVO.setImportance(null);
         parameter_validate(postUpdateRequestVO);

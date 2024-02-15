@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.domain.Time;
 import AlsongDalsong_backend.AlsongDalsong.domain.comment.Comment;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Test;
  */
 class CommentResponseDtoTest {
     @Test
+    @DisplayName("CommentResponseDto 생성 테스트")
     void testCommentResponseDto() {
         Comment comment = TestObjectFactory.initComment();
         comment.setUser(TestObjectFactory.initUser());

@@ -8,6 +8,7 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import AlsongDalsong_backend.AlsongDalsong.ValidatorUtil;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -17,6 +18,7 @@ class CommentSaveRequestDtoTest {
     private final ValidatorUtil<CommentSaveRequestDto> validatorUtil = new ValidatorUtil<>();
 
     @Test
+    @DisplayName("CommentSaveRequestDto 생성 테스트")
     void testCommentSaveRequestDto() {
         CommentSaveRequestDto commentSaveRequestDto = CommentSaveRequestDto.builder()
                 .email(VALID_EMAIL)

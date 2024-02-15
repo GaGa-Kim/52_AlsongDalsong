@@ -10,6 +10,7 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PROFILE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import AlsongDalsong_backend.AlsongDalsong.ValidatorUtil;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -19,6 +20,7 @@ class UserSaveRequestDtoTest {
     private final ValidatorUtil<UserSaveRequestDto> validatorUtil = new ValidatorUtil<>();
 
     @Test
+    @DisplayName("UserSaveRequestDto 생성 테스트")
     void testUserSaveRequestDto() {
         UserSaveRequestDto userSaveRequestDto = UserSaveRequestDto.builder()
                 .name(VALID_NAME)
@@ -36,6 +38,7 @@ class UserSaveRequestDtoTest {
     }
 
     @Test
+    @DisplayName("이름 유효성 검증 테스트")
     void name_validation() {
         UserSaveRequestDto userSaveRequestDto = UserSaveRequestDto.builder()
                 .name(INVALID_BLANK)
@@ -49,6 +52,7 @@ class UserSaveRequestDtoTest {
     }
 
     @Test
+    @DisplayName("이메일 유효성 검증 테스트")
     void email_validation() {
         UserSaveRequestDto userSaveRequestDto = UserSaveRequestDto.builder()
                 .name(VALID_NAME)
@@ -62,6 +66,7 @@ class UserSaveRequestDtoTest {
     }
 
     @Test
+    @DisplayName("닉네임 유효성 검증 테스트")
     void nickname_validation() {
         UserSaveRequestDto userSaveRequestDto = UserSaveRequestDto.builder()
                 .name(VALID_NAME)

@@ -7,6 +7,7 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_TOKEN;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import AlsongDalsong_backend.AlsongDalsong.ValidatorUtil;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -16,6 +17,7 @@ class TokenDtoTest {
     private final ValidatorUtil<TokenDto> validatorUtil = new ValidatorUtil<>();
 
     @Test
+    @DisplayName("TokenDto 생성 테스트")
     void testTokenDto() {
         TokenDto tokenDto = TokenDto.builder()
                 .token(VALID_TOKEN)
@@ -27,6 +29,7 @@ class TokenDtoTest {
     }
 
     @Test
+    @DisplayName("토큰 유효성 검증 테스트")
     void token_validation() {
         TokenDto tokenDto = TokenDto.builder()
                 .token(INVALID_BLANK)
@@ -37,6 +40,7 @@ class TokenDtoTest {
     }
 
     @Test
+    @DisplayName("이메일 유효성 검증 테스트")
     void email_validation() {
         TokenDto tokenDto = TokenDto.builder()
                 .token(VALID_TOKEN)

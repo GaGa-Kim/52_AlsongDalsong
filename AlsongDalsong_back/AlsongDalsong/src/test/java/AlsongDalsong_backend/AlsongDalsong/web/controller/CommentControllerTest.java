@@ -24,6 +24,7 @@ import AlsongDalsong_backend.AlsongDalsong.web.dto.comment.CommentUpdateRequestD
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -65,6 +66,7 @@ class CommentControllerTest {
     }
 
     @Test
+    @DisplayName("게시글에 댓글을 작성한 후, 게시글의 댓글 목록 리턴 테스트")
     void testCommentAdd() throws Exception {
         when(commentService.addComment(any())).thenReturn(Collections.singletonList(commentResponseDto));
 
@@ -80,6 +82,7 @@ class CommentControllerTest {
 
 
     @Test
+    @DisplayName("게시글 아이디에 따라 게시글별 댓글 목록 리턴 테스트")
     void testCommentList() throws Exception {
         when(commentService.findPostCommentsByLikes(any())).thenReturn(Collections.singletonList(commentResponseDto));
 
@@ -94,6 +97,7 @@ class CommentControllerTest {
 
 
     @Test
+    @DisplayName("게시글의 댓글을 수정한 후, 게시글의 댓글 목록 리턴 테스트")
     void testCommentModify() throws Exception {
         when(commentService.modifyComment(any())).thenReturn(Collections.singletonList(commentResponseDto));
 
@@ -108,6 +112,7 @@ class CommentControllerTest {
     }
 
     @Test
+    @DisplayName("게시글의 댓글을 삭제한 후, true 리턴 테스트")
     void testCommentRemove() throws Exception {
         when(commentService.removeComment(any(), any())).thenReturn(true);
 
