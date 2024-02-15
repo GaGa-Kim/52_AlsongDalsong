@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -51,6 +52,7 @@ class AwsS3ServiceImplTest {
     }
 
     @Test
+    @DisplayName("AWS S3 버킷에 회원 프로필 이미지(파일) 저장 테스트")
     void testAddProfileImage() {
         String result = awsS3Service.addProfileImage(file);
 
@@ -58,6 +60,7 @@ class AwsS3ServiceImplTest {
     }
 
     @Test
+    @DisplayName("AWS S3 버킷에 게시글 사진들(파일들) 저장 테스트")
     void testAddPhoto() {
         List<MultipartFile> files = Collections.singletonList(file);
         List<Photo> result = awsS3Service.addPhoto(files);
@@ -68,6 +71,7 @@ class AwsS3ServiceImplTest {
     }
 
     @Test
+    @DisplayName("AWS S3 버킷에 파일 URL 조회 테스트")
     void testFindFileUrl() {
         String newFileName = awsS3Service.addProfileImage(file);
 
@@ -77,6 +81,7 @@ class AwsS3ServiceImplTest {
     }
 
     @Test
+    @DisplayName("AWS S3 버킷에 파일을 조회해 다운로드 변환 테스트")
     void testFindFileObject() throws IOException {
         String newFileName = awsS3Service.addProfileImage(file);
 
@@ -86,6 +91,7 @@ class AwsS3ServiceImplTest {
     }
 
     @Test
+    @DisplayName("AWS S3 버킷에 파일을 조회해 Base64로 변환 테스트")
     void testFindFileBase64() throws IOException {
         String newFileName = awsS3Service.addProfileImage(file);
 
@@ -95,6 +101,7 @@ class AwsS3ServiceImplTest {
     }
 
     @Test
+    @DisplayName("AWS S3 버킷에서 파일 삭제 테스트")
     void testRemoveFile() {
         String newFileName = awsS3Service.addProfileImage(file);
 

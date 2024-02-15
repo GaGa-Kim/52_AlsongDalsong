@@ -16,6 +16,7 @@ import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.photo.PhotoResponseDto;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -41,6 +42,7 @@ class PhotoServiceImplTest {
     }
 
     @Test
+    @DisplayName("사진 저장 테스트")
     void testAddPhoto() {
         when(photoRepository.save(any())).thenReturn(photo);
 
@@ -53,6 +55,7 @@ class PhotoServiceImplTest {
     }
 
     @Test
+    @DisplayName("사진 아이디로 사진 조회 테스트")
     void testFindPhotoByPhotoId() {
         when(photoRepository.findById(any())).thenReturn(Optional.ofNullable(photo));
 
@@ -65,6 +68,7 @@ class PhotoServiceImplTest {
     }
 
     @Test
+    @DisplayName("사진 아이디로 사진 상세 조회 테스트")
     void testFindPhoto() {
         when(photoRepository.findById(any())).thenReturn(Optional.ofNullable(photo));
 
@@ -77,6 +81,7 @@ class PhotoServiceImplTest {
     }
 
     @Test
+    @DisplayName("사진 아이디로 사진 삭제 테스트")
     void testRemovePhoto() {
         doNothing().when(photoRepository).delete(any());
 
