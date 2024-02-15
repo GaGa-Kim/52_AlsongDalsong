@@ -58,7 +58,7 @@ class PhotoServiceImplTest {
 
     @Test
     @DisplayName("사진 아이디로 사진 조회 테스트")
-    void testFindPhotoByPhotoId() {
+    void testFindPhotoByExistingPhotoId() {
         when(photoRepository.findById(any())).thenReturn(Optional.ofNullable(photo));
 
         Photo result = photoService.findPhotoByPhotoId(photo.getId());
@@ -71,7 +71,7 @@ class PhotoServiceImplTest {
 
     @Test
     @DisplayName("존재하지 않는 사진 아이디로 사진 조회 예외 발생 테스트")
-    void testFindCommentByNonExistingCommentIdExcept() {
+    void testFindPhotoByNonExistingPhotoIdExcept() {
         Long nonExistingPhotoId = 100L;
         when(photoRepository.findById(any())).thenReturn(Optional.empty());
 
