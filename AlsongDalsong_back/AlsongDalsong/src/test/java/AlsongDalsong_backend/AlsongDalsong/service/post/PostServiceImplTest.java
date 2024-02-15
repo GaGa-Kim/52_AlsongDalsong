@@ -1,5 +1,6 @@
 package AlsongDalsong_backend.AlsongDalsong.service.post;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -20,6 +21,8 @@ import AlsongDalsong_backend.AlsongDalsong.domain.post.PostRepository;
 import AlsongDalsong_backend.AlsongDalsong.domain.scrap.Scrap;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import AlsongDalsong_backend.AlsongDalsong.domain.vote.Vote;
+import AlsongDalsong_backend.AlsongDalsong.except.NotFoundException;
+import AlsongDalsong_backend.AlsongDalsong.except.UnauthorizedEditException;
 import AlsongDalsong_backend.AlsongDalsong.service.photo.PhotoService;
 import AlsongDalsong_backend.AlsongDalsong.service.photo.StorageService;
 import AlsongDalsong_backend.AlsongDalsong.service.user.UserService;
@@ -31,6 +34,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -72,6 +76,7 @@ class PostServiceImplTest {
     }
 
     @Test
+    @DisplayName("게시글 작성 테스트")
     void testAddPostWithPhotos() {
         when(userService.findUserByEmail(any())).thenReturn(post.getUserId());
         when(postRepository.save(any())).thenReturn(post);
@@ -93,7 +98,8 @@ class PostServiceImplTest {
     }
 
     @Test
-    void testFindPostByPostId() {
+    @DisplayName("게시글 아이디로 게시글 조회 테스트")
+    void testFindPostByExistingPostId() {
         when(postRepository.findById(any())).thenReturn(Optional.ofNullable(post));
 
         Post result = postService.findPostByPostId(post.getId());
@@ -105,6 +111,17 @@ class PostServiceImplTest {
     }
 
     @Test
+    @DisplayName("존재하지 않는 게시글 아이디로 게시글 조회 예외 발생 테스트")
+    void testFindPostByNonExistingPostIdExcept() {
+        Long nonExistingPostId = 100L;
+        when(postRepository.findById(any())).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> postService.findPostByPostId(nonExistingPostId))
+                .isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("게시글 아이디로 게시글 상세 조회 테스트")
     void testFindPostDetailByPostId() {
         when(postRepository.findById(any())).thenReturn(Optional.ofNullable(post));
 
@@ -117,6 +134,7 @@ class PostServiceImplTest {
     }
 
     @Test
+    @DisplayName("분류별 최신글 리스트 조회 테스트")
     void testFindLatestPosts() {
         when(postRepository.findByTodo(any())).thenReturn(Collections.singletonList(post));
 
@@ -130,6 +148,7 @@ class PostServiceImplTest {
     }
 
     @Test
+    @DisplayName("분류별 인기글 리스트 조회 테스트")
     void testFindPopularPosts() {
         when(postRepository.findByTodoAndDecisionOrderByVoteListDesc(any(), any())).thenReturn(Collections.singletonList(post));
 
@@ -143,6 +162,7 @@ class PostServiceImplTest {
     }
 
     @Test
+    @DisplayName("분류 및 카테고리별 게시글 리스트 조회 테스트")
     void testFindPostsByCategory() {
         when(postRepository.findByTodoAndCategory(any(), any())).thenReturn(Collections.singletonList(post));
 
@@ -157,6 +177,7 @@ class PostServiceImplTest {
     }
 
     @Test
+    @DisplayName("회원 아이디에 따른 게시글 리스트 조회 테스트")
     void testFindUserPosts() {
         when(userService.findUserByEmail(any())).thenReturn(post.getUserId());
         when(post.getUserId().getPostList()).thenReturn(Collections.singletonList(post));
@@ -172,6 +193,17 @@ class PostServiceImplTest {
     }
 
     @Test
+    @DisplayName("회원 아이디에 따른 게시글 리스트 조회 시 빈 리스트 예외 발생 테스트")
+    void testFindUserPostsEmptyExcept() {
+        when(userService.findUserByEmail(any())).thenReturn(post.getUserId());
+        when(post.getUserId().getPostList()).thenReturn(Collections.emptyList());
+
+        assertThatThrownBy(() -> postService.findUserPosts(post.getUserId().getEmail()))
+                .isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("게시글 수정 테스트")
     void testModifyPost() {
         when(userService.findUserByEmail(any())).thenReturn(post.getUserId());
         when(postRepository.findById(any())).thenReturn(Optional.ofNullable(post));
@@ -192,6 +224,20 @@ class PostServiceImplTest {
     }
 
     @Test
+    @DisplayName("게시글 수정 시 작성자와 편집자가 다를 경우 예외 발생 테스트")
+    void testModifyPostUnauthorizedExcept() {
+        User notWriter = mock(User.class);
+        when(userService.findUserByEmail(any())).thenReturn(notWriter);
+        when(postRepository.findById(any())).thenReturn(Optional.ofNullable(post));
+
+        List<MultipartFile> photos = new ArrayList<>();
+        List<Long> deletePhotoIds = new ArrayList<>();
+        assertThatThrownBy(() -> postService.modifyPost(postUpdateRequestDto, photos, deletePhotoIds))
+                .isInstanceOf(UnauthorizedEditException.class);
+    }
+
+    @Test
+    @DisplayName("게시글 삭제 테스트")
     void testRemovePost() {
         when(userService.findUserByEmail(any())).thenReturn(post.getUserId());
         when(postRepository.findById(any())).thenReturn(Optional.ofNullable(post));
@@ -209,6 +255,18 @@ class PostServiceImplTest {
     }
 
     @Test
+    @DisplayName("게시글 삭제 시 작성자와 편집자가 다를 경우 예외 발생 테스트")
+    void testRemovePostUnauthorizedExcept() {
+        User notWriter = mock(User.class);
+        when(userService.findUserByEmail(any())).thenReturn(notWriter);
+        when(postRepository.findById(any())).thenReturn(Optional.ofNullable(post));
+
+        assertThatThrownBy(() -> postService.removePost(post.getId(), post.getUserId().getEmail()))
+                .isInstanceOf(UnauthorizedEditException.class);
+    }
+
+    @Test
+    @DisplayName("게시글 확정 테스트")
     void testModifyPostDecision() {
         when(userService.findUserByEmail(any())).thenReturn(post.getUserId());
         when(postRepository.findById(any())).thenReturn(Optional.ofNullable(post));
@@ -221,5 +279,16 @@ class PostServiceImplTest {
 
         verify(userService, times(1)).findUserByEmail(any());
         verify(postRepository, times(1)).findById(any());
+    }
+
+    @Test
+    @DisplayName("게시글 확정 시 작성자와 편집자가 다를 경우 예외 발생 테스트")
+    void testModifyPostDecisionUnauthorizedExcept() {
+        User notWriter = mock(User.class);
+        when(userService.findUserByEmail(any())).thenReturn(notWriter);
+        when(postRepository.findById(any())).thenReturn(Optional.ofNullable(post));
+
+        assertThatThrownBy(() -> postService.modifyPostDecision(post.getId(), post.getUserId().getEmail(), Decision.DECIDED.getDecision(), null))
+                .isInstanceOf(UnauthorizedEditException.class);
     }
 }
