@@ -1,69 +1,71 @@
 package AlsongDalsong_backend.AlsongDalsong.web.controller;
 
+import AlsongDalsong_backend.AlsongDalsong.constants.Message;
 import AlsongDalsong_backend.AlsongDalsong.domain.photo.Photo;
-import AlsongDalsong_backend.AlsongDalsong.domain.photo.PhotoRepository;
-import AlsongDalsong_backend.AlsongDalsong.service.AwsS3Service;
-import AlsongDalsong_backend.AlsongDalsong.service.PhotoService;
+import AlsongDalsong_backend.AlsongDalsong.service.photo.PhotoService;
+import AlsongDalsong_backend.AlsongDalsong.service.photo.StorageService;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.photo.PhotoResponseDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import java.io.IOException;
+import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * 사진 컨트롤러
  */
-@Api(tags={"Photo API (사진 API)"})
+@Api(tags = {"Photo API (사진 API)"})
 @RestController
+@Validated
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("/api/photo")
 public class PhotoController {
-
-    private final PhotoRepository photoRepository;
     private final PhotoService photoService;
-    private final AwsS3Service awsS3Service;
+    private final StorageService storageService;
 
-    // 사진 id로 이미지 정보 조회
-    @GetMapping("/api/photo/photoInfo")
+    @GetMapping("/photoInfo")
     @ApiOperation(value = "사진 id로 이미지 정보 조회", notes = "사진 id로 이미지 정보를 조회하여 리턴합니다.")
     @ApiImplicitParam(name = "id", value = "사진 id", example = "1")
-    public ResponseEntity<PhotoResponseDto> findById(@RequestParam Long id) {
-        return ResponseEntity.ok().body(photoService.findByPhotoId(id));
+    public ResponseEntity<PhotoResponseDto> photoDetails(@RequestParam @NotNull(message = Message.INPUT_PHOTO_ID) Long id) {
+        return ResponseEntity.ok().body(photoService.findPhoto(id));
     }
 
-    // 사진 id로 이미지 URL 정보 조회
-    @GetMapping("/api/photo/photoURL")
+    @GetMapping("/photoURL")
     @ApiOperation(value = "사진 id로 이미지 URL 정보 조회", notes = "사진 id로 이미지 URL 정보를 조회하여 리턴합니다.")
     @ApiImplicitParam(name = "id", value = "사진 id", example = "1")
-    public ResponseEntity<String> getS3(@RequestParam Long id) {
-        Photo photo = photoRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("해당 사진이 없습니다."));
-        return ResponseEntity.ok().body(awsS3Service.getS3(photo.getPhotoName()));
+    public ResponseEntity<String> photoUrlDetails(@RequestParam @NotNull(message = Message.INPUT_PHOTO_ID) Long id) {
+        return ResponseEntity.ok().body(storageService.findFileUrl(getPhotoName(id).getSecond()));
     }
 
-    // 사진 id로 이미지 bytearray 정보 조회
-    @GetMapping("/api/photo/photoByte")
+    @GetMapping("/photoByte")
     @ApiOperation(value = "사진 id로 이미지 bytearray 정보 조회", notes = "사진 id로 이미지를 bytearray로 리턴합니다.")
     @ApiImplicitParam(name = "id", value = "사진 id", example = "1")
-    public ResponseEntity<byte[]> getByte(@RequestParam Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Photo photo = photoRepository.findById(id).orElse(null);
-        return awsS3Service.getObject(photo.getOrigPhotoName(), photo.getPhotoName());
+    public ResponseEntity<byte[]> photoByteArrayDetails(@RequestParam @NotNull(message = Message.INPUT_PHOTO_ID) Long id) throws IOException {
+        Pair<String, String> photoName = getPhotoName(id);
+        return storageService.findFileObject(photoName.getFirst(), photoName.getSecond());
     }
 
-    // 사진 id로 이미지 Base64 정보 조회
-    @GetMapping("/api/photo/photoBase")
+    @GetMapping("/photoBase")
     @ApiOperation(value = "사진 id로 이미지 Base64 정보 조회", notes = "사진 id로 이미지를 Base64로 리턴합니다.")
     @ApiImplicitParam(name = "id", value = "사진 id", example = "1")
-    public ResponseEntity<String> getBase(@RequestParam Long id) throws IOException {
-        Photo photo = photoRepository.findById(id).orElse(null);
-        return awsS3Service.getBase(photo.getOrigPhotoName(), photo.getPhotoName());
+    public ResponseEntity<String> photoBase64Details(@RequestParam @NotNull(message = Message.INPUT_PHOTO_ID) Long id) throws IOException {
+        Pair<String, String> photoName = getPhotoName(id);
+        return storageService.findFileBase64(photoName.getFirst(), photoName.getSecond());
+    }
+
+    // 사진 id로 사진 원본 이름, 사진 변환 이름 조회
+    private Pair<String, String> getPhotoName(Long photoId) {
+        Photo photo = photoService.findPhotoByPhotoId(photoId);
+        return Pair.of(photo.getOrigPhotoName(), photo.getPhotoName());
     }
 }

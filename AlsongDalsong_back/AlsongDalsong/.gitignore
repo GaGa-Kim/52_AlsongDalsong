@@ -37,4 +37,6 @@ out/
 .vscode/
 
 ### secret ###
-AlsongDalsong_back/AlsongDalsong/src/main/resources/application.properties
+AlsongDalsong_back/AlsongDalsong/src/main/resources/application-cloud.yml
+AlsongDalsong_back/AlsongDalsong/src/main/resources/application-jwt.yml
+AlsongDalsong_back/AlsongDalsong/src/main/resources/application-oauth.yml

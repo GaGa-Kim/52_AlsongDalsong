@@ -1,10 +1,11 @@
 package AlsongDalsong_backend.AlsongDalsong.domain.photo;
 
-import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
+/**
+ * 사진 레포지토리
+ */
+@Repository
 public interface PhotoRepository extends JpaRepository<Photo, Long> {
-    List<Photo> findAllByPostId(Post post);
 }

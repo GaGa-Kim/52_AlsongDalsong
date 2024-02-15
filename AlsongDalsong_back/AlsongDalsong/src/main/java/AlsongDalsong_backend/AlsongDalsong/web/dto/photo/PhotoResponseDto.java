@@ -9,15 +9,14 @@ import lombok.Getter;
  */
 @Getter
 public class PhotoResponseDto {
-
     @ApiModelProperty(notes = "원본 이름", example = "photo.jpg")
-    private String origPhotoName; // 원본 이름
+    private String origPhotoName;
 
     @ApiModelProperty(notes = "변환된 사진 이름", example = "20202001-gggg.jpg")
-    private String photoName; // 변환된 사진 이름
+    private String photoName;
 
     @ApiModelProperty(notes = "사진 Url", example = "www")
-    private String photoUrl; // 사진 Url
+    private String photoUrl;
 
     @Builder
     public PhotoResponseDto(String origPhotoName, String photoName, String photoUrl) {

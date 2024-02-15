@@ -3,11 +3,19 @@ package AlsongDalsong_backend.AlsongDalsong.domain.like;
 import AlsongDalsong_backend.AlsongDalsong.domain.BaseTimeEntity;
 import AlsongDalsong_backend.AlsongDalsong.domain.comment.Comment;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
-import javax.persistence.*;
 
 /**
  * 댓글 좋아요 테이블
@@ -18,7 +26,6 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Table(name = "likes")
 public class Like extends BaseTimeEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Like_Id")
@@ -32,20 +39,19 @@ public class Like extends BaseTimeEntity {
     @JoinColumn(name = "Comment_Id")
     private Comment commentId; // 댓글 외래키
 
-    // 회원 연관관계 메소드
+    @Builder
+    public Like(Long id) {
+        this.id = id;
+    }
+    
     public void setUser(User user) {
         this.userId = user;
-        /*
-        if(!userId.getLikeList().contains(this))
-            user.getLikeList().add(this);
-         */
     }
 
-    // 댓글 연관관계 메소드
     public void setComment(Comment comment) {
         this.commentId = comment;
-        if(!commentId.getLikeList().contains(this))
+        if (!commentId.getLikeList().contains(this)) {
             comment.getLikeList().add(this);
+        }
     }
-
 }

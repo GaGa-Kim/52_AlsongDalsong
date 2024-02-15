@@ -1,8 +1,8 @@
 package AlsongDalsong_backend.AlsongDalsong.config;
 
-import AlsongDalsong_backend.AlsongDalsong.config.jwt.JwtAccessDeniedHandler;
-import AlsongDalsong_backend.AlsongDalsong.config.jwt.JwtAuthenticationEntryPoint;
-import AlsongDalsong_backend.AlsongDalsong.config.jwt.JwtRequestFilter;
+import AlsongDalsong_backend.AlsongDalsong.jwt.JwtAccessDeniedHandler;
+import AlsongDalsong_backend.AlsongDalsong.jwt.JwtAuthenticationEntryPoint;
+import AlsongDalsong_backend.AlsongDalsong.jwt.JwtRequestFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,14 +21,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-
     private final JwtRequestFilter jwtRequestFilter;
 
     @Override
-    public void configure(WebSecurity web){
+    public void configure(WebSecurity web) {
         web
                 .ignoring()
                 .antMatchers(

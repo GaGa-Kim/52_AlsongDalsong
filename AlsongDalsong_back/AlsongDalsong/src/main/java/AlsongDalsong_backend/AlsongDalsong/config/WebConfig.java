@@ -1,5 +1,6 @@
 package AlsongDalsong_backend.AlsongDalsong.config;
 
+import AlsongDalsong_backend.AlsongDalsong.handler.BaseHandlerInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +15,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @RequiredArgsConstructor
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-
+    @Bean
+    public GlobalConfig config() {
+        return new GlobalConfig();
+    }
+    
     @Bean
     public BaseHandlerInterceptor baseHandlerInterceptor() {
         return new BaseHandlerInterceptor();
@@ -39,5 +44,4 @@ public class WebConfig implements WebMvcConfigurer {
                 )
                 .allowCredentials(false);
     }
-
 }

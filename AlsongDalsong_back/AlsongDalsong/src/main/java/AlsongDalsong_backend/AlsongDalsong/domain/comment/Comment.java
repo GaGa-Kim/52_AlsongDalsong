@@ -4,14 +4,23 @@ import AlsongDalsong_backend.AlsongDalsong.domain.BaseTimeEntity;
 import AlsongDalsong_backend.AlsongDalsong.domain.like.Like;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 댓글 테이블
@@ -22,7 +31,6 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "comments")
 public class Comment extends BaseTimeEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Comment_Id")
@@ -43,36 +51,30 @@ public class Comment extends BaseTimeEntity {
     private List<Like> likeList = new ArrayList<>(); // 댓글 좋아요 리스트
 
     @Builder
-    public Comment(String content) {
+    public Comment(Long id, String content) {
+        this.id = id;
         this.content = content;
     }
 
-    // 댓글 수정
     public Comment update(String content) {
         this.content = content;
         return this;
     }
 
-    // 회원 연관관계 메소드
     public void setUser(User user) {
         this.userId = user;
-        /*
-        if(!userId.getCommentList().contains(this))
-            user.getCommentList().add(this);
-         */
     }
 
-    // 게시글 연관관계 메소드
     public void setPost(Post post) {
         this.postId = post;
-        if(!postId.getCommentList().contains(this))
+        if (!postId.getCommentList().contains(this)) {
             post.getCommentList().add(this);
+        }
     }
 
-    // 댓글 좋아요 연관관계 메소드
     public void addLikeList(Like like) {
         this.likeList.add(like);
-        if(like.getCommentId() != this) {
+        if (like.getCommentId() != this) {
             like.setComment(this);
         }
     }

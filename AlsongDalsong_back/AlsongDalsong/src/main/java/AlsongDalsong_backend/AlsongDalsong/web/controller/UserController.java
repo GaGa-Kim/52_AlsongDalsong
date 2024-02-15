@@ -1,175 +1,132 @@
 package AlsongDalsong_backend.AlsongDalsong.web.controller;
 
-import AlsongDalsong_backend.AlsongDalsong.domain.photo.Photo;
-import AlsongDalsong_backend.AlsongDalsong.domain.user.OauthToken;
+import static AlsongDalsong_backend.AlsongDalsong.constants.Message.INPUT_EMAIL;
+
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
-import AlsongDalsong_backend.AlsongDalsong.domain.user.UserRepository;
-import AlsongDalsong_backend.AlsongDalsong.service.AwsS3Service;
-import AlsongDalsong_backend.AlsongDalsong.service.UserService;
-import AlsongDalsong_backend.AlsongDalsong.domain.user.TokenDto;
+import AlsongDalsong_backend.AlsongDalsong.service.photo.StorageService;
+import AlsongDalsong_backend.AlsongDalsong.service.user.UserService;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.user.UserResponseDto;
-import AlsongDalsong_backend.AlsongDalsong.web.dto.user.UserSaveRequestDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.user.UserUpdateRequestDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import java.io.IOException;
+import java.util.Map;
+import javax.validation.Valid;
+import javax.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.http.HttpHeaders;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Map;
 
 /**
  * 회원 컨트롤러
  */
-@Api(tags={"User API (회원 API)"})
+@Api(tags = {"User API (회원 API)"})
 @RestController
+@Validated
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("/api/user")
 public class UserController {
+    private static final String EMAIL_VALUE = "이메일";
+    private static final String EMAIL_EXAMPLE = "1234@gmail.com";
+
+    private static final String PROFILE_NAME = "profile";
+    private static final String HTTP_URL = "http";
 
     private final UserService userService;
-    private final AwsS3Service awsS3Service;
-    private final UserRepository userRepository;
-    
-    // 카카오 회원가입과 로그인
-    @GetMapping("/auth/kakao")
-    @ApiOperation(value = "카카오 회원가입과 로그인", notes = "카카오 회원가입 또는 로그인을 한 후, jwt 토큰과 사용자 이메일을 리턴합니다.")
-    @ApiImplicitParam(name = "code", value = "인가코드", example = "12345", required = true)
-    public ResponseEntity<String> getKakaoLogin(@RequestParam("code") String code) {
-        // 인가코드로 카카오 액세스 토큰 발급하기
-        OauthToken accessToken = userService.getAccessToken(code);
-        // 액세스 토큰으로 카카오 회원가입과 로그인 후 토큰 발급하기
-        TokenDto tokenDto = userService.kakaoSignup(accessToken.getAccess_token());
-        // 응답 헤더에 토큰 삽입
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + tokenDto.getToken());
+    private final StorageService storageService;
 
-        return ResponseEntity.ok().headers(headers).body(tokenDto.getEmail());
-    }
-
-    // 일반 회원가입
-    @PostMapping("/auth/signup")
-    @ApiOperation(value = "일반 회원가입", notes = "일반 회원가입을 한 후, 가입된 사용자 정보를 리턴합니다.")
-    public ResponseEntity<UserResponseDto> signup(@RequestBody UserSaveRequestDto userSaveRequestDto) {
-        // 받아온 정보로 회원가입
-        return ResponseEntity.ok().body(userService.signup(userSaveRequestDto));
-    }
-
-    // 일반 로그인
-    @GetMapping("/auth/login")
-    @ApiOperation(value = "일반 로그인", notes = "일반 로그인을 한 후, jwt 토큰과 사용자 이메일을 리턴합니다.")
-    @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com", required = true)
-    public ResponseEntity<String> getLogin(@RequestParam String email) {
-
-        // 로그인 후 토큰 발급하기
-        TokenDto tokenDto = userService.login(email);
-        // 응답 헤더에 토큰 삽입
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + tokenDto.getToken());
-
-        return ResponseEntity.ok().headers(headers).body(tokenDto.getEmail());
-    }
-
-    // 회원 정보
-    @GetMapping("/api/user/me")
+    @GetMapping("/me")
     @ApiOperation(value = "회원 정보", notes = "회원 정보를 리턴합니다.")
-    @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com", required = true)
-    public ResponseEntity<UserResponseDto> getUser(@RequestParam("email") String email) {
-        // 받아온 정보로 회원 정보 조회
-        User user = userService.getUser(email);
+    @ApiImplicitParam(name = "email", value = EMAIL_VALUE, example = EMAIL_EXAMPLE, required = true)
+    public ResponseEntity<UserResponseDto> userDetails(@RequestParam @Email(message = INPUT_EMAIL) String email) {
+        User user = userService.findUserByEmail(email);
         return ResponseEntity.ok().body(new UserResponseDto(user));
     }
 
-    // 회원 정보 수정
-    @PutMapping("/api/user/updateInfo")
+    @PutMapping("/updateInfo")
     @ApiOperation(value = "회원 정보 수정", notes = "회원 정보 수정를 수정한 후, 수정된 회원 정보를 리턴합니다.")
-    public ResponseEntity<UserResponseDto> updateUser(@RequestBody UserUpdateRequestDto userUpdateRequestDto) {
-        // 받아온 정보로 회원 정보 수정 및 프로필 저장
-        User user = userService.updateUser(userUpdateRequestDto);
+    @ApiImplicitParam(name = "userUpdateRequestDto", value = "회원 수정 정보", required = true)
+    public ResponseEntity<UserResponseDto> userProfileModify(@RequestBody @Valid UserUpdateRequestDto userUpdateRequestDto) {
+        User user = userService.modifyUserProfile(userUpdateRequestDto);
         return ResponseEntity.ok().body(new UserResponseDto(user));
     }
 
-    // 회원 프로필 사진 URL 정보 조회
-    @GetMapping("/api/user/profileUrl")
+    @GetMapping("/profileUrl")
     @ApiOperation(value = "회원 프로필 URL 정보 조회", notes = "회원 프로필 사진 URL 정보를 조회하여 리턴합니다.")
-    @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com", required = true)
-    public ResponseEntity<String> getProfileUrl(@RequestParam("email") String email) throws IOException {
-        User user = userRepository.findByEmail(email);
-
-        // 카카오에서 받아온 프로필 사진이라면
-        if(user.getProfile().startsWith("http")) {
+    @ApiImplicitParam(name = "email", value = EMAIL_VALUE, example = EMAIL_EXAMPLE, required = true)
+    public ResponseEntity<String> userProfileImageAsUrl(@RequestParam @Email(message = INPUT_EMAIL) String email) {
+        User user = userService.findUserByEmail(email);
+        if (isKakaoProfile(user)) {
             return ResponseEntity.ok().body(user.getProfile());
         }
-        // 카카오 프로필 사진이 아니라면
-        else {
-            return  ResponseEntity.ok().body(awsS3Service.getS3(user.getProfile()));
-        }
+        return ResponseEntity.ok().body(storageService.findFileUrl(user.getProfile()));
     }
 
-
-    // 회원 프로필 사진 bytearray 정보 조회
-    @GetMapping("/api/user/profileByte")
+    @GetMapping("/profileByte")
     @ApiOperation(value = "회원 프로필 bytearray 정보 조회", notes = "회원 프로필 사진을 bytearray로 리턴합니다.")
-    @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com", required = true)
-    public ResponseEntity<byte[]> getProfileByte(@RequestParam("email") String email, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        User user = userRepository.findByEmail(email);
-
-        // 카카오에서 받아온 프로필 사진이라면
-        if(user.getProfile().startsWith("http")) {
-            return userService.getProfileByte(email);
+    @ApiImplicitParam(name = "email", value = EMAIL_VALUE, example = EMAIL_EXAMPLE, required = true)
+    public ResponseEntity<byte[]> userProfileImageAsBytes(@RequestParam @Email(message = INPUT_EMAIL) String email) throws IOException {
+        User user = userService.findUserByEmail(email);
+        if (isKakaoProfile(user)) {
+            return userService.findUserProfileImageAsBytes(email);
         }
-        // 카카오 프로필 사진이 아니라면
-        else {
-            return awsS3Service.getObject("profile", user.getProfile());
-        }
+        return storageService.findFileObject(PROFILE_NAME, user.getProfile());
     }
 
-    // 회원 프로필 사진 Base64 정보 조회
-    @GetMapping("/api/user/profileBase")
+    @GetMapping("/profileBase")
     @ApiOperation(value = "회원 프로필 Base64 정보 조회", notes = "회원 프로필 사진을 Base64로 리턴합니다.")
-    @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com", required = true)
-    public ResponseEntity<String> getProfileBase(@RequestParam("email") String email) throws IOException {
-        User user = userRepository.findByEmail(email);
-
-        // 카카오에서 받아온 프로필 사진이라면
-        if (user.getProfile().startsWith("http")) {
-            return userService.getProfileBase(email);
+    @ApiImplicitParam(name = "email", value = EMAIL_VALUE, example = EMAIL_EXAMPLE, required = true)
+    public ResponseEntity<String> userProfileImageAsBase64(@RequestParam @Email(message = INPUT_EMAIL) String email) throws IOException {
+        User user = userService.findUserByEmail(email);
+        if (isKakaoProfile(user)) {
+            return userService.findUserProfileImageAsBase64(email);
         }
-        // 카카오 프로필 사진이 아니라면
-        else {
-            return awsS3Service.getBase("profile", user.getProfile());
-        }
+        return storageService.findFileBase64(PROFILE_NAME, user.getProfile());
     }
 
-    // 회원 프로필 사진 수정
-    @PutMapping(value = "/api/user/updateProfile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/updateProfile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiOperation(value = "회원 프로필 사진 수정", notes = "회원 프로필 사진을 수정한 후 수정된 회원 정보를 리턴합니다.")
-    public ResponseEntity<UserResponseDto> updateProfile(@RequestParam String email, @RequestPart MultipartFile multipartFile) {
-        // 받아온 정보로 회원 정보 수정 및 프로필 저장
-        User user = userService.updateProfile(email, multipartFile);
+    @ApiImplicitParam(name = "email", value = EMAIL_VALUE, example = EMAIL_EXAMPLE, required = true)
+    public ResponseEntity<UserResponseDto> userProfileImageModify(@RequestParam @Email(message = INPUT_EMAIL) String email,
+                                                                  @RequestPart MultipartFile multipartFile) {
+        User user = userService.modifyUserProfileImage(email, multipartFile);
         return ResponseEntity.ok().body(new UserResponseDto(user));
     }
 
-    // 사용자별 구매 성향 (통계)
-    @GetMapping("/api/user/propensity")
+    @GetMapping("/propensity")
     @ApiOperation(value = "사용자별 구매 성향", notes = "사용자별 구매 성향을 리턴합니다. (살까 말까 미정/결정/취소, 할까 말까 미정/결정/취소, 갈까 말까 미정/결정/취소 갯수)")
-    @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com", required = true)
-    public Map<String, Object> propensity(String email) {
-        return userService.propensity(email);
+    @ApiImplicitParam(name = "email", value = EMAIL_VALUE, example = EMAIL_EXAMPLE, required = true)
+    public Map<String, Object> userPropensityDetails(@RequestParam @Email(message = INPUT_EMAIL) String email) {
+        return userService.findUserDecisionPropensity(email);
     }
 
-    // 회원 탈퇴
-    @PostMapping("/api/user/withdraw")
+    @PostMapping("/withdraw")
     @ApiOperation(value = "회원 탈퇴", notes = "회원 탈퇴를 한 후, true를 리턴합니다.")
-    @ApiImplicitParam(name = "email", value = "이메일", example = "1234@gmail.com", required = true)
-    public ResponseEntity<Boolean> withdrawUser(@RequestParam String email) {
-        return ResponseEntity.ok().body(userService.withdrawUser(email));
+    @ApiImplicitParam(name = "email", value = EMAIL_VALUE, example = EMAIL_EXAMPLE, required = true)
+    public ResponseEntity<Boolean> userWithdraw(@RequestParam @Email(message = INPUT_EMAIL) String email) {
+        return ResponseEntity.ok().body(userService.withdrawUserAccount(email));
+    }
+
+    // 카카오 프로필 사진 URL인지 확인
+    private boolean isKakaoProfile(User user) {
+        return isStartHttpString(user.getProfile());
+    }
+
+    // URL이 http로 시작하는지 확인
+    private boolean isStartHttpString(String url) {
+        return url.startsWith(HTTP_URL);
     }
 }

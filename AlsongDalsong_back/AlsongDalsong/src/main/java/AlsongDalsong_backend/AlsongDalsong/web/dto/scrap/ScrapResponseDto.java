@@ -9,27 +9,25 @@ import lombok.Getter;
  */
 @Getter
 public class ScrapResponseDto {
-
     @ApiModelProperty(notes = "게시글 기본키", example = "1")
     private Long id;
 
     @ApiModelProperty(notes = "분류", example = "살까 말까")
-    private String todo; // 분류
+    private String todo;
 
     @ApiModelProperty(notes = "무엇을", example = "신발")
-    private String what; // 무엇을
+    private String what;
 
     @ApiModelProperty(notes = "게시글 첫 번째 사진 id (썸네일 사진 id), 사진이 없다면 0", example = "1")
-    private Long photoId; // 썸네일 사진 id
+    private Long photoId;
 
     public ScrapResponseDto(Post post) {
         this.id = post.getId();
-        this.todo = post.getTodo();
+        this.todo = post.getTodo().getTodo();
         this.what = post.getWhat();
-        if(post.getPhotoList().size() == 0) {
+        if (post.getPhotoList().isEmpty()) {
             this.photoId = 0L;
-        }
-        else {
+        } else {
             this.photoId = post.getPhotoList().get(0).getId();
         }
     }
