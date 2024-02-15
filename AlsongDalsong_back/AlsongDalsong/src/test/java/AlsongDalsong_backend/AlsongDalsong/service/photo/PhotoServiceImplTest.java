@@ -1,5 +1,6 @@
 package AlsongDalsong_backend.AlsongDalsong.service.photo;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -13,6 +14,7 @@ import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.domain.photo.Photo;
 import AlsongDalsong_backend.AlsongDalsong.domain.photo.PhotoRepository;
 import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
+import AlsongDalsong_backend.AlsongDalsong.except.NotFoundException;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.photo.PhotoResponseDto;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -65,6 +67,16 @@ class PhotoServiceImplTest {
         assertEquals(photo.getId(), result.getId());
 
         verify(photoRepository, times(1)).findById(any());
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 사진 아이디로 사진 조회 예외 발생 테스트")
+    void testFindCommentByNonExistingCommentIdExcept() {
+        Long nonExistingPhotoId = 100L;
+        when(photoRepository.findById(any())).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> photoService.findPhotoByPhotoId(nonExistingPhotoId))
+                .isInstanceOf(NotFoundException.class);
     }
 
     @Test
