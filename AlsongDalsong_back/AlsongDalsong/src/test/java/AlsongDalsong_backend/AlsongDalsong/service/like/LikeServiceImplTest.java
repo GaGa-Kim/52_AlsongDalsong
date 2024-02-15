@@ -1,5 +1,6 @@
 package AlsongDalsong_backend.AlsongDalsong.service.like;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -14,10 +15,12 @@ import AlsongDalsong_backend.AlsongDalsong.domain.comment.Comment;
 import AlsongDalsong_backend.AlsongDalsong.domain.like.Like;
 import AlsongDalsong_backend.AlsongDalsong.domain.like.LikeRepository;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
+import AlsongDalsong_backend.AlsongDalsong.except.UnauthorizedEditException;
 import AlsongDalsong_backend.AlsongDalsong.service.comment.CommentService;
 import AlsongDalsong_backend.AlsongDalsong.service.user.UserService;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.like.LikeRequestDto;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -51,7 +54,8 @@ class LikeServiceImplTest {
     }
 
     @Test
-    void testSaveAddLike() {
+    @DisplayName("댓글 좋아요 작성 테스트")
+    void testAddLike() {
         when(userService.findUserByEmail(any())).thenReturn(like.getUserId());
         when(commentService.findCommentByCommentId(any())).thenReturn(like.getCommentId());
         when(likeRepository.existsByUserIdAndCommentId(any(), any())).thenReturn(false);
@@ -70,7 +74,8 @@ class LikeServiceImplTest {
     }
 
     @Test
-    void testSaveDeleteLike() {
+    @DisplayName("댓글 좋아요 삭제 테스트")
+    void testDeleteLike() {
         when(userService.findUserByEmail(any())).thenReturn(like.getUserId());
         when(commentService.findCommentByCommentId(any())).thenReturn(like.getCommentId());
         when(likeRepository.existsByUserIdAndCommentId(any(), any())).thenReturn(true);
@@ -90,6 +95,20 @@ class LikeServiceImplTest {
     }
 
     @Test
+    @DisplayName("댓글 좋아요 삭제 시 작성자와 편집자가 다를 경우 예외 발생 테스트")
+    void testDeleteLikeUnauthorizedExcept() {
+        User notWriter = mock(User.class);
+        when(userService.findUserByEmail(any())).thenReturn(notWriter);
+        when(commentService.findCommentByCommentId(any())).thenReturn(like.getCommentId());
+        when(likeRepository.existsByUserIdAndCommentId(any(), any())).thenReturn(true);
+        when(likeRepository.findByUserIdAndCommentId(any(), any())).thenReturn(like);
+
+        assertThatThrownBy(() -> likeService.saveLike(likeRequestDto))
+                .isInstanceOf(UnauthorizedEditException.class);
+    }
+
+    @Test
+    @DisplayName("댓글 아이디와 회원 이메일로 댓글 좋아요 조회 테스트")
     void testFindLike() {
         when(userService.findUserByEmail(any())).thenReturn(like.getUserId());
         when(commentService.findCommentByCommentId(any())).thenReturn(like.getCommentId());
