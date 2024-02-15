@@ -4,7 +4,7 @@ import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import AlsongDalsong_backend.AlsongDalsong.domain.vote.Vote;
 import AlsongDalsong_backend.AlsongDalsong.domain.vote.VoteRepository;
-import AlsongDalsong_backend.AlsongDalsong.except.NotFoundException;
+import AlsongDalsong_backend.AlsongDalsong.except.UnauthorizedEditException;
 import AlsongDalsong_backend.AlsongDalsong.service.post.PostService;
 import AlsongDalsong_backend.AlsongDalsong.service.user.UserService;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.vote.VoteRequestDto;
@@ -109,7 +109,7 @@ public class VoteServiceImpl implements VoteService {
             vote.update(voteRequestDto.getVote());
             return voteRequestDto.getVote().toString();
         }
-        throw new NotFoundException();
+        throw new UnauthorizedEditException();
     }
 
     /**

@@ -1,5 +1,6 @@
 package AlsongDalsong_backend.AlsongDalsong.service.vote;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -15,10 +16,12 @@ import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import AlsongDalsong_backend.AlsongDalsong.domain.vote.Vote;
 import AlsongDalsong_backend.AlsongDalsong.domain.vote.VoteRepository;
+import AlsongDalsong_backend.AlsongDalsong.except.UnauthorizedEditException;
 import AlsongDalsong_backend.AlsongDalsong.service.post.PostService;
 import AlsongDalsong_backend.AlsongDalsong.service.user.UserService;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.vote.VoteRequestDto;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -54,7 +57,8 @@ class VoteServiceImplTest {
     }
 
     @Test
-    void testSaveAddVote() {
+    @DisplayName("게시글에 투표 작성 테스트")
+    void testAddVote() {
         when(userService.findUserByEmail(any())).thenReturn(vote.getUserId());
         when(postService.findPostByPostId(any())).thenReturn(vote.getPostId());
         when(voteRepository.existsByUserIdAndPostId(any(), any())).thenReturn(false);
@@ -73,7 +77,8 @@ class VoteServiceImplTest {
     }
 
     @Test
-    void testSaveDeleteVote() {
+    @DisplayName("게시글에 투표 삭제 테스트")
+    void testDeleteVote() {
         when(userService.findUserByEmail(any())).thenReturn(vote.getUserId());
         when(postService.findPostByPostId(any())).thenReturn(vote.getPostId());
         when(voteRepository.existsByUserIdAndPostId(any(), any())).thenReturn(true);
@@ -93,7 +98,8 @@ class VoteServiceImplTest {
     }
 
     @Test
-    void testSaveModifyVote() {
+    @DisplayName("게시글에 투표 수정 테스트")
+    void testModifyVote() {
         when(userService.findUserByEmail(any())).thenReturn(vote.getUserId());
         when(postService.findPostByPostId(any())).thenReturn(vote.getPostId());
         when(voteRepository.existsByUserIdAndPostId(any(), any())).thenReturn(true);
@@ -110,6 +116,20 @@ class VoteServiceImplTest {
     }
 
     @Test
+    @DisplayName("게시글에 투표 삭제 또는 수정 시 작성자와 편집자가 다를 경우 예외 발생 테스트")
+    void testDeleteOrModifyVoteUnauthorizedExcept() {
+        User withdrawUser = mock(User.class);
+        when(userService.findUserByEmail(any())).thenReturn(withdrawUser);
+        when(postService.findPostByPostId(any())).thenReturn(vote.getPostId());
+        when(voteRepository.existsByUserIdAndPostId(any(), any())).thenReturn(true);
+        when(voteRepository.findByUserIdAndPostId(any(), any())).thenReturn(vote);
+
+        assertThatThrownBy(() -> voteService.saveVote(voteFalseResponseDto))
+                .isInstanceOf(UnauthorizedEditException.class);
+    }
+
+    @Test
+    @DisplayName("게시글 아이디와 회원 이메일에 따른 투표 조회 테스트")
     void testFindVote() {
         when(userService.findUserByEmail(any())).thenReturn(vote.getUserId());
         when(postService.findPostByPostId(any())).thenReturn(vote.getPostId());
