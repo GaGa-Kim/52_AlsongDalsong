@@ -23,6 +23,7 @@ import AlsongDalsong_backend.AlsongDalsong.web.dto.user.UserUpdateRequestDto;
 import java.io.IOException;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -58,6 +59,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("이메일로 회원 조회 테스트")
     void testFindUserByEmail() {
         when(userRepository.findByEmail(any())).thenReturn(user);
 
@@ -70,6 +72,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("회원 프로필 이미지 조회를 위한 Byte 배열 기반 이미지 응답 생성 테스트")
     void testFindUserProfileImageAsBytes() throws IOException {
         when(userRepository.findByEmail(any())).thenReturn(user);
 
@@ -79,6 +82,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("회원 프로필 이미지 조회를 위한 Base64 기반 이미지 응답 생성 테스트")
     void testFindUserProfileImageAsBase64() throws IOException {
         when(userRepository.findByEmail(any())).thenReturn(user);
 
@@ -88,6 +92,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("회원 정보 수정 테스트")
     void testModifyUserProfile() {
         when(userRepository.findByEmail(any())).thenReturn(user);
 
@@ -100,6 +105,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("회원 프로필 이미지 수정 테스트")
     void testModifyUserProfileImage() {
         when(userRepository.findByEmail(any())).thenReturn(user);
         doNothing().when(storageService).removeFile(any());
@@ -117,6 +123,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("회원별 구매 성향 통계 조회 테스트")
     void testFindUserDecisionPropensity() {
         when(userRepository.findByEmail(any())).thenReturn(user);
         when(user.getPostList().get(0).getTodo()).thenReturn(Todo.TO_BUY_OR_NOT_TO_BUY);
@@ -134,6 +141,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("회원 탈퇴 테스트")
     void testWithdrawUserAccount() {
         when(userRepository.findByEmail(any())).thenReturn(user);
 

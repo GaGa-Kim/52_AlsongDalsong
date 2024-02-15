@@ -198,7 +198,7 @@ public class AuthServiceImpl implements AuthService {
      * 회원 탈퇴 여부를 조회한다.
      *
      * @param user (회원)
-     * @return boolean (회원 가입 여부)
+     * @return boolean (회원 탈퇴 여부)
      */
     private boolean isWithdrawn(User user) {
         return user.getWithdraw();

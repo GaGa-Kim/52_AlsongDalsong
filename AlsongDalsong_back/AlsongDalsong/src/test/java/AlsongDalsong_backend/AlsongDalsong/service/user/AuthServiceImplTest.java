@@ -1,6 +1,7 @@
 package AlsongDalsong_backend.AlsongDalsong.service.user;
 
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_TOKEN;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -15,11 +16,14 @@ import AlsongDalsong_backend.AlsongDalsong.domain.post.Post;
 import AlsongDalsong_backend.AlsongDalsong.domain.scrap.Scrap;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import AlsongDalsong_backend.AlsongDalsong.domain.user.UserRepository;
+import AlsongDalsong_backend.AlsongDalsong.except.DuplicateEmailException;
+import AlsongDalsong_backend.AlsongDalsong.except.WithdrawnException;
 import AlsongDalsong_backend.AlsongDalsong.jwt.TokenProvider;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.auth.TokenDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.user.UserResponseDto;
 import AlsongDalsong_backend.AlsongDalsong.web.dto.user.UserSaveRequestDto;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -51,6 +55,7 @@ class AuthServiceImplTest {
     }
 
     @Test
+    @DisplayName("일반 회원가입을 진행한 후, 사용자 정보 반환 테스트")
     void testSignupAndReturnUser() {
         when(userRepository.existsByEmail(any())).thenReturn(false);
         when(userRepository.save(any())).thenReturn(user);
@@ -65,6 +70,16 @@ class AuthServiceImplTest {
     }
 
     @Test
+    @DisplayName("일반 회원가입 시 동일한 이메일 회원이 있을 경우 예외 발생 테스트")
+    void testSignupDuplicationEmailExcept() {
+        when(userRepository.existsByEmail(any())).thenReturn(true);
+
+        assertThatThrownBy(() -> authService.signupAndReturnUser(userSaveRequestDto))
+                .isInstanceOf(DuplicateEmailException.class);
+    }
+
+    @Test
+    @DisplayName("일반 로그인을 진행한 후, JWT 토큰 반환 테스트")
     void testLoginAndGenerateToken() {
         when(userRepository.findByEmail(anyString())).thenReturn(user);
         when(tokenProvider.createToken(any())).thenReturn(VALID_TOKEN);
@@ -77,5 +92,16 @@ class AuthServiceImplTest {
 
         verify(userRepository, times(1)).findByEmail(any());
         verify(tokenProvider, times(1)).createToken(any());
+    }
+
+    @Test
+    @DisplayName("탈퇴한 회원으로 일반 로그인 시 예외 발생 테스트")
+    void testLoginWithdrawnExcept() {
+        User withdrawUser = mock(User.class);
+        when(userRepository.findByEmail(any())).thenReturn(withdrawUser);
+        when(withdrawUser.getWithdraw()).thenReturn(true);
+
+        assertThatThrownBy(() -> authService.loginAndGenerateToken(withdrawUser.getEmail()))
+                .isInstanceOf(WithdrawnException.class);
     }
 }
