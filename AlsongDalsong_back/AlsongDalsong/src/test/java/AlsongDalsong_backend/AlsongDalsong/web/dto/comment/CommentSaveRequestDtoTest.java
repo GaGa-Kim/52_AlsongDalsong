@@ -32,6 +32,7 @@ class CommentSaveRequestDtoTest {
     }
 
     @Test
+    @DisplayName("이메일 유효성 검증 테스트")
     void email_validation() {
         CommentSaveRequestDto commentSaveRequestDto = CommentSaveRequestDto.builder()
                 .email(INVALID_EMAIL)
@@ -43,6 +44,7 @@ class CommentSaveRequestDtoTest {
     }
 
     @Test
+    @DisplayName("게시글 아이디 유효성 검증 테스트")
     void postId_validation() {
         CommentSaveRequestDto commentSaveRequestDto = CommentSaveRequestDto.builder()
                 .email(VALID_EMAIL)
@@ -54,6 +56,7 @@ class CommentSaveRequestDtoTest {
     }
 
     @Test
+    @DisplayName("댓글 내용 유효성 검증 테스트")
     void content_validation() {
         CommentSaveRequestDto commentSaveRequestDto = CommentSaveRequestDto.builder()
                 .email(VALID_EMAIL)
