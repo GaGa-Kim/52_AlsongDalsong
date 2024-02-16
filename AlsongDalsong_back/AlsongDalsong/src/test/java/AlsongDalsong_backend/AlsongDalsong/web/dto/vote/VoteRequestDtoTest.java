@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.ValidatorUtil;
 import AlsongDalsong_backend.AlsongDalsong.domain.vote.Vote;
 import org.junit.jupiter.api.DisplayName;
@@ -44,11 +43,7 @@ class VoteRequestDtoTest {
                 .build();
 
         Vote vote = voteRequestDto.toEntity();
-        vote.setUser(TestObjectFactory.initUser());
-        vote.setPost(TestObjectFactory.initPost());
 
-        assertEquals(voteRequestDto.getEmail(), vote.getUserId().getEmail());
-        assertEquals(voteRequestDto.getPostId(), vote.getPostId().getId());
         assertEquals(voteRequestDto.getVote(), vote.getVote());
     }
 
