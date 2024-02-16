@@ -99,7 +99,7 @@ class VoteControllerTest {
     }
 
     @Test
-    @DisplayName("회원 탈퇴를 한 후, true 리턴 테스트")
+    @DisplayName("사용자별로 게시글 투표 조회 테스트")
     void voteDetails() throws Exception {
         when(voteService.findVote(any(), any())).thenReturn("true");
 

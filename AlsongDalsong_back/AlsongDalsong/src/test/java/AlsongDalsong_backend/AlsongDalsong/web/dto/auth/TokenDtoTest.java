@@ -5,6 +5,8 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.INVALID_EMAIL;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_TOKEN;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import AlsongDalsong_backend.AlsongDalsong.ValidatorUtil;
 import org.junit.jupiter.api.DisplayName;
@@ -26,6 +28,16 @@ class TokenDtoTest {
 
         assertEquals(VALID_TOKEN, tokenDto.getToken());
         assertEquals(VALID_EMAIL, tokenDto.getEmail());
+    }
+
+    @Test
+    @DisplayName("protected 기본 생성자 테스트")
+    void testProtectedNoArgsConstructor() {
+        TokenDto tokenDto = new TokenDto();
+
+        assertNotNull(tokenDto);
+        assertNull(tokenDto.getToken());
+        assertNull(tokenDto.getEmail());
     }
 
     @Test

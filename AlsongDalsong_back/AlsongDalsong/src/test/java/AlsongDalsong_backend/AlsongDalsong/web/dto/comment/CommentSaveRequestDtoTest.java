@@ -6,8 +6,11 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_COMMENT_CO
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import AlsongDalsong_backend.AlsongDalsong.ValidatorUtil;
+import AlsongDalsong_backend.AlsongDalsong.domain.comment.Comment;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -29,6 +32,32 @@ class CommentSaveRequestDtoTest {
         assertEquals(VALID_EMAIL, commentSaveRequestDto.getEmail());
         assertEquals(VALID_POST_ID, commentSaveRequestDto.getPostId());
         assertEquals(VALID_COMMENT_CONTENT, commentSaveRequestDto.getContent());
+    }
+
+    @Test
+    @DisplayName("CommentSaveRequestDto toEntity 생성 테스트")
+    void testCommentSaveRequestDtoEntity() {
+        CommentSaveRequestDto commentSaveRequestDto = CommentSaveRequestDto.builder()
+                .email(VALID_EMAIL)
+                .postId(VALID_POST_ID)
+                .content(VALID_COMMENT_CONTENT)
+                .build();
+
+        Comment comment = commentSaveRequestDto.toEntity();
+
+        assertNotNull(comment);
+        assertEquals(VALID_COMMENT_CONTENT, comment.getContent());
+    }
+
+    @Test
+    @DisplayName("protected 기본 생성자 테스트")
+    void testProtectedNoArgsConstructor() {
+        CommentSaveRequestDto commentSaveRequestDto = new CommentSaveRequestDto();
+
+        assertNotNull(commentSaveRequestDto);
+        assertNull(commentSaveRequestDto.getEmail());
+        assertNull(commentSaveRequestDto.getPostId());
+        assertNull(commentSaveRequestDto.getContent());
     }
 
     @Test

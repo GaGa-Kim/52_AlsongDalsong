@@ -61,7 +61,7 @@ class ScrapControllerTest {
     }
 
     @Test
-    @DisplayName("게시글을 작성한 후, 작성한 게시글 리턴 테스트")
+    @DisplayName("게시글을 스크랩한 후, true 리턴 테스트")
     void testScrapSaveAdd() throws Exception {
         when(scrapService.saveScrap(any())).thenReturn(true);
 
@@ -76,7 +76,7 @@ class ScrapControllerTest {
     }
 
     @Test
-    @DisplayName("게시글을 작성한 후, 작성한 게시글 리턴 테스트")
+    @DisplayName("게시글이 이미 스크랩되어 있을 경우 스크랩이 취소되고 false 리턴 테스트")
     void testScrapSaveDelete() throws Exception {
         when(scrapService.saveScrap(any())).thenReturn(false);
 
@@ -91,7 +91,7 @@ class ScrapControllerTest {
     }
 
     @Test
-    @DisplayName("게시글을 작성한 후, 작성한 게시글 리턴 테스트")
+    @DisplayName("사용자별로 게시글에 스크랩을 눌렀는지 조회 테스트, 스크랩했다면 true, 그렇지 않다면 false 리턴")
     void testScrapDetails() throws Exception {
         when(scrapService.findScrap(any(), any())).thenReturn(true);
 
@@ -106,7 +106,7 @@ class ScrapControllerTest {
     }
 
     @Test
-    @DisplayName("게시글을 작성한 후, 작성한 게시글 리턴 테스트")
+    @DisplayName("사용자별 스크랩 목록 조회 리턴 테스트")
     void testScrapUserList() throws Exception {
         when(scrapService.findUserScraps(any())).thenReturn(Collections.singletonList(scrapResponseDto));
 
@@ -115,7 +115,6 @@ class ScrapControllerTest {
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
 
         verify(scrapService, times(1)).findUserScraps(any());

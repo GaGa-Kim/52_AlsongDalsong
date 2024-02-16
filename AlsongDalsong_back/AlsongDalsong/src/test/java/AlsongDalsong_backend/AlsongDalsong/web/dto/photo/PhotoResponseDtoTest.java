@@ -17,8 +17,12 @@ class PhotoResponseDtoTest {
         Photo photo = TestObjectFactory.initPhoto();
         photo.setPost(TestObjectFactory.initPost());
 
-        PhotoResponseDto photoResponseDto = new PhotoResponseDto(photo.getOrigPhotoName(), photo.getPhotoName(), photo.getPhotoUrl());
-
+        PhotoResponseDto photoResponseDto = PhotoResponseDto.builder()
+                .origPhotoName(photo.getOrigPhotoName())
+                .photoName(photo.getPhotoName())
+                .photoUrl(photo.getPhotoUrl())
+                .build();
+        
         assertEquals(photo.getOrigPhotoName(), photoResponseDto.getOrigPhotoName());
         assertEquals(photo.getOrigPhotoName(), photoResponseDto.getOrigPhotoName());
         assertEquals(photo.getPhotoName(), photoResponseDto.getPhotoName());

@@ -3,6 +3,8 @@ package AlsongDalsong_backend.AlsongDalsong.web.dto.post;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.INVALID_BLANK;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.INVALID_EMAIL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.ValidatorUtil;
@@ -38,9 +40,28 @@ class PostUpdateRequestTest {
         assertEquals(postUpdateRequestVO.getWho(), postUpdateRequestDto.getWho());
         assertEquals(postUpdateRequestVO.getOld(), postUpdateRequestDto.getOld());
         assertEquals(postUpdateRequestVO.getDate(), postUpdateRequestDto.getDate());
+        assertEquals(postUpdateRequestVO.getWhat(), postUpdateRequestDto.getWhat());
         assertEquals(postUpdateRequestVO.getContent(), postUpdateRequestDto.getContent());
         assertEquals(postUpdateRequestVO.getLink(), postUpdateRequestDto.getLink());
         assertEquals(postUpdateRequestVO.getImportance(), postUpdateRequestDto.getImportance());
+    }
+
+    @Test
+    @DisplayName("protected 기본 생성자 테스트")
+    void testProtectedNoArgsConstructor() {
+        PostUpdateRequestDto postUpdateRequestDto = new PostUpdateRequestDto();
+
+        assertNotNull(postUpdateRequestDto);
+        assertNull(postUpdateRequestDto.getEmail());
+        assertNull(postUpdateRequestDto.getTodo());
+        assertNull(postUpdateRequestDto.getCategory());
+        assertNull(postUpdateRequestDto.getWho());
+        assertNull(postUpdateRequestDto.getOld());
+        assertNull(postUpdateRequestDto.getDate());
+        assertNull(postUpdateRequestDto.getWhat());
+        assertNull(postUpdateRequestDto.getContent());
+        assertNull(postUpdateRequestDto.getLink());
+        assertNull(postUpdateRequestDto.getImportance());
     }
 
     @Test

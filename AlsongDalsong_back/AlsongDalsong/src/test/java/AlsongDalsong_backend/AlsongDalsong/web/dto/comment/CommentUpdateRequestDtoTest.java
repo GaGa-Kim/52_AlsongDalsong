@@ -7,6 +7,8 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_COMMENT_ID
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import AlsongDalsong_backend.AlsongDalsong.ValidatorUtil;
 import org.junit.jupiter.api.DisplayName;
@@ -32,6 +34,18 @@ class CommentUpdateRequestDtoTest {
         assertEquals(VALID_EMAIL, commentUpdateRequestDto.getEmail());
         assertEquals(VALID_POST_ID, commentUpdateRequestDto.getPostId());
         assertEquals(VALID_COMMENT_CONTENT, commentUpdateRequestDto.getContent());
+    }
+
+    @Test
+    @DisplayName("protected 기본 생성자 테스트")
+    void testProtectedNoArgsConstructor() {
+        CommentUpdateRequestDto commentUpdateRequestDto = new CommentUpdateRequestDto();
+
+        assertNotNull(commentUpdateRequestDto);
+        assertNull(commentUpdateRequestDto.getId());
+        assertNull(commentUpdateRequestDto.getEmail());
+        assertNull(commentUpdateRequestDto.getPostId());
+        assertNull(commentUpdateRequestDto.getContent());
     }
 
     @Test

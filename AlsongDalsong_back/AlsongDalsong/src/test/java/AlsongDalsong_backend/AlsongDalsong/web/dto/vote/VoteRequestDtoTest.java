@@ -5,8 +5,12 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_ID;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_VOTE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
+import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.ValidatorUtil;
+import AlsongDalsong_backend.AlsongDalsong.domain.vote.Vote;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -28,6 +32,35 @@ class VoteRequestDtoTest {
         assertEquals(VALID_EMAIL, voteRequestDto.getEmail());
         assertEquals(VALID_POST_ID, voteRequestDto.getPostId());
         assertEquals(VALID_VOTE, voteRequestDto.getVote());
+    }
+
+    @Test
+    @DisplayName("VoteRequestDto toEntity 생성 테스트")
+    void testVoteRequestDtoEntity() {
+        VoteRequestDto voteRequestDto = VoteRequestDto.builder()
+                .email(VALID_EMAIL)
+                .postId(VALID_POST_ID)
+                .vote(VALID_VOTE)
+                .build();
+
+        Vote vote = voteRequestDto.toEntity();
+        vote.setUser(TestObjectFactory.initUser());
+        vote.setPost(TestObjectFactory.initPost());
+
+        assertEquals(voteRequestDto.getEmail(), vote.getUserId().getEmail());
+        assertEquals(voteRequestDto.getPostId(), vote.getPostId().getId());
+        assertEquals(voteRequestDto.getVote(), vote.getVote());
+    }
+
+    @Test
+    @DisplayName("protected 기본 생성자 테스트")
+    void testProtectedNoArgsConstructor() {
+        VoteRequestDto voteRequestDto = new VoteRequestDto();
+
+        assertNotNull(voteRequestDto);
+        assertNull(voteRequestDto.getEmail());
+        assertNull(voteRequestDto.getPostId());
+        assertNull(voteRequestDto.getVote());
     }
 
     @Test
