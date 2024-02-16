@@ -95,8 +95,7 @@ public class PostServiceImpl implements PostService {
      */
     @Override
     public List<PostResponseDto> findPopularPosts(String todo) {
-        return convertToDtos(
-                postRepository.findByTodoAndDecisionOrderByVoteListDesc(Todo.ofTodo(todo), Decision.UNDECIDED));
+        return convertToDtos(postRepository.findByTodoAndDecisionOrderByVoteListDesc(Todo.ofTodo(todo), Decision.UNDECIDED));
     }
 
     /**
@@ -133,8 +132,8 @@ public class PostServiceImpl implements PostService {
      * @return PostResponseDto (수정된 게시글 정보 DTO)
      */
     @Override
-    public PostResponseDto modifyPost(PostUpdateRequestDto postUpdateRequestDto, List<MultipartFile> photos,
-                                      List<Long> deletePhotoIds) {
+    public PostResponseDto modifyPost(PostUpdateRequestDto postUpdateRequestDto,
+                                      List<MultipartFile> photos, List<Long> deletePhotoIds) {
         User user = userService.findUserByEmail(postUpdateRequestDto.getEmail());
         Post post = findPostByPostId(postUpdateRequestDto.getId());
         if (isSameUser(user, post)) {

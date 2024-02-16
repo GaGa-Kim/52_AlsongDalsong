@@ -85,7 +85,7 @@ public class AwsS3ServiceImpl implements StorageService {
     }
 
     /**
-     * AWS S3 버킷에 파일 URL을 조회한다.
+     * AWS S3 버킷에서 파일 URL을 조회한다.
      *
      * @param fileName (파일 변환 이름)
      * @return String (파일 URL)
@@ -96,7 +96,7 @@ public class AwsS3ServiceImpl implements StorageService {
     }
 
     /**
-     * AWS S3 버킷에 파일을 조회해 다운로드한다.
+     * AWS S3 버킷에서 파일을 조회해 다운로드한다.
      *
      * @param originFileName (원본 파일 이름), fileName (파일 변환 이름)
      * @return byte[] (다운로드 가능한 파일 ByteArray)
@@ -113,7 +113,7 @@ public class AwsS3ServiceImpl implements StorageService {
     }
 
     /**
-     * AWS S3 버킷에 파일을 조회해 Base64로 변환한다.
+     * AWS S3 버킷에서 파일을 조회해 Base64로 변환한다.
      *
      * @param originFileName (원본 파일 이름), fileName (파일 변환 이름)
      * @return String (파일 Base64)
@@ -138,23 +138,23 @@ public class AwsS3ServiceImpl implements StorageService {
     }
 
     /**
-     * AWS S3 버킷에서 파일을 업로드한다.
+     * AWS S3 버킷에 파일을 업로드한다.
      *
      * @param file (업로드할 파일)
      * @return String (업로드한 파일 이름)
      */
     private String addFile(MultipartFile file) {
-        String name = createName(file.getOriginalFilename());
+        String convertName = createName(file.getOriginalFilename());
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(file.getSize());
         metadata.setContentType(file.getContentType());
         try (InputStream inputStream = file.getInputStream()) {
-            amazonS3Client.putObject(new PutObjectRequest(bucket, name, inputStream, metadata)
+            amazonS3Client.putObject(new PutObjectRequest(bucket, convertName, inputStream, metadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
         } catch (IOException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, UPLOAD_FAIL);
         }
-        return name;
+        return convertName;
     }
 
     /**

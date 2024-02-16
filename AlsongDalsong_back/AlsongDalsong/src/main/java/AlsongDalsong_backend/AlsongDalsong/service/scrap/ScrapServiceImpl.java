@@ -85,7 +85,7 @@ public class ScrapServiceImpl implements ScrapService {
      * @return boolean (스크랩 저장에 따른 true 반환)
      */
     private boolean createScrap(User user, Post post) {
-        Scrap scrap = new Scrap();
+        Scrap scrap = Scrap.builder().build();
         scrap.setUser(user);
         scrap.setPost(post);
         scrapRepository.save(scrap);

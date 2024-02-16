@@ -49,7 +49,7 @@ public class AuthServiceImpl implements AuthService {
     public TokenDto socialSignupAndGenerateToken(String code) {
         OauthToken access_token = getAccessToken(code);
         KakaoProfile profile = getKakaoProfile(access_token.getAccess_token());
-        User user = findOrAddUser(profile);
+        User user = findOrAddKakaoUser(profile);
         if (isWithdrawn(user)) {
             throw new WithdrawnException();
         }
@@ -167,7 +167,7 @@ public class AuthServiceImpl implements AuthService {
      * @param profile (카카오로부터 받은 회원 정보)
      * @return User (회원가입된 회원 또는 로그인된 회원)
      */
-    private User findOrAddUser(KakaoProfile profile) {
+    private User findOrAddKakaoUser(KakaoProfile profile) {
         String email = profile.getKakao_account().getEmail();
         if (doesUserExistWithEmail(email)) {
             return findUserByEmail(email);
@@ -232,6 +232,6 @@ public class AuthServiceImpl implements AuthService {
      */
     private TokenDto createJwtToken(User user) {
         String jwtToken = tokenProvider.createToken(user);
-        return new TokenDto(jwtToken, user.getEmail());
+        return TokenDto.builder().token(jwtToken).email(user.getEmail()).build();
     }
 }

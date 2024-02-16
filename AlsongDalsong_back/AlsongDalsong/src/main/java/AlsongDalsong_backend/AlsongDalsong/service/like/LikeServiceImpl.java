@@ -72,7 +72,7 @@ public class LikeServiceImpl implements LikeService {
      * @return boolean (좋아요 저장에 따른 true 반환)
      */
     private boolean createLike(User user, Comment comment) {
-        Like like = new Like();
+        Like like = Like.builder().build();
         like.setUser(user);
         like.setComment(comment);
         likeRepository.save(like);
