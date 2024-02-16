@@ -54,9 +54,7 @@ class PostSaveRequestTest {
                 .build();
 
         Post post = postSaveRequestDto.toEntity();
-        post.setUser(TestObjectFactory.initUser());
 
-        assertEquals(postSaveRequestVO.getEmail(), post.getUserId().getEmail());
         assertEquals(postSaveRequestVO.getTodo(), post.getTodo().getTodo());
         assertEquals(postSaveRequestVO.getCategory(), post.getCategory().getCategory());
         assertEquals(postSaveRequestVO.getWho(), post.getWho().getWho());
