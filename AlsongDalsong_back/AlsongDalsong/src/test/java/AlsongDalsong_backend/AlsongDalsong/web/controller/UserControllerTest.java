@@ -55,8 +55,6 @@ import org.springframework.test.web.servlet.request.RequestPostProcessor;
 class UserControllerTest {
     private User user;
     private UserUpdateRequestDto userUpdateRequestDto;
-    private byte[] profileByteArray;
-    private String profileByteBase;
     private HttpHeaders httpHeaders;
     private Map<String, Object> propensityMap;
 
@@ -74,8 +72,6 @@ class UserControllerTest {
         user.addScrapList(TestObjectFactory.initScrap());
 
         userUpdateRequestDto = TestObjectFactory.initUserUpdateRequestDto(user);
-        profileByteArray = IOUtils.toByteArray(user.getProfile());
-        profileByteBase = Base64.getEncoder().encodeToString(profileByteArray);
         httpHeaders = new HttpHeaders();
         propensityMap = new HashMap<>();
     }
@@ -111,8 +107,8 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("회원 프로필 사진 URL 정보 조회 리턴 테스트")
-    void testUserProfileImageAsUrl() throws Exception {
+    @DisplayName("회원 카카오 프로필 사진 URL 정보 조회 리턴 테스트")
+    void testUserKakaoProfileImageAsUrl() throws Exception {
         when(userService.findUserByEmail(any())).thenReturn(user);
 
         mockMvc.perform(get("/api/user/profileUrl")
@@ -125,11 +121,29 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("회원 프로필 사진 bytearray 리턴 테스트")
-    void testUserProfileImageAsBytes() throws Exception {
+    @DisplayName("회원 프로필 사진 URL 정보 조회 리턴 테스트")
+    void testUserProfileImageAsUrl() throws Exception {
+        user.updateProfile("일반 프로필");
+        when(userService.findUserByEmail(any())).thenReturn(user);
+        when(storageService.findFileUrl(any())).thenReturn(user.getProfile());
+
+        mockMvc.perform(get("/api/user/profileUrl")
+                        .param("email", user.getEmail())
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(user.getProfile()));
+
+        verify(userService, times(1)).findUserByEmail(any());
+        verify(storageService, times(1)).findFileUrl(any());
+    }
+
+    @Test
+    @DisplayName("회원 카카오 프로필 사진 bytearray 리턴 테스트")
+    void testUserKakaoProfileImageAsBytes() throws Exception {
+        byte[] kakaoProfileByte = IOUtils.toByteArray(user.getProfile());
         when(userService.findUserByEmail(any())).thenReturn(user);
         when(userService.findUserProfileImageAsBytes(any()))
-                .thenReturn(new ResponseEntity<>(profileByteArray, httpHeaders, HttpStatus.OK));
+                .thenReturn(new ResponseEntity<>(kakaoProfileByte, httpHeaders, HttpStatus.OK));
 
         mockMvc.perform(get("/api/user/profileByte")
                         .param("email", user.getEmail())
@@ -142,17 +156,38 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("게시글을 스크랩한 후, true 리턴 테스트")
-    void testUserProfileImageAsBase64() throws Exception {
+    @DisplayName("회원 프로필 사진 bytearray 리턴 테스트")
+    void testUserProfileImageAsBytes() throws Exception {
+        user.updateProfile("일반 프로필");
+        byte[] profileArray = IOUtils.toByteArray(user.getProfile());
+        when(userService.findUserByEmail(any())).thenReturn(user);
+        when(storageService.findFileObject(any(), any()))
+                .thenReturn(new ResponseEntity<>(profileArray, httpHeaders, HttpStatus.OK));
+
+        mockMvc.perform(get("/api/user/profileByte")
+                        .param("email", user.getEmail())
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(user.getProfile()));
+
+        verify(userService, times(1)).findUserByEmail(any());
+        verify(storageService, times(1)).findFileObject(any(), any());
+    }
+
+    @Test
+    @DisplayName("회원 카카오 프로필 사진 Base64 리턴 테스트")
+    void testUserKakaoProfileImageAsBase64() throws Exception {
+        byte[] kakaoProfileByte = IOUtils.toByteArray(user.getProfile());
+        String kakaoProfileBase = Base64.getEncoder().encodeToString(kakaoProfileByte);
         when(userService.findUserByEmail(any())).thenReturn(user);
         when(userService.findUserProfileImageAsBase64(any()))
-                .thenReturn(new ResponseEntity<>(profileByteBase, httpHeaders, HttpStatus.OK));
+                .thenReturn(new ResponseEntity<>(kakaoProfileBase, httpHeaders, HttpStatus.OK));
 
         mockMvc.perform(get("/api/user/profileBase")
                         .param("email", user.getEmail())
                         .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").value(profileByteBase));
+                .andExpect(jsonPath("$").value(kakaoProfileBase));
 
         verify(userService, times(1)).findUserByEmail(any());
         verify(userService, times(1)).findUserProfileImageAsBase64(any());
@@ -160,10 +195,32 @@ class UserControllerTest {
 
     @Test
     @DisplayName("회원 프로필 사진 Base64 리턴 테스트")
+    void testUserProfileImageAsBase64() throws Exception {
+        user.updateProfile("일반 프로필");
+        byte[] profileArray = IOUtils.toByteArray(user.getProfile());
+        String profileBase = Base64.getEncoder().encodeToString(profileArray);
+
+        when(userService.findUserByEmail(any())).thenReturn(user);
+        when(storageService.findFileBase64(any(), any()))
+                .thenReturn(new ResponseEntity<>(profileBase, httpHeaders, HttpStatus.OK));
+
+        mockMvc.perform(get("/api/user/profileBase")
+                        .param("email", user.getEmail())
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(profileBase));
+
+        verify(userService, times(1)).findUserByEmail(any());
+        verify(storageService, times(1)).findFileBase64(any(), any());
+    }
+
+    @Test
+    @DisplayName("회원 프로필 사진을 수정한 후 수정된 회원 정보 리턴 테스트")
     void testUserProfileImageModify() throws Exception {
+        byte[] profileArray = IOUtils.toByteArray(user.getProfile());
         when(userService.modifyUserProfileImage(any(), any())).thenReturn(user);
 
-        MockMultipartFile profile = new MockMultipartFile("file", "newProfile.jpg", "image/jpeg", profileByteArray);
+        MockMultipartFile profile = new MockMultipartFile("file", "newProfile.jpg", "image/jpeg", profileArray);
         MockMultipartHttpServletRequestBuilder builder = multipart("/api/user/updateProfile");
         builder.with(new RequestPostProcessor() {
             @Override
@@ -185,7 +242,7 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("회원 프로필 사진을 수정한 후 수정된 회원 정보 리턴 테스트")
+    @DisplayName("사용자별 구매 성향 리턴 테스트")
     void testUserPropensityDetails() throws Exception {
         when(userService.findUserDecisionPropensity(any())).thenReturn(propensityMap);
 

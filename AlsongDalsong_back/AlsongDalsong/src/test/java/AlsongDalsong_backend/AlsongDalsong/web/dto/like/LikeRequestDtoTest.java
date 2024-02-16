@@ -4,6 +4,8 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.INVALID_EMAIL;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_COMMENT_ID;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import AlsongDalsong_backend.AlsongDalsong.ValidatorUtil;
 import org.junit.jupiter.api.DisplayName;
@@ -26,6 +28,17 @@ class LikeRequestDtoTest {
         assertEquals(VALID_EMAIL, likeRequestDto.getEmail());
         assertEquals(VALID_COMMENT_ID, likeRequestDto.getCommentId());
     }
+
+    @Test
+    @DisplayName("protected 기본 생성자 테스트")
+    void testProtectedNoArgsConstructor() {
+        LikeRequestDto likeRequestDto = new LikeRequestDto();
+
+        assertNotNull(likeRequestDto);
+        assertNull(likeRequestDto.getEmail());
+        assertNull(likeRequestDto.getCommentId());
+    }
+
 
     @Test
     @DisplayName("이메일 유효성 검증 테스트")

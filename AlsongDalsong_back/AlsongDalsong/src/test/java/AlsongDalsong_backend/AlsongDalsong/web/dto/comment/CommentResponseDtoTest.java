@@ -24,6 +24,9 @@ class CommentResponseDtoTest {
 
         assertEquals(comment.getId(), commentResponseDto.getId());
         assertEquals(Time.calculateTime(comment.getCreatedDateTime()), commentResponseDto.getCreatedDateTime());
+        assertEquals(comment.getUserId().getEmail(), commentResponseDto.getEmail());
+        assertEquals(comment.getUserId().getNickname(), commentResponseDto.getNickname());
+        assertEquals(comment.getPostId().getId(), commentResponseDto.getPostId());
         assertEquals(comment.getContent(), commentResponseDto.getContent());
         assertEquals(comment.getLikeList().size(), commentResponseDto.getLike());
     }

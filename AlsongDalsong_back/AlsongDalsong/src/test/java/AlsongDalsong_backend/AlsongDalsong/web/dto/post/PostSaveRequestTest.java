@@ -3,6 +3,8 @@ package AlsongDalsong_backend.AlsongDalsong.web.dto.post;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.INVALID_BLANK;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.INVALID_EMAIL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import AlsongDalsong_backend.AlsongDalsong.TestObjectFactory;
 import AlsongDalsong_backend.AlsongDalsong.ValidatorUtil;
@@ -38,9 +40,50 @@ class PostSaveRequestTest {
         assertEquals(postSaveRequestVO.getWho(), postSaveRequestDto.getWho());
         assertEquals(postSaveRequestVO.getOld(), postSaveRequestDto.getOld());
         assertEquals(postSaveRequestVO.getDate(), postSaveRequestDto.getDate());
+        assertEquals(postSaveRequestVO.getWhat(), postSaveRequestDto.getWhat());
         assertEquals(postSaveRequestVO.getContent(), postSaveRequestDto.getContent());
         assertEquals(postSaveRequestVO.getLink(), postSaveRequestDto.getLink());
         assertEquals(postSaveRequestVO.getImportance(), postSaveRequestDto.getImportance());
+    }
+
+    @Test
+    @DisplayName("PostSaveRequest toEntity 생성 테스트")
+    void testPostSaveRequestDtoEntity() {
+        PostSaveRequestDto postSaveRequestDto = PostSaveRequestDto.builder()
+                .postSaveRequestVO(postSaveRequestVO)
+                .build();
+
+        Post post = postSaveRequestDto.toEntity();
+        post.setUser(TestObjectFactory.initUser());
+
+        assertEquals(postSaveRequestVO.getEmail(), post.getUserId().getEmail());
+        assertEquals(postSaveRequestVO.getTodo(), post.getTodo().getTodo());
+        assertEquals(postSaveRequestVO.getCategory(), post.getCategory().getCategory());
+        assertEquals(postSaveRequestVO.getWho(), post.getWho().getWho());
+        assertEquals(postSaveRequestVO.getOld(), post.getOld().getOld());
+        assertEquals(postSaveRequestVO.getDate(), post.getDate());
+        assertEquals(postSaveRequestVO.getWhat(), post.getWhat());
+        assertEquals(postSaveRequestVO.getContent(), post.getContent());
+        assertEquals(postSaveRequestVO.getLink(), post.getLink());
+        assertEquals(postSaveRequestVO.getImportance(), post.getImportance());
+    }
+
+    @Test
+    @DisplayName("protected 기본 생성자 테스트")
+    void testProtectedNoArgsConstructor() {
+        PostSaveRequestDto postSaveRequestDto = new PostSaveRequestDto();
+
+        assertNotNull(postSaveRequestDto);
+        assertNull(postSaveRequestDto.getEmail());
+        assertNull(postSaveRequestDto.getTodo());
+        assertNull(postSaveRequestDto.getCategory());
+        assertNull(postSaveRequestDto.getWho());
+        assertNull(postSaveRequestDto.getOld());
+        assertNull(postSaveRequestDto.getDate());
+        assertNull(postSaveRequestDto.getWhat());
+        assertNull(postSaveRequestDto.getContent());
+        assertNull(postSaveRequestDto.getLink());
+        assertNull(postSaveRequestDto.getImportance());
     }
 
     @Test

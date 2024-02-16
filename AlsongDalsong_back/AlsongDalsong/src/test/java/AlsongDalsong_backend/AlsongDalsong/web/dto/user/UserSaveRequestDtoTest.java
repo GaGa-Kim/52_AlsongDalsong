@@ -8,8 +8,11 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NAME;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NICKNAME;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_PROFILE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import AlsongDalsong_backend.AlsongDalsong.ValidatorUtil;
+import AlsongDalsong_backend.AlsongDalsong.domain.user.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -35,6 +38,39 @@ class UserSaveRequestDtoTest {
         assertEquals(VALID_NICKNAME, userSaveRequestDto.getNickname());
         assertEquals(VALID_PROFILE, userSaveRequestDto.getProfile());
         assertEquals(VALID_INTRODUCE, userSaveRequestDto.getIntroduce());
+    }
+
+    @Test
+    @DisplayName("UserSaveRequestDto toEntity 생성 테스트")
+    void testUserSaveRequestDtoEntity() {
+        UserSaveRequestDto userSaveRequestDto = UserSaveRequestDto.builder()
+                .name(VALID_NAME)
+                .email(VALID_EMAIL)
+                .nickname(VALID_NICKNAME)
+                .profile(VALID_PROFILE)
+                .introduce(VALID_INTRODUCE)
+                .build();
+
+        User user = userSaveRequestDto.toEntity();
+
+        assertEquals(VALID_NAME, user.getName());
+        assertEquals(VALID_EMAIL, user.getEmail());
+        assertEquals(VALID_NICKNAME, user.getNickname());
+        assertEquals(VALID_PROFILE, user.getProfile());
+        assertEquals(VALID_INTRODUCE, user.getIntroduce());
+    }
+
+    @Test
+    @DisplayName("protected 기본 생성자 테스트")
+    void testProtectedNoArgsConstructor() {
+        UserSaveRequestDto userSaveRequestDto = new UserSaveRequestDto();
+
+        assertNotNull(userSaveRequestDto);
+        assertNull(userSaveRequestDto.getName());
+        assertNull(userSaveRequestDto.getEmail());
+        assertNull(userSaveRequestDto.getNickname());
+        assertNull(userSaveRequestDto.getProfile());
+        assertNull(userSaveRequestDto.getIntroduce());
     }
 
     @Test

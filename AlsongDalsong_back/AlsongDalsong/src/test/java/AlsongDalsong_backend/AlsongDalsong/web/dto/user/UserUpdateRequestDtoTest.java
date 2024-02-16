@@ -6,6 +6,8 @@ import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_INTRODUCE;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_NICKNAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import AlsongDalsong_backend.AlsongDalsong.ValidatorUtil;
 import org.junit.jupiter.api.DisplayName;
@@ -29,6 +31,17 @@ class UserUpdateRequestDtoTest {
         assertEquals(VALID_EMAIL, userUpdateRequestDto.getEmail());
         assertEquals(VALID_NICKNAME, userUpdateRequestDto.getNickname());
         assertEquals(VALID_INTRODUCE, userUpdateRequestDto.getIntroduce());
+    }
+
+    @Test
+    @DisplayName("protected 기본 생성자 테스트")
+    void testProtectedNoArgsConstructor() {
+        UserUpdateRequestDto userUpdateRequestDto = new UserUpdateRequestDto();
+
+        assertNotNull(userUpdateRequestDto);
+        assertNull(userUpdateRequestDto.getEmail());
+        assertNull(userUpdateRequestDto.getNickname());
+        assertNull(userUpdateRequestDto.getIntroduce());
     }
 
     @Test

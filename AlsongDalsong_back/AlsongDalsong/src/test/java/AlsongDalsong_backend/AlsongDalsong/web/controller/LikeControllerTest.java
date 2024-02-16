@@ -54,7 +54,7 @@ class LikeControllerTest {
     }
 
     @Test
-    @DisplayName("게시글을 스크랩한 후, true 리턴 테스트")
+    @DisplayName("댓글에 좋아요를 작성한 후, true 리턴 테스트")
     void testLikeSaveAdd() throws Exception {
         when(likeService.saveLike(any())).thenReturn(true);
 
@@ -69,7 +69,7 @@ class LikeControllerTest {
     }
 
     @Test
-    @DisplayName("게시글이 이미 스크랩되어 있을 경우 스크랩이 취소되고 false 리턴 테스트")
+    @DisplayName("댓글이 이미 좋아요일 경우 좋아요가 취소되고 false 리턴 테스트")
     void testLikeSaveDelete() throws Exception {
         when(likeService.saveLike(any())).thenReturn(false);
 
@@ -84,7 +84,7 @@ class LikeControllerTest {
     }
 
     @Test
-    @DisplayName("사용자별 스크랩 목록 조회 리턴 테스트")
+    @DisplayName("사용자별로 댓글에 좋아요를 눌렀는지 조회 테스트")
     void testLikeDetails() throws Exception {
         when(likeService.findLike(any(), any())).thenReturn(true);
 

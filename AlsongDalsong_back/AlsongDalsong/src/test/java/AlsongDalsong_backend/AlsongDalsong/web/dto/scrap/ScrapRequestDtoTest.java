@@ -3,6 +3,8 @@ package AlsongDalsong_backend.AlsongDalsong.web.dto.scrap;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_EMAIL;
 import static AlsongDalsong_backend.AlsongDalsong.TestConstants.VALID_POST_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import AlsongDalsong_backend.AlsongDalsong.ValidatorUtil;
 import org.junit.jupiter.api.DisplayName;
@@ -24,6 +26,16 @@ class ScrapRequestDtoTest {
 
         assertEquals(VALID_EMAIL, scrapRequestDto.getEmail());
         assertEquals(VALID_POST_ID, scrapRequestDto.getPostId());
+    }
+
+    @Test
+    @DisplayName("protected 기본 생성자 테스트")
+    void testProtectedNoArgsConstructor() {
+        ScrapRequestDto scrapRequestDto = new ScrapRequestDto();
+
+        assertNotNull(scrapRequestDto);
+        assertNull(scrapRequestDto.getEmail());
+        assertNull(scrapRequestDto.getPostId());
     }
 
     @Test
